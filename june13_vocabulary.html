@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>June 13 — Vocabulary Flashcards</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f7f3;min-height:100vh;padding:1rem}
+.app{max-width:600px;margin:0 auto;padding:1.5rem 1rem}
+h1{font-size:17px;font-weight:600;color:#1a1a18;margin-bottom:.25rem}
+.subtitle{font-size:13px;color:#888;margin-bottom:1.25rem}
+.mode-tabs{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap}
+.tab{padding:7px 16px;border-radius:20px;border:1px solid #ddd;font-size:13px;cursor:pointer;background:#fff;color:#666;transition:all .15s}
+.tab.active{background:#1D9E75;color:#fff;border-color:#1D9E75}
+.progress-bar{width:100%;height:4px;background:#e8e6e0;border-radius:2px;margin-bottom:1.25rem;overflow:hidden}
+.progress-fill{height:4px;background:#1D9E75;border-radius:2px;transition:width .3s ease}
+.stats{display:flex;gap:10px;margin-bottom:1.25rem}
+.stat-card{flex:1;background:#fff;border-radius:10px;padding:.65rem;text-align:center;border:1px solid #ebe9e2}
+.stat-num{font-size:20px;font-weight:600;color:#1a1a18}
+.stat-lbl{font-size:11px;color:#aaa;margin-top:2px}
+.flip-hint{text-align:center;font-size:12px;color:#bbb;margin-bottom:.6rem}
+.card-area{perspective:1000px;margin-bottom:1rem}
+.card{width:100%;min-height:200px;cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.card.flipped{transform:rotateY(180deg)}
+.card-face{position:absolute;inset:0;background:#fff;border:1px solid #e0ddd4;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;backface-visibility:hidden;min-height:200px}
+.card-back{transform:rotateY(180deg)}
+.card-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#bbb;margin-bottom:.75rem}
+.card-text{font-size:22px;font-weight:600;color:#1a1a18;text-align:center;line-height:1.4}
+.feedback-row{display:flex;gap:10px;justify-content:center;margin-bottom:1rem}
+.know-btn{flex:1;max-width:160px;padding:10px;border-radius:10px;border:1px solid #1D9E75;color:#1D9E75;background:#fff;font-size:14px;cursor:pointer;transition:all .12s;font-weight:500}
+.know-btn:hover{background:#E1F5EE}
+.dont-btn{flex:1;max-width:160px;padding:10px;border-radius:10px;border:1px solid #D85A30;color:#D85A30;background:#fff;font-size:14px;cursor:pointer;transition:all .12s;font-weight:500}
+.dont-btn:hover{background:#FAECE7}
+.controls{display:flex;gap:8px;justify-content:center;margin-bottom:1.5rem}
+.btn{padding:8px 20px;border-radius:8px;border:1px solid #ccc;font-size:14px;cursor:pointer;background:#fff;color:#333;transition:all .12s}
+.btn:hover{background:#f1f0e8}
+.btn.primary{background:#1D9E75;color:#fff;border-color:#1D9E75}
+.btn.primary:hover{background:#0F6E56}
+.counter{text-align:right;font-size:13px;color:#888;margin-bottom:.5rem}
+/* Quiz */
+.quiz-area{background:#fff;border:1px solid #e0ddd4;border-radius:14px;padding:1.5rem;margin-bottom:1rem}
+.quiz-q{font-size:16px;font-weight:600;color:#1a1a18;margin-bottom:1.25rem;text-align:center;line-height:1.4}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.quiz-opt{padding:10px 14px;border-radius:8px;border:1px solid #e0ddd4;font-size:13px;cursor:pointer;background:#fff;color:#1a1a18;text-align:left;transition:all .12s;line-height:1.4}
+.quiz-opt:hover:not([disabled]){background:#f5f4ef}
+.quiz-opt.correct{background:#E1F5EE;border-color:#1D9E75;color:#0F6E56;font-weight:600}
+.quiz-opt.wrong{background:#FAECE7;border-color:#D85A30;color:#993C1D}
+.quiz-result{text-align:center;padding:.75rem;border-radius:8px;margin-top:1rem;font-size:14px;font-weight:500}
+.quiz-result.ok{background:#E1F5EE;color:#0F6E56}
+.quiz-result.bad{background:#FAECE7;color:#993C1D}
+/* List */
+.list-area{display:flex;flex-direction:column;gap:6px}
+.list-row{display:flex;align-items:stretch;border:1px solid #e0ddd4;border-radius:10px;overflow:hidden;background:#fff}
+.list-en{flex:1;padding:9px 14px;font-size:14px;color:#1a1a18;border-right:1px solid #e0ddd4}
+.list-ru{flex:1;padding:9px 14px;font-size:14px;color:#666}
+.list-header .list-en,.list-header .list-ru{font-size:11px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.06em;background:#f8f7f3}
+/* Done */
+.done-screen{text-align:center;padding:2.5rem 1rem}
+.done-icon{font-size:52px;margin-bottom:1rem}
+.done-title{font-size:22px;font-weight:700;color:#1a1a18;margin-bottom:.5rem}
+.done-sub{font-size:14px;color:#888;margin-bottom:1.5rem}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>June 13 — Shopping &amp; Online</h1>
+  <div class="subtitle">38 words · tap a card to flip</div>
+
+  <div class="mode-tabs">
+    <button class="tab active" onclick="setMode('flash')">Flashcards</button>
+    <button class="tab" onclick="setMode('quiz')">Quiz</button>
+    <button class="tab" onclick="setMode('list')">Word list</button>
+  </div>
+
+  <!-- FLASHCARD MODE -->
+  <div id="flash-mode">
+    <div class="progress-bar"><div class="progress-fill" id="prog" style="width:2.6%"></div></div>
+    <div class="stats">
+      <div class="stat-card"><div class="stat-num" id="known-n">0</div><div class="stat-lbl">Know it</div></div>
+      <div class="stat-card"><div class="stat-num" id="left-n">38</div><div class="stat-lbl">Left</div></div>
+      <div class="stat-card"><div class="stat-num" id="learn-n">0</div><div class="stat-lbl">Learning</div></div>
+    </div>
+    <div class="counter"><span id="counter">1 / 38</span></div>
+    <div class="flip-hint">Tap the card to see translation</div>
+    <div class="card-area">
+      <div class="card" id="flashcard" onclick="flipCard()">
+        <div class="card-face">
+          <div class="card-label">English</div>
+          <div class="card-text" id="card-en"></div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-label">Russian</div>
+          <div class="card-text" id="card-ru"></div>
+        </div>
+      </div>
+    </div>
+    <div class="feedback-row" id="feedback-btns" style="display:none">
+      <button class="dont-btn" onclick="markCard(false)">Still learning</button>
+      <button class="know-btn" onclick="markCard(true)">Know it! ✓</button>
+    </div>
+    <div class="controls">
+      <button class="btn" onclick="prevCard()">← Back</button>
+      <button class="btn" onclick="shuffleCards()">Shuffle</button>
+      <button class="btn primary" onclick="nextCard()">Next →</button>
+    </div>
+  </div>
+
+  <!-- QUIZ MODE -->
+  <div id="quiz-mode" style="display:none">
+    <div class="progress-bar"><div class="progress-fill" id="quiz-prog" style="width:0%"></div></div>
+    <div class="stats">
+      <div class="stat-card"><div class="stat-num" id="q-correct">0</div><div class="stat-lbl">Correct</div></div>
+      <div class="stat-card"><div class="stat-num" id="q-total">0</div><div class="stat-lbl">Answered</div></div>
+    </div>
+    <div class="quiz-area" id="quiz-area">
+      <div class="quiz-q" id="quiz-q">Loading...</div>
+      <div class="quiz-options" id="quiz-opts"></div>
+      <div class="quiz-result" id="quiz-result" style="display:none"></div>
+    </div>
+    <div class="controls">
+      <button class="btn primary" id="quiz-next" onclick="nextQuiz()" style="display:none">Next question →</button>
+    </div>
+  </div>
+
+  <!-- LIST MODE -->
+  <div id="list-mode" style="display:none">
+    <div class="list-area" id="list-area"></div>
+  </div>
+</div>
+
+<script>
+const WORDS=[
+  {en:"to catch up (= meet up)",ru:"встретиться"},
+  {en:"a library",ru:"библиотека"},
+  {en:"to catch up on something",ru:"наверстать что-то"},
+  {en:"to suggest",ru:"предлагать"},
+  {en:"main character",ru:"главный герой"},
+  {en:"universal",ru:"универсальный"},
+  {en:"short for (Victoria)",ru:"сокращение от (Victoria)"},
+  {en:"to come across",ru:"наткнуться / встретить случайно"},
+  {en:"biblical",ru:"библейский"},
+  {en:"savior",ru:"спаситель"},
+  {en:"initially",ru:"изначально"},
+  {en:"He is my namesake",ru:"Он мой тёзка"},
+  {en:"namesakes",ru:"тёзки"},
+  {en:"to run out of (milk)",ru:"закончиться (молоко кончилось)"},
+  {en:"per cent %",ru:"процент"},
+  {en:"it's impossible / unreal",ru:"это невозможно / нереально"},
+  {en:"pet supplies",ru:"товары для животных"},
+  {en:"picky",ru:"придирчивый"},
+  {en:"items",ru:"позиция, предмет (в списке)"},
+  {en:"last but one",ru:"предпоследний"},
+  {en:"from 20 to 30%",ru:"от 20 до 30%"},
+  {en:"to increase",ru:"повышаться, возрастать"},
+  {en:"retail shops",ru:"розничные магазины"},
+  {en:"empty",ru:"пустой"},
+  {en:"crowded",ru:"переполненный людьми"},
+  {en:"nickname",ru:"прозвище, никнейм"},
+  {en:"named after (someone)",ru:"назван в честь кого-то"},
+  {en:"common",ru:"распространённый, обычный"},
+  {en:"unusual",ru:"необычный"},
+  {en:"not long ago",ru:"недавно"},
+  {en:"transparent",ru:"прозрачный"},
+  {en:"to invite",ru:"пригласить"},
+  {en:"it's on me",ru:"я плачу, я угощаю"},
+  {en:"to sign up",ru:"зарегистрироваться"},
+  {en:"to be allergic to",ru:"быть аллергичным на что-то"},
+  {en:"to sneeze",ru:"чихать"},
+  {en:"medicine / pills",ru:"лекарство / таблетки"},
+  {en:"tidy (your room)",ru:"убирать, наводить порядок"},
+];
+
+let cards=[...WORDS],idx=0,flipped=false,known=0,learning=0;
+let quizIdx=0,qCorrect=0,qTotal=0,qAnswered=false;
+let quizOrder=[...WORDS].sort(()=>Math.random()-.5);
+
+function setMode(m){
+  ['flash','quiz','list'].forEach(x=>document.getElementById(x+'-mode').style.display=x===m?'':'none');
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['flash','quiz','list'][i]===m));
+  if(m==='quiz')buildQuiz();
+  if(m==='list')buildList();
+}
+
+function updateCard(){
+  if(idx>=cards.length){showDone();return;}
+  const w=cards[idx];
+  document.getElementById('card-en').textContent=w.en;
+  document.getElementById('card-ru').textContent=w.ru;
+  document.getElementById('counter').textContent=(idx+1)+' / '+cards.length;
+  document.getElementById('prog').style.width=((idx/cards.length)*100)+'%';
+  document.getElementById('left-n').textContent=cards.length-idx;
+  const fc=document.getElementById('flashcard');
+  fc.classList.remove('flipped');
+  flipped=false;
+  document.getElementById('feedback-btns').style.display='none';
+}
+
+function flipCard(){
+  flipped=!flipped;
+  document.getElementById('flashcard').classList.toggle('flipped',flipped);
+  if(flipped)document.getElementById('feedback-btns').style.display='flex';
+}
+
+function markCard(ok){
+  if(ok){known++;document.getElementById('known-n').textContent=known;}
+  else{learning++;document.getElementById('learn-n').textContent=learning;}
+  idx++;updateCard();
+}
+
+function nextCard(){idx++;updateCard();}
+function prevCard(){if(idx>0){idx--;updateCard();}}
+function shuffleCards(){cards.sort(()=>Math.random()-.5);idx=0;updateCard();}
+
+function showDone(){
+  document.getElementById('flash-mode').innerHTML='<div class="done-screen"><div class="done-icon">🎉</div><div class="done-title">All done!</div><div class="done-sub">Known: '+known+' &nbsp;·&nbsp; Learning: '+learning+'</div><button class="btn primary" onclick="location.reload()">Start again</button></div>';
+}
+
+function buildQuiz(){
+  if(quizIdx>=quizOrder.length){quizIdx=0;quizOrder=[...WORDS].sort(()=>Math.random()-.5);}
+  const w=quizOrder[quizIdx];
+  document.getElementById('quiz-q').textContent='Translate: "'+w.en+'"';
+  const opts=[w.ru];
+  while(opts.length<4){const r=WORDS[Math.floor(Math.random()*WORDS.length)].ru;if(!opts.includes(r))opts.push(r);}
+  opts.sort(()=>Math.random()-.5);
+  const el=document.getElementById('quiz-opts');
+  el.innerHTML='';
+  opts.forEach(o=>{
+    const b=document.createElement('button');
+    b.className='quiz-opt';b.textContent=o;
+    b.onclick=()=>checkQuiz(b,o,w.ru);
+    el.appendChild(b);
+  });
+  document.getElementById('quiz-result').style.display='none';
+  document.getElementById('quiz-next').style.display='none';
+  document.getElementById('quiz-prog').style.width=((quizIdx/quizOrder.length)*100)+'%';
+  qAnswered=false;
+}
+
+function checkQuiz(btn,chosen,correct){
+  if(qAnswered)return;
+  qAnswered=true;qTotal++;
+  document.querySelectorAll('.quiz-opt').forEach(b=>{b.disabled=true;if(b.textContent===correct)b.classList.add('correct');});
+  const res=document.getElementById('quiz-result');
+  if(chosen===correct){qCorrect++;btn.classList.add('correct');res.className='quiz-result ok';res.textContent='Correct! ✓';}
+  else{btn.classList.add('wrong');res.className='quiz-result bad';res.textContent='Not quite — the answer is: '+correct;}
+  res.style.display='block';
+  document.getElementById('quiz-next').style.display='inline-block';
+  document.getElementById('q-correct').textContent=qCorrect;
+  document.getElementById('q-total').textContent=qTotal;
+}
+
+function nextQuiz(){quizIdx++;buildQuiz();}
+
+function buildList(){
+  const el=document.getElementById('list-area');
+  el.innerHTML='<div class="list-row list-header"><div class="list-en">English</div><div class="list-ru">Russian</div></div>';
+  WORDS.forEach(w=>{
+    const r=document.createElement('div');r.className='list-row';
+    r.innerHTML='<div class="list-en">'+w.en+'</div><div class="list-ru">'+w.ru+'</div>';
+    el.appendChild(r);
+  });
+}
+
+updateCard();
+</script>
+</body>
+</html>
