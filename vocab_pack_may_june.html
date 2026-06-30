@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocab Pack — May & June</title>
+<style>
+  :root {
+    --navy: #1a2744;
+    --coral: #e8613a;
+    --green: #1d9e75;
+    --purple: #7c5cbf;
+    --bg: #f4f3ef;
+    --card: #ffffff;
+    --border: #e2dfd8;
+    --text: #1a1a18;
+    --muted: #888;
+    --radius: 12px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* HEADER */
+  .header { background: var(--navy); color: #fff; padding: 1.25rem 1.5rem; }
+  .header h1 { font-size: 18px; font-weight: 700; letter-spacing: -.3px; }
+  .header p { font-size: 13px; opacity: .65; margin-top: 3px; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 0; background: var(--navy); padding: 0 1.5rem; border-bottom: 1px solid rgba(255,255,255,.1); overflow-x: auto; }
+  .tab { padding: 10px 18px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,.55); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: all .15s; background: none; border-top: none; border-left: none; border-right: none; }
+  .tab.active { color: #fff; border-bottom-color: var(--coral); }
+
+  /* CATEGORY BAR */
+  .cat-bar { padding: .75rem 1.5rem; display: flex; gap: 8px; overflow-x: auto; background: #fff; border-bottom: 1px solid var(--border); }
+  .cat-btn { padding: 5px 13px; border-radius: 20px; border: 1px solid var(--border); font-size: 12px; cursor: pointer; background: var(--bg); color: var(--muted); white-space: nowrap; transition: all .12s; }
+  .cat-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+  /* MAIN */
+  .main { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+  /* PROGRESS */
+  .prog-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+  .prog-bar { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .prog-fill { height: 5px; background: var(--green); border-radius: 3px; transition: width .3s; }
+  .prog-lbl { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+  /* SCORE */
+  .score-row { display: flex; gap: 10px; margin-bottom: 1.25rem; }
+  .score-box { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: .6rem; text-align: center; }
+  .score-num { font-size: 20px; font-weight: 700; color: var(--text); }
+  .score-lbl { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+  /* MATCH */
+  .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
+  .match-col { display: flex; flex-direction: column; gap: 8px; }
+  .match-item { padding: 10px 14px; background: var(--card); border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; cursor: pointer; transition: all .15s; line-height: 1.4; min-height: 44px; display: flex; align-items: center; }
+  .match-item.selected { border-color: var(--navy); background: #eef0f8; }
+  .match-item.matched { border-color: var(--green); background: #e4f5ee; color: var(--green); cursor: default; }
+  .match-item.wrong { border-color: var(--coral); background: #fdeee8; animation: shake .3s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+  .match-result { text-align: center; padding: .75rem; border-radius: 10px; font-size: 14px; font-weight: 500; margin-bottom: 1rem; }
+  .match-result.ok { background: #e4f5ee; color: #0f6e56; }
+
+  /* QUIZ */
+  .quiz-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; }
+  .quiz-q { font-size: 16px; font-weight: 600; text-align: center; margin-bottom: 1.25rem; line-height: 1.5; }
+  .quiz-cat-tag { font-size: 11px; color: var(--muted); text-align: center; margin-bottom: .75rem; text-transform: uppercase; letter-spacing: .06em; }
+  .quiz-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .quiz-opt { padding: 10px 14px; border-radius: 9px; border: 1.5px solid var(--border); font-size: 13px; cursor: pointer; background: var(--card); text-align: left; transition: all .12s; line-height: 1.4; }
+  .quiz-opt:hover:not([disabled]) { background: var(--bg); }
+  .quiz-opt.correct { background: #e4f5ee; border-color: var(--green); color: #0f6e56; font-weight: 600; }
+  .quiz-opt.wrong { background: #fdeee8; border-color: var(--coral); color: #993c1d; }
+  .quiz-feedback { text-align: center; padding: .65rem; border-radius: 8px; margin-top: .75rem; font-size: 14px; font-weight: 500; }
+  .quiz-feedback.ok { background: #e4f5ee; color: #0f6e56; }
+  .quiz-feedback.bad { background: #fdeee8; color: #993c1d; }
+  .btn-next { display: block; margin: 0 auto; padding: 9px 28px; background: var(--navy); color: #fff; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; margin-top: 1rem; transition: background .12s; }
+  .btn-next:hover { background: #2a3d6e; }
+
+  /* GAP FILL */
+  .gap-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .gap-cat { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .5rem; }
+  .gap-sentence { font-size: 15px; line-height: 1.8; margin-bottom: 1rem; }
+  .gap-input { border: none; border-bottom: 2px solid var(--navy); background: transparent; font-size: 15px; font-family: var(--font); color: var(--navy); padding: 0 4px; min-width: 120px; outline: none; }
+  .gap-input.correct { border-bottom-color: var(--green); color: var(--green); }
+  .gap-input.wrong { border-bottom-color: var(--coral); color: var(--coral); }
+  .gap-hint { font-size: 12px; color: var(--muted); margin-bottom: .75rem; }
+  .gap-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .btn-check { padding: 8px 20px; background: var(--green); color: #fff; border: none; border-radius: 8px; font-size: 13px; cursor: pointer; transition: background .12s; }
+  .btn-check:hover { background: #0f6e56; }
+  .btn-skip { padding: 8px 16px; background: var(--bg); color: var(--muted); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; cursor: pointer; }
+  .gap-result { font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 7px; }
+  .gap-result.ok { background: #e4f5ee; color: #0f6e56; }
+  .gap-result.bad { background: #fdeee8; color: #993c1d; }
+
+  /* DONE */
+  .done { text-align: center; padding: 3rem 1rem; }
+  .done-icon { font-size: 52px; margin-bottom: 1rem; }
+  .done-title { font-size: 22px; font-weight: 700; margin-bottom: .5rem; }
+  .done-sub { font-size: 14px; color: var(--muted); margin-bottom: 1.5rem; }
+  .btn-restart { padding: 10px 28px; background: var(--coral); color: #fff; border: none; border-radius: 9px; font-size: 15px; cursor: pointer; font-weight: 600; }
+
+  /* CATEGORY HEADER */
+  .cat-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+  .cat-icon { font-size: 20px; }
+  .cat-title { font-size: 16px; font-weight: 700; color: var(--navy); }
+  .cat-count { font-size: 12px; color: var(--muted); background: var(--bg); padding: 2px 9px; border-radius: 20px; border: 1px solid var(--border); }
+
+  .section-divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Vocabulary Practice — May & June</h1>
+  <p>11 categories · Match · Quiz · Fill in the gap</p>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="setTab('match')">Match</button>
+  <button class="tab" onclick="setTab('quiz')">Quiz</button>
+  <button class="tab" onclick="setTab('gap')">Fill the gap</button>
+</div>
+
+<div class="cat-bar" id="cat-bar"></div>
+
+<div class="main" id="main-area"></div>
+
+<script>
+const CATEGORIES = [
+  {
+    id: 'family', icon: '🏠', name: 'Family & Home',
+    words: [
+      {en:'nephew', ru:'племянник'},
+      {en:'niece', ru:'племянница'},
+      {en:'playroom / children\'s room', ru:'детская комната'},
+      {en:'to tidy your room', ru:'убирать комнату'},
+      {en:'to give birth', ru:'родить'},
+      {en:'put your daughter to bed', ru:'укладывать дочь спать'},
+    ],
+    gaps: [
+      {s:'My brother has two kids — a son and a ___ who is five.', ans:'niece', hint:'female child of your sibling'},
+      {s:'Can you ___ your room before dinner, please?', ans:'tidy', hint:'make it clean and organized'},
+      {s:'She gave ___ to twins last month.', ans:'birth', hint:'give ___ = родить'},
+    ]
+  },
+  {
+    id: 'shopping', icon: '🛍️', name: 'Shopping & Things',
+    words: [
+      {en:'bargain', ru:'выгодная покупка'},
+      {en:'receipt', ru:'чек'},
+      {en:'second-hand', ru:'подержанный'},
+      {en:'reliable', ru:'надёжный'},
+      {en:'damaged', ru:'повреждённый'},
+      {en:'wide selection', ru:'большой выбор'},
+      {en:'retail shops', ru:'розничные магазины'},
+      {en:'empty', ru:'пустой'},
+      {en:'crowded', ru:'переполненный людьми'},
+      {en:'picky', ru:'придирчивый'},
+      {en:'items', ru:'позиции, предметы'},
+      {en:'to increase', ru:'повышаться, возрастать'},
+      {en:'run out of', ru:'закончиться'},
+      {en:'last but one', ru:'предпоследний'},
+      {en:'per cent %', ru:'процент'},
+    ],
+    gaps: [
+      {s:'I got this jacket for only £5 — what a ___!', ans:'bargain', hint:'a very cheap good deal'},
+      {s:'The shop was completely ___ — there was nothing left on the shelves.', ans:'empty', hint:'opposite of full'},
+      {s:'Can I have a ___, please? I might need to return this.', ans:'receipt', hint:'paper proof of purchase'},
+      {s:'We ___ of milk, so I went to the shop.', ans:'ran out', hint:'ran ___ of = закончилось'},
+      {s:'Prices ___ by 10% last year.', ans:'increased', hint:'went up'},
+      {s:'The market was so ___ we could barely move.', ans:'crowded', hint:'переполненный людьми'},
+    ]
+  },
+  {
+    id: 'clothes', icon: '👗', name: 'Clothes & Materials',
+    words: [
+      {en:'to wear', ru:'носить'},
+      {en:'to shorten the sleeves', ru:'укоротить рукава'},
+      {en:'cotton', ru:'хлопок'},
+      {en:'leather', ru:'кожа'},
+      {en:'linen', ru:'лён'},
+      {en:'denim', ru:'джинсовая ткань'},
+      {en:'silk', ru:'шёлк'},
+      {en:'wool', ru:'шерсть'},
+      {en:'bright colors / vivid', ru:'яркие насыщенные цвета'},
+      {en:'transparent', ru:'прозрачный'},
+      {en:'hair tie', ru:'резинка для волос'},
+      {en:'hair clip', ru:'заколка'},
+    ],
+    gaps: [
+      {s:'This coat is made of ___, so it keeps you very warm in winter.', ans:'wool', hint:'from sheep'},
+      {s:'She always wears ___ colors — you can spot her from far away.', ans:'vivid', hint:'яркие / bright and ___'},
+      {s:'The tailor agreed to ___ the sleeves because they were too long.', ans:'shorten', hint:'make shorter'},
+      {s:'I love this blouse — it feels amazing because it\'s pure ___.', ans:'silk', hint:'шёлк'},
+    ]
+  },
+  {
+    id: 'fingers', icon: '✋', name: 'Fingers',
+    words: [
+      {en:'thumb', ru:'большой палец'},
+      {en:'index finger', ru:'указательный палец'},
+      {en:'middle finger', ru:'средний палец'},
+      {en:'ring finger', ru:'безымянный палец'},
+      {en:'pinky', ru:'мизинец'},
+    ],
+    gaps: [
+      {s:'She wears her wedding ring on her ___ finger.', ans:'ring', hint:'4th finger'},
+      {s:'Point at something with your ___ finger.', ans:'index', hint:'2nd finger, used for pointing'},
+      {s:'The smallest finger is called the ___.', ans:'pinky', hint:'мизинец'},
+    ]
+  },
+  {
+    id: 'emotions', icon: '😤', name: 'Emotions & Reactions',
+    words: [
+      {en:'excited', ru:'взволнованный'},
+      {en:'a relief', ru:'облегчение'},
+      {en:'What a relief!', ru:'Какое облегчение!'},
+      {en:'frozen', ru:'замер'},
+      {en:'have a tantrum', ru:'закатить истерику'},
+      {en:'have a breakdown', ru:'нервный срыв'},
+      {en:'it\'s on me', ru:'я угощаю / я плачу'},
+      {en:'it\'s impossible', ru:'это невозможно'},
+    ],
+    gaps: [
+      {s:'The child had a complete ___ in the middle of the shop.', ans:'tantrum', hint:'истерика'},
+      {s:'Don\'t worry about the bill — ___ on me.', ans:'it\'s', hint:'___ on me = я плачу'},
+      {s:'I was so nervous, and then she said yes — what a ___!', ans:'relief', hint:'облегчение'},
+      {s:'He just ___ when he heard the news — he couldn\'t move.', ans:'froze', hint:'past of: freeze / замер'},
+    ]
+  },
+  {
+    id: 'health', icon: '🌿', name: 'Health & Body',
+    words: [
+      {en:'to sneeze', ru:'чихать'},
+      {en:'I have allergies', ru:'у меня аллергия'},
+      {en:'to be allergic to', ru:'быть аллергичным на'},
+      {en:'stuffed / stuffy nose', ru:'заложенный нос'},
+      {en:'medicine', ru:'лекарство'},
+      {en:'pills', ru:'таблетки'},
+      {en:'to take pills', ru:'принимать таблетки'},
+      {en:'to sign up', ru:'зарегистрироваться'},
+    ],
+    gaps: [
+      {s:'I keep ___ — I think I\'m allergic to cats.', ans:'sneezing', hint:'чихать (continuous)'},
+      {s:'She has a completely ___ nose and can\'t breathe properly.', ans:'stuffy', hint:'заложенный'},
+      {s:'He\'s ___ to nuts, so be careful what you cook.', ans:'allergic', hint:'to be ___ to'},
+      {s:'Don\'t forget to ___ your pills twice a day.', ans:'take', hint:'принимать'},
+    ]
+  },
+  {
+    id: 'parenting', icon: '👶', name: 'Parenting & Kids',
+    words: [
+      {en:'pregnant', ru:'беременная'},
+      {en:'to raise a child', ru:'воспитывать ребёнка'},
+      {en:'parenting', ru:'родительство'},
+      {en:'toddler', ru:'малыш, начинающий ходить'},
+      {en:'to give birth', ru:'родить'},
+      {en:'due date', ru:'предполагаемая дата родов'},
+      {en:'nickname', ru:'прозвище, никнейм'},
+      {en:'named after', ru:'назван в честь'},
+      {en:'namesake', ru:'тёзка'},
+    ],
+    gaps: [
+      {s:'A ___ is a small child who has just started walking.', ans:'toddler', hint:'малыш, начинающий ходить'},
+      {s:'She\'s ___ — the baby is due in March.', ans:'pregnant', hint:'expecting a baby'},
+      {s:'He was ___ after his grandfather.', ans:'named', hint:'___ after = назван в честь'},
+      {s:'Good ___ means spending quality time with your children.', ans:'parenting', hint:'родительство'},
+    ]
+  },
+  {
+    id: 'playground', icon: '🛝', name: 'Playground',
+    words: [
+      {en:'slide', ru:'горка'},
+      {en:'swings', ru:'качели'},
+      {en:'seesaw', ru:'качели-балансир'},
+      {en:'monkey bars', ru:'шведская стенка'},
+      {en:'climbing frame', ru:'спортивный комплекс'},
+      {en:'roundabout', ru:'карусель'},
+      {en:'sandpit', ru:'песочница'},
+      {en:'bench', ru:'скамейка'},
+      {en:'stairs', ru:'лестница'},
+    ],
+    gaps: [
+      {s:'The kids love to ___ down the ___ at the playground.', ans:'slide', hint:'go ___ the slide'},
+      {s:'She sat on the ___ and watched the children play.', ans:'bench', hint:'скамейка'},
+      {s:'Two children sit on opposite ends of a ___ and go up and down.', ans:'seesaw', hint:'качели-балансир'},
+      {s:'He climbed all the way to the top of the ___ frame.', ans:'climbing', hint:'___ frame = спортивный комплекс'},
+    ]
+  },
+  {
+    id: 'time', icon: '⏰', name: 'Time Expressions',
+    words: [
+      {en:'not long ago', ru:'недавно'},
+      {en:'initially', ru:'изначально'},
+      {en:'at the weekend', ru:'на выходных'},
+      {en:'last weekend', ru:'в прошлые выходные'},
+      {en:'this weekend', ru:'на этих выходных'},
+      {en:'next weekend', ru:'на следующих выходных'},
+      {en:'in three days', ru:'через три дня'},
+      {en:'in the morning', ru:'утром'},
+      {en:'on Monday', ru:'в понедельник'},
+      {en:'at night', ru:'ночью'},
+    ],
+    gaps: [
+      {s:'___ I didn\'t like coffee, but now I love it.', ans:'Initially', hint:'изначально / at first'},
+      {s:'I bought this coat not ___ ago — it was only £20.', ans:'long', hint:'not ___ ago = недавно'},
+      {s:'What are you doing ___ the weekend?', ans:'at', hint:'at / on / in?'},
+      {s:'She\'ll be back ___ three days.', ans:'in', hint:'through = in English: ___ 3 days'},
+    ]
+  },
+  {
+    id: 'useful', icon: '🗣️', name: 'Useful Phrases',
+    words: [
+      {en:'to suggest', ru:'предлагать'},
+      {en:'to invite', ru:'пригласить'},
+      {en:'to come across', ru:'наткнуться / встретить случайно'},
+      {en:'to catch up', ru:'встретиться / наверстать'},
+      {en:'universal', ru:'универсальный'},
+      {en:'common', ru:'распространённый'},
+      {en:'unusual', ru:'необычный'},
+      {en:'picky', ru:'придирчивый'},
+      {en:'to increase', ru:'возрастать'},
+      {en:'short for', ru:'сокращение от'},
+    ],
+    gaps: [
+      {s:'I ___ across a great little café near the station.', ans:'came', hint:'came ___ = наткнулась'},
+      {s:'Let\'s ___ up for coffee — I haven\'t seen you in ages!', ans:'catch', hint:'catch ___ = встретиться'},
+      {s:'She ___ me to her birthday party.', ans:'invited', hint:'пригласила'},
+      {s:'"Vic" is ___ for Victoria.', ans:'short', hint:'___ for = сокращение от'},
+    ]
+  },
+  {
+    id: 'money', icon: '💰', name: 'Money & Numbers',
+    words: [
+      {en:'per cent %', ru:'процент'},
+      {en:'to increase', ru:'повышаться'},
+      {en:'last but one', ru:'предпоследний'},
+      {en:'run out of', ru:'закончиться'},
+      {en:'to spend', ru:'тратить (с пользой)'},
+      {en:'to waste', ru:'тратить впустую'},
+      {en:'bargain', ru:'выгодная сделка'},
+      {en:'it\'s on me', ru:'я угощаю'},
+    ],
+    gaps: [
+      {s:'Don\'t ___ your money on things you don\'t need.', ans:'waste', hint:'тратить впустую'},
+      {s:'She took the ___ but one seat — so she was second from last.', ans:'last', hint:'___ but one = предпоследний'},
+      {s:'Sales ___ by 30 per ___ last month.', ans:'cent', hint:'per ___ = %'},
+    ]
+  },
+];
+
+let currentTab = 'match';
+let currentCat = 0;
+
+// ---------- MATCH STATE ----------
+let matchLeft = [], matchRight = [], matchedPairs = 0, selectedLeft = null, selectedRight = null;
+let matchScore = 0, matchTotal = 0;
+
+// ---------- QUIZ STATE ----------
+let quizQueue = [], quizIdx = 0, quizCorrect = 0, quizAnswered = false;
+
+// ---------- GAP STATE ----------
+let gapQueue = [], gapIdx = 0, gapCorrect = 0;
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - .5); }
+
+function setTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', ['match','quiz','gap'][i] === tab));
+  renderCatBar();
+  renderMain();
+}
+
+function setCat(idx) {
+  currentCat = idx;
+  document.querySelectorAll('.cat-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+  initCurrentMode();
+  renderMain();
+}
+
+function renderCatBar() {
+  const bar = document.getElementById('cat-bar');
+  bar.innerHTML = CATEGORIES.map((c, i) =>
+    `<button class="cat-btn${i === currentCat ? ' active' : ''}" onclick="setCat(${i})">${c.icon} ${c.name}</button>`
+  ).join('');
+}
+
+function initCurrentMode() {
+  const cat = CATEGORIES[currentCat];
+  if (currentTab === 'match') {
+    const words = shuffle(cat.words).slice(0, Math.min(8, cat.words.length));
+    matchLeft = shuffle(words.map(w => w.en));
+    matchRight = shuffle(words.map(w => w.ru));
+    matchedPairs = 0; selectedLeft = null; selectedRight = null;
+    matchScore = 0; matchTotal = words.length;
+  } else if (currentTab === 'quiz') {
+    quizQueue = shuffle(cat.words);
+    quizIdx = 0; quizCorrect = 0; quizAnswered = false;
+  } else if (currentTab === 'gap') {
+    gapQueue = shuffle(cat.gaps || []);
+    gapIdx = 0; gapCorrect = 0;
+  }
+}
+
+function renderMain() {
+  const area = document.getElementById('main-area');
+  const cat = CATEGORIES[currentCat];
+  if (currentTab === 'match') area.innerHTML = renderMatch(cat);
+  else if (currentTab === 'quiz') area.innerHTML = renderQuiz(cat);
+  else area.innerHTML = renderGap(cat);
+  attachEvents();
+}
+
+// ===== MATCH =====
+function renderMatch(cat) {
+  if (matchedPairs === matchLeft.length) {
+    return `<div class="done">
+      <div class="done-icon">🎉</div>
+      <div class="done-title">All matched!</div>
+      <div class="done-sub">Well done! Try another category or switch to Quiz.</div>
+      <button class="btn-restart" onclick="initCurrentMode();renderMain()">Play again</button>
+    </div>`;
+  }
+  const leftItems = matchLeft.map((w, i) => {
+    const isMatched = !matchLeft.includes(w) || document.querySelectorAll;
+    return `<div class="match-item" id="ml-${i}" data-idx="${i}" data-side="left" onclick="matchClick('left',${i})">${w}</div>`;
+  });
+  const rightItems = matchRight.map((w, i) =>
+    `<div class="match-item" id="mr-${i}" data-idx="${i}" data-side="right" onclick="matchClick('right',${i})">${w}</div>`
+  );
+  return `
+    <div class="cat-header"><span class="cat-icon">${cat.icon}</span><span class="cat-title">${cat.name}</span><span class="cat-count">${cat.words.length} words</span></div>
+    <div class="score-row">
+      <div class="score-box"><div class="score-num" id="match-score">0</div><div class="score-lbl">Matched</div></div>
+      <div class="score-box"><div class="score-num">${matchLeft.length}</div><div class="score-lbl">Total</div></div>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:.75rem">Tap a word on the left, then its translation on the right.</p>
+    <div class="match-grid">
+      <div class="match-col" id="match-left">${leftItems.join('')}</div>
+      <div class="match-col" id="match-right">${rightItems.join('')}</div>
+    </div>`;
+}
+
+function matchClick(side, idx) {
+  const el = document.getElementById((side === 'left' ? 'ml-' : 'mr-') + idx);
+  if (el.classList.contains('matched')) return;
+
+  if (side === 'left') {
+    if (selectedLeft !== null) document.getElementById('ml-' + selectedLeft).classList.remove('selected');
+    selectedLeft = idx;
+    el.classList.add('selected');
+  } else {
+    if (selectedRight !== null) document.getElementById('mr-' + selectedRight).classList.remove('selected');
+    selectedRight = idx;
+    el.classList.add('selected');
+  }
+
+  if (selectedLeft !== null && selectedRight !== null) {
+    const en = matchLeft[selectedLeft];
+    const ru = matchRight[selectedRight];
+    const cat = CATEGORIES[currentCat];
+    const correct = cat.words.find(w => w.en === en && w.ru === ru);
+    if (correct) {
+      document.getElementById('ml-' + selectedLeft).classList.replace('selected', 'matched');
+      document.getElementById('mr-' + selectedRight).classList.replace('selected', 'matched');
+      matchedPairs++;
+      document.getElementById('match-score').textContent = matchedPairs;
+      selectedLeft = null; selectedRight = null;
+      if (matchedPairs === matchLeft.length) setTimeout(() => { initCurrentMode(); renderMain(); }, 800);
+    } else {
+      const lEl = document.getElementById('ml-' + selectedLeft);
+      const rEl = document.getElementById('mr-' + selectedRight);
+      lEl.classList.add('wrong'); rEl.classList.add('wrong');
+      setTimeout(() => {
+        lEl.classList.remove('wrong', 'selected');
+        rEl.classList.remove('wrong', 'selected');
+        selectedLeft = null; selectedRight = null;
+      }, 700);
+    }
+  }
+}
+
+// ===== QUIZ =====
+function renderQuiz(cat) {
+  if (quizIdx >= quizQueue.length) {
+    return `<div class="done">
+      <div class="done-icon">${quizCorrect === quizQueue.length ? '🏆' : '📚'}</div>
+      <div class="done-title">${quizCorrect} / ${quizQueue.length} correct</div>
+      <div class="done-sub">${quizCorrect === quizQueue.length ? 'Perfect score!' : 'Keep practising!'}</div>
+      <button class="btn-restart" onclick="initCurrentMode();renderMain()">Try again</button>
+    </div>`;
+  }
+  const w = quizQueue[quizIdx];
+  const wrong = shuffle(cat.words.filter(x => x.ru !== w.ru)).slice(0, 3).map(x => x.ru);
+  const opts = shuffle([w.ru, ...wrong]);
+  return `
+    <div class="cat-header"><span class="cat-icon">${cat.icon}</span><span class="cat-title">${cat.name}</span></div>
+    <div class="score-row">
+      <div class="score-box"><div class="score-num">${quizCorrect}</div><div class="score-lbl">Correct</div></div>
+      <div class="score-box"><div class="score-num">${quizIdx}</div><div class="score-lbl">Answered</div></div>
+      <div class="score-box"><div class="score-num">${quizQueue.length - quizIdx}</div><div class="score-lbl">Left</div></div>
+    </div>
+    <div class="prog-row"><div class="prog-bar"><div class="prog-fill" style="width:${(quizIdx/quizQueue.length)*100}%"></div></div><span class="prog-lbl">${quizIdx+1} / ${quizQueue.length}</span></div>
+    <div class="quiz-card">
+      <div class="quiz-cat-tag">${cat.icon} ${cat.name}</div>
+      <div class="quiz-q">What does "<strong>${w.en}</strong>" mean?</div>
+      <div class="quiz-opts">
+        ${opts.map(o => `<button class="quiz-opt" onclick="checkQuiz(this,'${o.replace(/'/g,"\\'")}','${w.ru.replace(/'/g,"\\'")}')\">${o}</button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="qfb" style="display:none"></div>
+    </div>
+    <button class="btn-next" id="btn-next" style="display:none" onclick="nextQuiz()">Next →</button>`;
+}
+
+function checkQuiz(btn, chosen, correct) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  document.querySelectorAll('.quiz-opt').forEach(b => {
+    b.disabled = true;
+    if (b.textContent === correct) b.classList.add('correct');
+  });
+  const fb = document.getElementById('qfb');
+  if (chosen === correct) {
+    quizCorrect++;
+    btn.classList.add('correct');
+    fb.className = 'quiz-feedback ok'; fb.textContent = 'Correct! ✓';
+  } else {
+    btn.classList.add('wrong');
+    fb.className = 'quiz-feedback bad'; fb.textContent = 'Not quite — it\'s: ' + correct;
+  }
+  fb.style.display = 'block';
+  document.getElementById('btn-next').style.display = 'block';
+}
+
+function nextQuiz() {
+  quizIdx++;
+  quizAnswered = false;
+  renderMain();
+}
+
+// ===== GAP FILL =====
+function renderGap(cat) {
+  if (!cat.gaps || cat.gaps.length === 0) {
+    return `<div class="done"><div class="done-icon">🚧</div><div class="done-title">No gap exercises yet</div><div class="done-sub">Try Match or Quiz for this category.</div></div>`;
+  }
+  if (gapIdx >= gapQueue.length) {
+    return `<div class="done">
+      <div class="done-icon">${gapCorrect === gapQueue.length ? '🎉' : '📝'}</div>
+      <div class="done-title">${gapCorrect} / ${gapQueue.length} correct</div>
+      <div class="done-sub">${gapCorrect === gapQueue.length ? 'Perfect!' : 'Good effort — try again!'}</div>
+      <button class="btn-restart" onclick="initCurrentMode();renderMain()">Try again</button>
+    </div>`;
+  }
+  const g = gapQueue[gapIdx];
+  const sentence = g.s.replace('___', '<input class="gap-input" id="gap-in" placeholder="..." autocomplete="off" autocorrect="off" spellcheck="false">');
+  return `
+    <div class="cat-header"><span class="cat-icon">${cat.icon}</span><span class="cat-title">${cat.name}</span></div>
+    <div class="score-row">
+      <div class="score-box"><div class="score-num">${gapCorrect}</div><div class="score-lbl">Correct</div></div>
+      <div class="score-box"><div class="score-num">${gapIdx + 1} / ${gapQueue.length}</div><div class="score-lbl">Question</div></div>
+    </div>
+    <div class="prog-row"><div class="prog-bar"><div class="prog-fill" style="width:${(gapIdx/gapQueue.length)*100}%"></div></div></div>
+    <div class="gap-card">
+      <div class="gap-cat">${cat.icon} Fill in the gap</div>
+      <div class="gap-sentence">${sentence}</div>
+      <div class="gap-hint">💡 Hint: ${g.hint}</div>
+      <div class="gap-actions">
+        <button class="btn-check" onclick="checkGap('${g.ans.replace(/'/g,"\\'")}')">Check ✓</button>
+        <button class="btn-skip" onclick="skipGap('${g.ans.replace(/'/g,"\\'")}')">Skip →</button>
+        <span id="gap-result" class="gap-result" style="display:none"></span>
+      </div>
+    </div>`;
+}
+
+function checkGap(ans) {
+  const inp = document.getElementById('gap-in');
+  if (!inp) return;
+  const val = inp.value.trim().toLowerCase();
+  const correct = ans.toLowerCase();
+  const res = document.getElementById('gap-result');
+  if (val === correct) {
+    inp.classList.add('correct');
+    res.className = 'gap-result ok'; res.textContent = 'Correct! ✓'; res.style.display = 'inline-block';
+    gapCorrect++;
+    setTimeout(() => { gapIdx++; renderMain(); }, 900);
+  } else {
+    inp.classList.add('wrong');
+    res.className = 'gap-result bad'; res.textContent = 'Answer: ' + ans; res.style.display = 'inline-block';
+    setTimeout(() => { gapIdx++; renderMain(); }, 1400);
+  }
+}
+
+function skipGap(ans) {
+  document.getElementById('gap-result').className = 'gap-result bad';
+  document.getElementById('gap-result').textContent = 'Answer: ' + ans;
+  document.getElementById('gap-result').style.display = 'inline-block';
+  setTimeout(() => { gapIdx++; renderMain(); }, 1200);
+}
+
+function attachEvents() {
+  const inp = document.getElementById('gap-in');
+  if (inp) {
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { const ans = gapQueue[gapIdx].ans; checkGap(ans); } });
+    inp.focus();
+  }
+}
+
+// INIT
+renderCatBar();
+initCurrentMode();
+renderMain();
+</script>
+</body>
+</html>
