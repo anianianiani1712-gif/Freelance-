@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Start Your Business: Make Your Dream Come True</title>
+<style>
+  :root{
+    --cream:#F5EFE4;
+    --card:#FFFFFF;
+    --coral:#E8703A;
+    --coral-dark:#C85A2B;
+    --ink:#2E2A25;
+    --ink-soft:#6B6459;
+    --line:#EAE2D2;
+    --mint:#3D8C6C;
+    --gold:#D9A441;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Georgia', 'Iowan Old Style', serif;
+    line-height:1.5;
+    padding:0 0 60px 0;
+  }
+  header{
+    padding:44px 20px 30px;
+    text-align:center;
+    border-bottom:3px solid var(--coral);
+    background:linear-gradient(180deg, #FBF7EF 0%, var(--cream) 100%);
+  }
+  header .eyebrow{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    font-size:12px;
+    color:var(--coral-dark);
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  header h1{
+    font-size:32px;
+    margin:0 0 10px;
+    line-height:1.2;
+  }
+  header p{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    color:var(--ink-soft);
+    font-size:14px;
+    margin:0;
+  }
+  .meta-row{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    flex-wrap:wrap;
+    margin-top:18px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:13px;
+  }
+  .meta-pill{
+    background:var(--card);
+    border:1px solid var(--line);
+    padding:6px 14px;
+    border-radius:20px;
+    color:var(--ink-soft);
+  }
+  main{
+    max-width:760px;
+    margin:0 auto;
+    padding:36px 18px 0;
+  }
+  .stage{
+    background:var(--card);
+    border-radius:10px;
+    border-left:6px solid var(--coral);
+    box-shadow:0 2px 10px rgba(46,42,37,0.06);
+    margin-bottom:26px;
+    padding:22px 22px 24px;
+  }
+  .stage.mint{border-left-color:var(--mint);}
+  .stage.gold{border-left-color:var(--gold);}
+  .stage-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:6px;
+  }
+  .stage-title{
+    font-size:20px;
+    margin:0;
+    font-weight:700;
+  }
+  .stage-time{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:12px;
+    font-weight:700;
+    color:#fff;
+    background:var(--coral);
+    padding:4px 11px;
+    border-radius:14px;
+    white-space:nowrap;
+  }
+  .stage.mint .stage-time{background:var(--mint);}
+  .stage.gold .stage-time{background:var(--gold);}
+  .stage-sub{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    color:var(--ink-soft);
+    font-size:13.5px;
+    margin:0 0 14px;
+    font-style:italic;
+  }
+  .stage p{margin:8px 0;}
+  .stage ul{margin:8px 0; padding-left:20px;}
+  .stage li{margin-bottom:4px;}
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:12px 0;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:14px;
+  }
+  th, td{
+    text-align:left;
+    padding:8px 10px;
+    border-bottom:1px solid var(--line);
+  }
+  th{
+    color:var(--coral-dark);
+    font-size:12px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+  }
+
+  /* --- widget shared --- */
+  .widget{
+    margin-top:16px;
+    background:var(--cream);
+    border:1px dashed #DCCFB2;
+    border-radius:8px;
+    padding:16px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+  }
+  .widget-label{
+    font-size:11px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  button{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-weight:700;
+    font-size:14px;
+    border:none;
+    border-radius:24px;
+    padding:11px 22px;
+    background:var(--coral);
+    color:#fff;
+    cursor:pointer;
+    transition:transform .12s ease, background .12s ease;
+  }
+  button:hover{background:var(--coral-dark);}
+  button:active{transform:scale(0.96);}
+  button.secondary{
+    background:transparent;
+    color:var(--ink-soft);
+    border:1px solid var(--line);
+  }
+  button.secondary:hover{background:#fff;color:var(--ink);}
+
+  /* Warm up widget */
+  .word-display{
+    font-size:28px;
+    font-weight:700;
+    text-align:center;
+    padding:22px 10px;
+    background:#fff;
+    border-radius:8px;
+    margin-bottom:12px;
+    color:var(--coral-dark);
+    min-height:34px;
+  }
+  .btn-row{display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
+
+  /* countdown */
+  .timer-display{
+    font-size:46px;
+    font-weight:700;
+    text-align:center;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    margin:6px 0 14px;
+    color:var(--ink);
+    letter-spacing:2px;
+  }
+  .timer-display.low{color:var(--coral);}
+
+  /* mashup cards */
+  .mashup-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:12px;
+    flex-wrap:wrap;
+  }
+  .card-slot{
+    flex:1;
+    min-width:130px;
+    background:#fff;
+    border-radius:8px;
+    padding:16px 10px;
+    text-align:center;
+    font-weight:700;
+    font-size:15px;
+    box-shadow:0 1px 4px rgba(0,0,0,0.06);
+  }
+  .card-slot .tag{
+    display:block;
+    font-size:10px;
+    letter-spacing:1.5px;
+    color:var(--ink-soft);
+    font-weight:700;
+    margin-bottom:6px;
+    text-transform:uppercase;
+  }
+  .plus{
+    align-self:center;
+    font-size:20px;
+    color:var(--ink-soft);
+    font-weight:700;
+  }
+
+  /* investment tracker */
+  .invest-grid{
+    display:grid;
+    grid-template-columns:1fr auto auto;
+    gap:8px 12px;
+    align-items:center;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:14px;
+  }
+  .invest-grid input[type=text]{
+    padding:8px 10px;
+    border-radius:6px;
+    border:1px solid var(--line);
+    font-family:inherit;
+    font-size:14px;
+    width:100%;
+  }
+  .coin-count{
+    font-weight:700;
+    min-width:26px;
+    text-align:center;
+  }
+  .coin-btn{
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    padding:0;
+    font-size:16px;
+    line-height:1;
+  }
+  .coin-btn.minus{background:#B5AFA0;}
+  .add-row{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+  }
+  .add-row input{flex:1;}
+
+  /* materials + footer */
+  .materials{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:13.5px;
+    color:var(--ink-soft);
+  }
+  footer{
+    text-align:center;
+    padding:30px 20px 0;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+  .divider{
+    text-align:center;
+    color:var(--coral);
+    font-size:14px;
+    letter-spacing:6px;
+    margin:6px 0 26px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Speaking Club · B1+ / B2</div>
+  <h1>Start Your Business: Make Your Dream Come True</h1>
+  <p>A 55-minute pure-speaking lesson — no grammar, all momentum.</p>
+  <div class="meta-row">
+    <span class="meta-pill">⏱ 55 minutes</span>
+    <span class="meta-pill">👥 5 students</span>
+    <span class="meta-pill">🗣 100% speaking</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- STAGE 1 -->
+  <div class="stage">
+    <div class="stage-head">
+      <h2 class="stage-title">1. Warm-Up: Business or Bust</h2>
+      <span class="stage-time">6 min</span>
+    </div>
+    <p class="stage-sub">Fast, loud, fun — everyone talks in the first 30 seconds.</p>
+    <p>Tap <strong>New Word</strong>. The student has <strong>7 seconds</strong> to invent a business using that word out loud — no thinking time, no "correct" answer. Go around twice, faster the second time.</p>
+    <div class="widget">
+      <div class="widget-label">Word Generator</div>
+      <div class="word-display" id="wordDisplay">Tap "New Word" to start</div>
+      <div class="btn-row">
+        <button onclick="newWord()">🎲 New Word</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 2 -->
+  <div class="stage mint">
+    <div class="stage-head">
+      <h2 class="stage-title">2. Idea Spark: Mashup Cards</h2>
+      <span class="stage-time">10 min</span>
+    </div>
+    <p class="stage-sub">Removes the "I don't know what business to choose" freeze.</p>
+    <p>Each student taps <strong>Draw Cards</strong> once — an Industry + a Twist = one weird business idea. 2 min to think alone, then 1 min to pitch it informally to a partner. Rotate once.</p>
+    <div class="widget">
+      <div class="widget-label">Card Drawer</div>
+      <div class="mashup-row">
+        <div class="card-slot"><span class="tag">Industry</span><span id="industryCard">—</span></div>
+        <div class="plus">+</div>
+        <div class="card-slot"><span class="tag">Twist</span><span id="twistCard">—</span></div>
+      </div>
+      <div class="btn-row">
+        <button onclick="drawCards()">🎴 Draw Cards</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 3 -->
+  <div class="stage">
+    <div class="stage-head">
+      <h2 class="stage-title">3. Build Your Dream Business</h2>
+      <span class="stage-time">15 min</span>
+    </div>
+    <p class="stage-sub">Talking framework, not a writing task — 3-4 words max on paper, everything else spoken.</p>
+    <table>
+      <tr><th>Prompt</th><th>Example</th></tr>
+      <tr><td>What is it?</td><td>"A café where…"</td></tr>
+      <tr><td>Who is it for?</td><td>"People who…"</td></tr>
+      <tr><td>What makes it special?</td><td>"Unlike other cafés, we…"</td></tr>
+      <tr><td>Slogan</td><td>3-5 words, punchy</td></tr>
+    </table>
+    <p>Pair up (2+3). Partner must ask at least <strong>2 questions</strong> — "Why would people pay for that?" / "What's your biggest problem?"</p>
+  </div>
+
+  <!-- STAGE 4 -->
+  <div class="stage mint">
+    <div class="stage-head">
+      <h2 class="stage-title">4. Investor Roulette</h2>
+      <span class="stage-time">15 min</span>
+    </div>
+    <p class="stage-sub">The energy peak — pitch to the room.</p>
+    <p>Each student gets <strong>60 seconds</strong> to pitch standing up. The other 4 are investors — each must ask one question (rotate: price / competition / target customer / biggest risk). Applaud every pitch, no exceptions.</p>
+    <div class="widget">
+      <div class="widget-label">Pitch Timer</div>
+      <div class="timer-display" id="timerDisplay">1:00</div>
+      <div class="btn-row">
+        <button onclick="startTimer()">▶ Start</button>
+        <button class="secondary" onclick="resetTimer()">↺ Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 5 -->
+  <div class="stage gold">
+    <div class="stage-head">
+      <h2 class="stage-title">5. The Investment Round</h2>
+      <span class="stage-time">6 min</span>
+    </div>
+    <p class="stage-sub">Forces real listening and reactive speaking, not memorized lines.</p>
+    <p>Each student gets <strong>3 coins</strong>. They invest in <em>other people's</em> businesses — split or go all-in. Add each business below and tap + to invest a coin. Then ask 2-3 students: <em>"Why did you invest there?"</em></p>
+    <div class="widget">
+      <div class="widget-label">Live Investment Tracker</div>
+      <div class="invest-grid" id="investGrid"></div>
+      <div class="add-row">
+        <input type="text" id="newBizName" placeholder="Business name…">
+        <button onclick="addBusiness()">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 6 -->
+  <div class="stage">
+    <div class="stage-head">
+      <h2 class="stage-title">6. Closing Round: One Step Forward</h2>
+      <span class="stage-time">4 min</span>
+    </div>
+    <p class="stage-sub">Ends on a forward-looking, energetic note.</p>
+    <p>Lightning round — one sentence each: <strong>"You just got funded. What's the very first thing you do tomorrow?"</strong></p>
+  </div>
+
+  <div class="divider">◆ ◆ ◆</div>
+
+  <div class="stage" style="border-left-color:var(--ink-soft);">
+    <div class="stage-head">
+      <h2 class="stage-title" style="font-size:16px;">Materials Needed</h2>
+    </div>
+    <div class="materials">
+      <ul>
+        <li>This page (word generator, cards, timer & tracker built in — just tap through on the lesson screen)</li>
+        <li>Paper "coins" are optional — the live tracker above replaces them if you're on a screen</li>
+        <li>Optional: printed mashup cards if you prefer physical cards over the digital drawer</li>
+      </ul>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Start Your Business · Speaking Club Lesson · B1+/B2
+</footer>
+
+<script>
+  // Warm-up word generator
+  const words = ["banana","umbrella","grandma","wifi","socks","pillow","bicycle","coffee","mirror","spider","ladder","toothbrush","balloon","cactus","suitcase","flashlight","noodle","raincoat","skateboard","doorbell","pancake","glasses","backpack","candle","goldfish"];
+  function newWord(){
+    const w = words[Math.floor(Math.random()*words.length)];
+    document.getElementById('wordDisplay').textContent = w;
+  }
+
+  // Mashup cards
+  const industries = ["Food","Fashion","Travel","Pets","Tech","Fitness","Music","Beauty","Education","Home decor"];
+  const twists = ["Subscription-based","Only for introverts","Run by robots","Zero waste","For people over 80","Mobile-only, no shop","24-hour, always open","Pay-what-you-want","For left-handed people","No screens allowed"];
+  function drawCards(){
+    document.getElementById('industryCard').textContent = industries[Math.floor(Math.random()*industries.length)];
+    document.getElementById('twistCard').textContent = twists[Math.floor(Math.random()*twists.length)];
+  }
+
+  // Timer
+  let timerInterval = null;
+  let secondsLeft = 60;
+  function updateTimerDisplay(){
+    const m = Math.floor(secondsLeft/60);
+    const s = secondsLeft%60;
+    const el = document.getElementById('timerDisplay');
+    el.textContent = m + ":" + (s<10?"0":"") + s;
+    el.classList.toggle('low', secondsLeft <= 10);
+  }
+  function startTimer(){
+    if(timerInterval) return;
+    timerInterval = setInterval(()=>{
+      if(secondsLeft > 0){
+        secondsLeft--;
+        updateTimerDisplay();
+      } else {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }, 1000);
+  }
+  function resetTimer(){
+    clearInterval(timerInterval);
+    timerInterval = null;
+    secondsLeft = 60;
+    updateTimerDisplay();
+  }
+  updateTimerDisplay();
+
+  // Investment tracker
+  let businesses = [];
+  function renderInvestGrid(){
+    const grid = document.getElementById('investGrid');
+    grid.innerHTML = "";
+    businesses.forEach((b, i)=>{
+      const nameEl = document.createElement('div');
+      nameEl.textContent = b.name;
+      nameEl.style.fontWeight = "700";
+
+      const minus = document.createElement('button');
+      minus.className = "coin-btn minus";
+      minus.textContent = "–";
+      minus.onclick = ()=>{ if(b.coins>0){ b.coins--; renderInvestGrid(); } };
+
+      const countWrap = document.createElement('div');
+      countWrap.style.display = "flex";
+      countWrap.style.alignItems = "center";
+      countWrap.style.gap = "8px";
+      const count = document.createElement('span');
+      count.className = "coin-count";
+      count.textContent = "🪙 " + b.coins;
+      const plus = document.createElement('button');
+      plus.className = "coin-btn";
+      plus.textContent = "+";
+      plus.onclick = ()=>{ b.coins++; renderInvestGrid(); };
+
+      countWrap.appendChild(minus);
+      countWrap.appendChild(count);
+      countWrap.appendChild(plus);
+
+      grid.appendChild(nameEl);
+      grid.appendChild(countWrap);
+      grid.appendChild(document.createElement('div'));
+    });
+  }
+  function addBusiness(){
+    const input = document.getElementById('newBizName');
+    const name = input.value.trim();
+    if(!name) return;
+    businesses.push({name, coins:0});
+    input.value = "";
+    renderInvestGrid();
+  }
+  document.getElementById('newBizName').addEventListener('keypress', function(e){
+    if(e.key === 'Enter') addBusiness();
+  });
+</script>
+
+</body>
+</html>
