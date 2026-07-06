@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🦈 Shark Tank Showdown — Speaking Club Lesson 3</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --shark:   #0C1B2E;
+  --deep:    #071424;
+  --wave:    #142A45;
+  --bite:    #FF4D2E;
+  --cash:    #F5C518;
+  --mint:    #00C9A7;
+  --fog:     #7B92AD;
+  --ice:     #D6E4F0;
+  --glass:   rgba(255,255,255,0.05);
+  --border:  rgba(255,255,255,0.09);
+  --r:       12px;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--deep); color: var(--ice); min-height: 100vh; }
+
+/* HERO */
+.hero { background: var(--shark); position: relative; overflow: hidden; border-bottom: 1px solid var(--border); }
+.hero-inner { max-width: 980px; margin: 0 auto; padding: 3rem 1.5rem 2.5rem; display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+.hero-bg-text { position: absolute; right: -1rem; top: 50%; transform: translateY(-50%); font-family: 'Bebas Neue', sans-serif; font-size: clamp(7rem, 16vw, 13rem); color: rgba(255,255,255,0.025); line-height: 1; pointer-events: none; user-select: none; white-space: nowrap; }
+.hero-eyebrow { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,77,46,0.15); border: 1px solid rgba(255,77,46,0.35); border-radius: 99px; padding: 4px 14px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bite); margin-bottom: 1rem; }
+.hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 9vw, 6rem); line-height: 0.92; color: #fff; letter-spacing: 0.01em; }
+.hero h1 em { font-style: normal; color: var(--cash); display: block; }
+.hero-sub { margin-top: 1.1rem; font-size: 0.95rem; color: var(--fog); max-width: 460px; line-height: 1.65; }
+.hero-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+.hero-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; color: var(--cash); line-height: 1; }
+.hero-stat-label { font-size: 0.72rem; color: var(--fog); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+
+/* NAV */
+.nav-wrap { background: var(--shark); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.nav-inner { max-width: 980px; margin: 0 auto; padding: 0 1.5rem; display: flex; overflow-x: auto; scrollbar-width: none; }
+.nav-inner::-webkit-scrollbar { display: none; }
+.tab-btn { flex-shrink: 0; padding: 1rem 1.2rem; background: none; border: none; border-bottom: 3px solid transparent; color: var(--fog); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: color 0.15s, border-color 0.15s; white-space: nowrap; }
+.tab-btn:hover { color: var(--ice); }
+.tab-btn.active { color: #fff; border-bottom-color: var(--bite); }
+
+/* PANELS */
+.panel { display: none; }
+.panel.active { display: block; }
+.panel-inner { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+/* LABELS */
+.s-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bite); margin-bottom: 0.4rem; }
+.s-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: #fff; letter-spacing: 0.03em; margin-bottom: 1.5rem; }
+
+/* CARD BASE */
+.card { background: var(--wave); border: 1px solid var(--border); border-radius: var(--r); }
+.card-p { padding: 1.4rem 1.5rem; }
+
+/* DEAL CARDS */
+.deal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(168px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.deal-card { background: var(--wave); border: 1px solid var(--border); border-radius: var(--r); padding: 1.4rem 1rem; text-align: center; cursor: pointer; transition: border-color 0.15s, transform 0.12s; user-select: none; }
+.deal-card:hover:not(.revealed) { border-color: rgba(255,255,255,0.22); transform: translateY(-2px); }
+.deal-card.revealed { border-color: var(--mint); cursor: default; }
+.card-num { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fog); margin-bottom: 0.7rem; }
+.card-emoji { font-size: 2.4rem; margin-bottom: 0.6rem; }
+.card-title { font-weight: 700; font-size: 0.95rem; color: #fff; margin-bottom: 0.5rem; line-height: 1.3; }
+.card-tag { display: inline-block; padding: 2px 10px; border-radius: 99px; background: rgba(0,201,167,0.15); border: 1px solid rgba(0,201,167,0.3); font-size: 0.72rem; font-weight: 600; color: var(--mint); margin-bottom: 0.6rem; }
+.card-twist { background: rgba(245,197,24,0.08); border: 1px solid rgba(245,197,24,0.22); border-radius: 8px; padding: 0.5rem 0.7rem; font-size: 0.8rem; color: #d4a900; line-height: 1.45; text-align: left; }
+.card-twist::before { content: "⚡ "; }
+.card-flip-hint { font-size: 0.78rem; color: var(--fog); margin-top: 0.6rem; }
+
+/* TIMER */
+.timer-block { text-align: center; padding: 2.5rem 1.5rem; background: var(--wave); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 1.2rem; }
+.timer-display { font-family: 'Bebas Neue', sans-serif; font-size: clamp(5rem, 18vw, 9rem); letter-spacing: 0.04em; line-height: 1; color: #fff; transition: color 0.3s; }
+.timer-display.warn { color: var(--bite); }
+.timer-display.done { color: var(--mint); }
+.timer-sublabel { font-size: 0.82rem; color: var(--fog); margin-top: 0.5rem; letter-spacing: 0.05em; text-transform: uppercase; }
+.timer-btns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+
+/* BUTTONS */
+.btn { padding: 0.65rem 1.4rem; border-radius: 8px; border: 1px solid var(--border); background: var(--glass); color: var(--ice); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+.btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.22); }
+.btn-primary { background: var(--bite); border-color: var(--bite); color: #fff; }
+.btn-primary:hover { background: #e63a1c; border-color: #e63a1c; }
+.btn-cash { background: rgba(245,197,24,0.13); border-color: rgba(245,197,24,0.35); color: var(--cash); }
+.btn-cash:hover { background: rgba(245,197,24,0.22); }
+
+/* CHECKLIST */
+.checklist { display: grid; gap: 0.75rem; }
+.check-item { display: flex; gap: 1rem; align-items: flex-start; background: var(--wave); border: 1px solid var(--border); border-radius: var(--r); padding: 1rem 1.2rem; }
+.check-num { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,77,46,0.15); border: 1.5px solid rgba(255,77,46,0.35); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: var(--bite); flex-shrink: 0; margin-top: 1px; }
+.check-q { font-weight: 700; color: #fff; font-size: 0.95rem; margin-bottom: 0.25rem; }
+.check-hint { font-size: 0.83rem; color: var(--fog); font-style: italic; }
+
+/* VOTING */
+.pitcher-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
+.pitcher-btn { padding: 0.5rem 1rem; border-radius: 99px; border: 1.5px solid var(--border); background: var(--glass); color: var(--fog); font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+.pitcher-btn:hover { border-color: rgba(255,255,255,0.25); color: var(--ice); }
+.pitcher-btn.active { background: rgba(255,77,46,0.2); border-color: var(--bite); color: #fff; }
+.vote-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(158px,1fr)); gap: 0.9rem; margin-bottom: 1.3rem; }
+.voter-card { background: var(--wave); border: 1px solid var(--border); border-radius: var(--r); padding: 1.1rem; }
+.voter-name { font-weight: 700; color: #fff; font-size: 0.9rem; margin-bottom: 0.7rem; }
+.budget-bar-track { height: 5px; background: rgba(255,255,255,0.08); border-radius: 99px; margin-bottom: 0.35rem; overflow: hidden; }
+.budget-bar-fill { height: 100%; border-radius: 99px; background: var(--mint); transition: width 0.4s; }
+.budget-text { font-size: 0.75rem; color: var(--fog); margin-bottom: 0.8rem; }
+.bid-input { width: 100%; padding: 0.5rem 0.7rem; border-radius: 8px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: #fff; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; text-align: center; outline: none; transition: border-color 0.15s; }
+.bid-input:focus { border-color: var(--mint); }
+.bid-input::placeholder { color: var(--fog); }
+
+/* SCOREBOARD */
+.score-table { width: 100%; border-collapse: collapse; }
+.score-table th { text-align: left; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fog); padding: 0 0 0.8rem; border-bottom: 1px solid var(--border); }
+.score-table td { padding: 0.9rem 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; color: var(--ice); vertical-align: middle; }
+.score-table td:last-child { text-align: right; }
+.score-money { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.05em; color: var(--cash); }
+.badge { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 0.72rem; font-weight: 700; }
+.badge-funded { background: rgba(0,201,167,0.15); color: var(--mint); border: 1px solid rgba(0,201,167,0.3); }
+.badge-nodeal { background: rgba(255,77,46,0.12); color: #ff7a5a; border: 1px solid rgba(255,77,46,0.25); }
+.score-empty { text-align: center; padding: 3rem 1rem; color: var(--fog); font-size: 0.95rem; }
+
+/* PLAN */
+.plan-grid { display: grid; gap: 1rem; }
+.plan-step { background: var(--wave); border: 1px solid var(--border); border-radius: var(--r); padding: 1.4rem 1.5rem; display: grid; grid-template-columns: 52px 1fr; gap: 1.1rem; align-items: start; transition: border-color 0.15s; }
+.plan-step:hover { border-color: rgba(255,255,255,0.18); }
+.plan-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+.plan-step:nth-child(1) .plan-icon { background: rgba(255,77,46,0.15); }
+.plan-step:nth-child(2) .plan-icon { background: rgba(245,197,24,0.12); }
+.plan-step:nth-child(3) .plan-icon { background: rgba(0,201,167,0.12); }
+.plan-step:nth-child(4) .plan-icon { background: rgba(130,100,255,0.15); }
+.plan-header { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.4rem; }
+.plan-title { font-weight: 700; font-size: 1rem; color: #fff; }
+.plan-time { font-size: 0.73rem; color: var(--fog); font-weight: 500; }
+.plan-desc { font-size: 0.88rem; color: var(--fog); line-height: 1.65; margin-bottom: 0.85rem; }
+.plan-example { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.86rem; font-style: italic; color: var(--ice); line-height: 1.6; }
+.plan-example::before { content: "💬  "; font-style: normal; }
+
+/* TIPS */
+.tips-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: 0.75rem; margin-top: 1.5rem; }
+.tip-item { background: var(--glass); border: 1px solid var(--border); border-radius: var(--r); padding: 1rem; }
+.tip-icon { font-size: 1.3rem; margin-bottom: 0.4rem; }
+.tip-text { font-size: 0.83rem; color: var(--fog); line-height: 1.5; }
+.tip-text strong { color: var(--ice); }
+
+/* EXPRESSIONS */
+.expr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.expr-group { background: var(--wave); border: 1px solid var(--border); border-radius: var(--r); padding: 1.2rem 1.3rem; }
+.expr-group-title { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.8rem; }
+.expr-group:nth-child(1) .expr-group-title { color: var(--bite); }
+.expr-group:nth-child(2) .expr-group-title { color: var(--mint); }
+.expr-group:nth-child(3) .expr-group-title { color: var(--cash); }
+.expr-list { list-style: none; display: grid; gap: 0.5rem; }
+.expr-list li { font-size: 0.88rem; color: var(--ice); padding: 0.5rem 0.7rem; border-radius: 7px; background: rgba(255,255,255,0.04); font-style: italic; line-height: 1.45; }
+.expr-list li::before { content: '"'; color: var(--fog); }
+.expr-list li::after  { content: '"'; color: var(--fog); }
+
+/* NOTICE */
+.notice { background: rgba(245,197,24,0.08); border: 1px solid rgba(245,197,24,0.22); border-radius: var(--r); padding: 1rem 1.2rem; font-size: 0.87rem; color: #d4a900; line-height: 1.6; margin-bottom: 1.5rem; }
+.notice strong { color: var(--cash); }
+
+@media (max-width: 540px) {
+  .hero-stats { display: none; }
+  .plan-step { grid-template-columns: 1fr; }
+  .plan-icon { width: 38px; height: 38px; font-size: 1.1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-bg-text">SHARK TANK</div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">🦈 Speaking Club · Lesson 3 · B1/B2</div>
+      <h1>Shark Tank<em>Showdown</em></h1>
+      <p class="hero-sub">5 students. 5 secret businesses. One limited budget per shark. Pitch, invest, and find out who raised the most.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">5</div>
+        <div class="hero-stat-label">Students</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">$500K</div>
+        <div class="hero-stat-label">Per shark</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">~40</div>
+        <div class="hero-stat-label">Minutes</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav-wrap">
+  <div class="nav-inner">
+    <button class="tab-btn active"  onclick="showTab('deal',this)">🎴 Deal Cards</button>
+    <button class="tab-btn"         onclick="showTab('prep',this)">📝 Prep Timer</button>
+    <button class="tab-btn"         onclick="showTab('pitch',this)">🎤 Pitch Timer</button>
+    <button class="tab-btn"         onclick="showTab('vote',this)">💰 Invest</button>
+    <button class="tab-btn"         onclick="showTab('score',this)">🏆 Scoreboard</button>
+    <button class="tab-btn"         onclick="showTab('plan',this)">📋 Pitch Plan</button>
+    <button class="tab-btn"         onclick="showTab('phrases',this)">💬 Phrases</button>
+  </div>
+</nav>
+
+<!-- ═══════════ DEAL CARDS ═══════════ -->
+<div class="panel active" id="panel-deal">
+  <div class="panel-inner">
+    <p class="s-eyebrow">Step 1</p>
+    <h2 class="s-title">Deal the Business Cards</h2>
+    <div class="notice"><strong>Teacher:</strong> tap each card one at a time and show it only to that student — don't reveal to the group until all pitches are done.</div>
+    <div class="deal-grid" id="deal-grid"></div>
+    <button class="btn" onclick="resetCards()">↺ Reset all cards</button>
+  </div>
+</div>
+
+<!-- ═══════════ PREP TIMER ═══════════ -->
+<div class="panel" id="panel-prep">
+  <div class="panel-inner">
+    <p class="s-eyebrow">Step 2</p>
+    <h2 class="s-title">Preparation Time</h2>
+    <div class="timer-block">
+      <div class="timer-display" id="prep-display">3:00</div>
+      <div class="timer-sublabel">minutes to prepare your pitch notes</div>
+    </div>
+    <div class="timer-btns" style="margin-bottom:2rem;">
+      <button class="btn btn-primary" onclick="startTimer('prep')">▶ Start</button>
+      <button class="btn" onclick="pauseTimer('prep')">⏸ Pause</button>
+      <button class="btn" onclick="resetTimer('prep',180)">↺ Reset</button>
+    </div>
+    <div class="checklist">
+      <div class="check-item">
+        <div class="check-num">1</div>
+        <div>
+          <div class="check-q">What problem does your business solve?</div>
+          <div class="check-hint">Think about a real pain point in daily life</div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num">2</div>
+        <div>
+          <div class="check-q">Who is your target market?</div>
+          <div class="check-hint">Age, lifestyle, location — be specific</div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num">3</div>
+        <div>
+          <div class="check-q">How do you make money?</div>
+          <div class="check-hint">Subscription, one-off purchase, commission?</div>
+        </div>
+      </div>
+      <div class="check-item">
+        <div class="check-num">4</div>
+        <div>
+          <div class="check-q">Why will investors love it?</div>
+          <div class="check-hint">USP + market size + one impressive number</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ PITCH TIMER ═══════════ -->
+<div class="panel" id="panel-pitch">
+  <div class="panel-inner">
+    <p class="s-eyebrow">Step 3</p>
+    <h2 class="s-title">Pitch Timer</h2>
+    <div class="timer-block">
+      <div class="timer-display" id="pitch-display">2:00</div>
+      <div class="timer-sublabel">speak clearly — no reading from notes</div>
+    </div>
+    <div class="timer-btns" style="margin-bottom:1.5rem;">
+      <button class="btn btn-primary" onclick="startTimer('pitch')">▶ Start</button>
+      <button class="btn" onclick="pauseTimer('pitch')">⏸ Pause</button>
+      <button class="btn" onclick="resetTimer('pitch',120)">↺ 2 min</button>
+      <button class="btn" onclick="resetTimer('pitch',180)">↺ 3 min</button>
+    </div>
+    <div class="card card-p" style="margin-bottom:1rem;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+        <div>
+          <p class="s-eyebrow" style="margin-bottom:0.6rem;">🎤 Pitcher</p>
+          <ul style="list-style:none;display:grid;gap:0.45rem;">
+            <li style="font-size:0.87rem;color:var(--fog);">✓ &nbsp;Speak to all the sharks</li>
+            <li style="font-size:0.87rem;color:var(--fog);">✓ &nbsp;Don't read word for word</li>
+            <li style="font-size:0.87rem;color:var(--fog);">✓ &nbsp;Slow down for numbers</li>
+            <li style="font-size:0.87rem;color:var(--fog);">✓ &nbsp;End with a clear ask</li>
+          </ul>
+        </div>
+        <div>
+          <p class="s-eyebrow" style="color:var(--mint);margin-bottom:0.6rem;">🦈 Sharks</p>
+          <ul style="list-style:none;display:grid;gap:0.45rem;">
+            <li style="font-size:0.87rem;color:var(--fog);">✓ &nbsp;Listen — take mental notes</li>
+            <li style="font-size:0.87rem;color:var(--fog);">✓ &nbsp;Prepare ONE question</li>
+            <li style="font-size:0.87rem;color:var(--fog);">✓ &nbsp;Decide your bid secretly</li>
+            <li style="font-size:0.87rem;color:var(--fog);">✓ &nbsp;Remember your budget!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:0.82rem;color:var(--fog);text-align:center;">After pitch → each shark asks ONE question (60 sec each) → then move to Invest tab</p>
+  </div>
+</div>
+
+<!-- ═══════════ INVEST ═══════════ -->
+<div class="panel" id="panel-vote">
+  <div class="panel-inner">
+    <p class="s-eyebrow">Step 4</p>
+    <h2 class="s-title">Investor Voting</h2>
+    <div class="notice"><strong>Who is pitching right now?</strong> Select their name, then each shark enters a bid from their remaining budget.</div>
+    <div class="pitcher-row" id="pitcher-row"></div>
+    <div class="vote-grid" id="vote-grid"></div>
+    <button class="btn btn-cash" onclick="lockBids()" style="width:100%;padding:0.85rem;font-size:1rem;">🔒 Lock in bids → Scoreboard</button>
+    <p style="font-size:0.78rem;color:var(--fog);text-align:center;margin-top:0.6rem;">Budgets update automatically after locking</p>
+  </div>
+</div>
+
+<!-- ═══════════ SCOREBOARD ═══════════ -->
+<div class="panel" id="panel-score">
+  <div class="panel-inner">
+    <p class="s-eyebrow">Results</p>
+    <h2 class="s-title">Scoreboard</h2>
+    <div id="score-empty" class="score-empty">No bids locked yet — go to the <strong>Invest</strong> tab first.</div>
+    <table class="score-table" id="score-table" style="display:none;">
+      <thead>
+        <tr>
+          <th></th><th>Student</th><th>Business</th><th>Status</th><th>Raised</th>
+        </tr>
+      </thead>
+      <tbody id="score-body"></tbody>
+    </table>
+    <div style="margin-top:1.5rem;text-align:center;">
+      <button class="btn" onclick="fullReset()">↺ New game</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ PITCH PLAN ═══════════ -->
+<div class="panel" id="panel-plan">
+  <div class="panel-inner">
+    <p class="s-eyebrow">Before you pitch</p>
+    <h2 class="s-title">The 4-Part Pitch Plan</h2>
+
+    <div class="plan-grid">
+      <div class="plan-step">
+        <div class="plan-icon">🎣</div>
+        <div>
+          <div class="plan-header">
+            <span class="plan-title">The Hook</span>
+            <span class="plan-time">~15 seconds</span>
+          </div>
+          <p class="plan-desc">Open with a question, a surprising fact, or an "imagine if…" moment. Make the sharks lean in before you explain anything. Don't introduce the business yet — just create curiosity.</p>
+          <div class="plan-example">Have you ever noticed that…? / Imagine a world where… / Did you know that 1 in 3 people…?</div>
+        </div>
+      </div>
+
+      <div class="plan-step">
+        <div class="plan-icon">🔥</div>
+        <div>
+          <div class="plan-header">
+            <span class="plan-title">The Problem</span>
+            <span class="plan-time">~20 seconds</span>
+          </div>
+          <p class="plan-desc">Name the pain point clearly and make the sharks feel it. Say who has this problem, how often it happens, and why it matters. Don't just describe it — make it real and relatable.</p>
+          <div class="plan-example">The problem is that many people… / Currently, there is no easy way to… / Millions of people still have to…</div>
+        </div>
+      </div>
+
+      <div class="plan-step">
+        <div class="plan-icon">💡</div>
+        <div>
+          <div class="plan-header">
+            <span class="plan-title">The Solution</span>
+            <span class="plan-time">~30 seconds</span>
+          </div>
+          <p class="plan-desc">Introduce your product or service. One clear sentence on what it does, then one sentence on why it's better than what already exists. If you need more than two sentences, it's too complicated.</p>
+          <div class="plan-example">That's why we created… / Our product allows you to… / Unlike our competitors, we…</div>
+        </div>
+      </div>
+
+      <div class="plan-step">
+        <div class="plan-icon">📊</div>
+        <div>
+          <div class="plan-header">
+            <span class="plan-title">The Business</span>
+            <span class="plan-time">~30 seconds</span>
+          </div>
+          <p class="plan-desc">Cover three things quickly: who your customers are, how you make money, and one number that shows market potential. Be specific and confident — investors need to see a path to profit.</p>
+          <div class="plan-example">Our target market is… / We make money by… / There are X million potential customers, which means…</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tips-strip">
+      <div class="tip-item">
+        <div class="tip-icon">👁</div>
+        <div class="tip-text"><strong>Eye contact</strong> with all the sharks, not just one person</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-icon">🐢</div>
+        <div class="tip-text"><strong>Slow down for numbers</strong> — sharks need a moment to process them</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-icon">📄</div>
+        <div class="tip-text"><strong>Don't read from notes</strong> — glance down, then look up and speak</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-icon">🤷</div>
+        <div class="tip-text">If stuck: <strong>"That's a great point — our plan is to…"</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ PHRASES ═══════════ -->
+<div class="panel" id="panel-phrases">
+  <div class="panel-inner">
+    <p class="s-eyebrow">Language support</p>
+    <h2 class="s-title">Useful Expressions</h2>
+
+    <div class="expr-grid">
+      <div class="expr-group">
+        <div class="expr-group-title">Pitching your idea</div>
+        <ul class="expr-list">
+          <li>Have you ever noticed that…?</li>
+          <li>The problem we're solving is…</li>
+          <li>That's why we created / developed…</li>
+          <li>Unlike our competitors, we…</li>
+          <li>Our target market is… because…</li>
+          <li>We make money by… / We charge…</li>
+          <li>We expect to break even within…</li>
+          <li>What makes us unique is…</li>
+        </ul>
+      </div>
+
+      <div class="expr-group">
+        <div class="expr-group-title">Sharks — asking questions</div>
+        <ul class="expr-list">
+          <li>What is your USP?</li>
+          <li>Who are your main competitors?</li>
+          <li>How will you scale?</li>
+          <li>What's your biggest risk?</li>
+          <li>Could you explain that in more detail?</li>
+          <li>How soon will you break even?</li>
+          <li>What stops a bigger company from copying this?</li>
+        </ul>
+      </div>
+
+      <div class="expr-group">
+        <div class="expr-group-title">Sharks — reacting</div>
+        <ul class="expr-list">
+          <li>I'm definitely in for…</li>
+          <li>I'm out — the risk is too high.</li>
+          <li>I'd invest, but only if you lower…</li>
+          <li>I'm not convinced by the numbers.</li>
+          <li>I can see real potential here.</li>
+          <li>I need more evidence before committing.</li>
+          <li>That's a lot to ask. Could you justify…?</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card card-p">
+      <p style="font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--cash);margin-bottom:0.8rem;">Answering difficult questions</p>
+      <div style="display:grid;gap:0.55rem;">
+        <div style="font-size:0.87rem;color:var(--fog);">If you don't know → <em style="color:var(--ice);">"That's a great point. Our current plan is to…"</em></div>
+        <div style="font-size:0.87rem;color:var(--fog);">If you disagree → <em style="color:var(--ice);">"I understand your concern, but I think…"</em></div>
+        <div style="font-size:0.87rem;color:var(--fog);">If you need time → <em style="color:var(--ice);">"Could I come back to that? First, I'd like to mention…"</em></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const STUDENTS = ["Student 1","Student 2","Student 3","Student 4","Student 5"];
+const BUDGET = 500;
+const CARDS = [
+  { emoji:"🧠", title:"AI study buddy",             tag:"EdTech",           twist:"Must be completely free for students" },
+  { emoji:"🛵", title:"Midnight snack delivery",     tag:"Food & Logistics", twist:"Only operates 11 pm – 4 am" },
+  { emoji:"🧘", title:"Stress detox spa for teens",  tag:"Wellness",         twist:"No screens allowed inside" },
+  { emoji:"♻️", title:"Second-hand clothes sub box", tag:"Sustainability",   twist:"Every item must be under €5" },
+  { emoji:"🐾", title:"Pet hotel with live cams",    tag:"Pet care",         twist:"Pets must have social media" },
+];
+
+let revealed = Array(5).fill(false);
+let budgets  = Array(5).fill(BUDGET);
+let scores   = {};
+let pitcher  = 0;
+let timers   = { prep:null, pitch:null };
+let secs     = { prep:180,  pitch:120 };
+
+// ── TABS
+function showTab(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  if (btn && btn.classList) btn.classList.add('active');
+  if (name === 'vote')  buildVoting();
+  if (name === 'score') buildScoreboard();
+}
+
+// ── DEAL CARDS
+function buildCards() {
+  const grid = document.getElementById('deal-grid');
+  grid.innerHTML = '';
+  CARDS.forEach((c, i) => {
+    const div = document.createElement('div');
+    div.className = 'deal-card' + (revealed[i] ? ' revealed' : '');
+    if (!revealed[i]) {
+      div.innerHTML = `<div class="card-num">Card ${i+1}</div><div class="card-emoji">🎴</div><div class="card-flip-hint">Tap to reveal</div>`;
+      div.onclick = () => { revealed[i] = true; buildCards(); };
+    } else {
+      div.innerHTML = `<div class="card-num">Card ${i+1} · ${STUDENTS[i]}</div><div class="card-emoji">${c.emoji}</div><div class="card-title">${c.title}</div><span class="card-tag">${c.tag}</span><div class="card-twist">${c.twist}</div>`;
+    }
+    grid.appendChild(div);
+  });
+}
+function resetCards() { revealed = Array(5).fill(false); buildCards(); }
+
+// ── TIMERS
+function fmt(s) { return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); }
+function startTimer(type) {
+  if (timers[type]) return;
+  timers[type] = setInterval(() => {
+    secs[type]--;
+    const el = document.getElementById(type + '-display');
+    if (!el) return;
+    el.textContent = fmt(secs[type]);
+    el.className = 'timer-display' + (secs[type] <= 0 ? ' done' : secs[type] <= 30 ? ' warn' : '');
+    if (secs[type] <= 0) { clearInterval(timers[type]); timers[type] = null; }
+  }, 1000);
+}
+function pauseTimer(type) { clearInterval(timers[type]); timers[type] = null; }
+function resetTimer(type, val) {
+  pauseTimer(type);
+  secs[type] = val;
+  const el = document.getElementById(type + '-display');
+  if (el) { el.textContent = fmt(val); el.className = 'timer-display'; }
+}
+
+// ── VOTING
+function buildVoting() {
+  const pr = document.getElementById('pitcher-row');
+  pr.innerHTML = '';
+  STUDENTS.forEach((s,i) => {
+    const b = document.createElement('button');
+    b.className = 'pitcher-btn' + (i === pitcher ? ' active' : '');
+    b.textContent = s;
+    b.onclick = () => { pitcher = i; buildVoting(); };
+    pr.appendChild(b);
+  });
+
+  const vg = document.getElementById('vote-grid');
+  vg.innerHTML = '';
+  STUDENTS.forEach((s,i) => {
+    if (i === pitcher) return;
+    const pct = Math.round((budgets[i] / BUDGET) * 100);
+    const div = document.createElement('div');
+    div.className = 'voter-card';
+    div.innerHTML = `
+      <div class="voter-name">🦈 ${s}</div>
+      <div class="budget-bar-track"><div class="budget-bar-fill" style="width:${pct}%"></div></div>
+      <div class="budget-text">$${budgets[i]}K remaining</div>
+      <input class="bid-input" id="bid-${i}" type="number" min="0" max="${budgets[i]}" step="10" placeholder="Bid $K…">`;
+    vg.appendChild(div);
+  });
+}
+
+function lockBids() {
+  let total = 0;
+  STUDENTS.forEach((s,i) => {
+    if (i === pitcher) return;
+    const inp = document.getElementById('bid-' + i);
+    if (!inp) return;
+    const val = Math.max(0, Math.min(budgets[i], parseInt(inp.value) || 0));
+    budgets[i] -= val;
+    total += val;
+  });
+  const key = STUDENTS[pitcher];
+  if (!scores[key]) scores[key] = { total: 0, card: CARDS[pitcher] };
+  scores[key].total += total;
+
+  // auto-advance to scoreboard
+  showTab('score', null);
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'score'")) b.classList.add('active');
+    else b.classList.remove('active');
+  });
+}
+
+// ── SCOREBOARD
+function buildScoreboard() {
+  const empty = document.getElementById('score-empty');
+  const table = document.getElementById('score-table');
+  const body  = document.getElementById('score-body');
+  const entries = Object.entries(scores);
+  if (!entries.length) { empty.style.display='block'; table.style.display='none'; return; }
+  empty.style.display = 'none';
+  table.style.display = 'table';
+  const sorted = entries.sort((a,b) => b[1].total - a[1].total);
+  const ranks = ['🥇','🥈','🥉','4th','5th'];
+  body.innerHTML = sorted.map(([name,data],idx) => `
+    <tr>
+      <td style="font-size:1.1rem;">${ranks[idx]||''}</td>
+      <td><strong>${name}</strong></td>
+      <td style="color:var(--fog);font-size:0.88rem;">${data.card.emoji} ${data.card.title}</td>
+      <td><span class="badge ${data.total>0?'badge-funded':'badge-nodeal'}">${data.total>0?'Funded!':'No deal'}</span></td>
+      <td><span class="score-money">$${data.total}K</span></td>
+    </tr>`).join('');
+}
+
+function fullReset() {
+  revealed = Array(5).fill(false);
+  budgets  = Array(5).fill(BUDGET);
+  scores   = {};
+  pitcher  = 0;
+  resetTimer('prep', 180);
+  resetTimer('pitch', 120);
+  buildCards();
+  buildVoting();
+  showTab('deal', document.querySelector('.tab-btn'));
+  document.querySelector('.tab-btn').classList.add('active');
+}
+
+// ── INIT
+buildCards();
+buildVoting();
+</script>
+</body>
+</html>
