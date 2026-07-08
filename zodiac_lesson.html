@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Speaking Club — Zodiac Signs (B1+)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink-bg: #fff0f7;
+    --pink-card: #ffffff;
+    --hot-pink: #ff2e88;
+    --deep-magenta: #b3186b;
+    --soft-pink: #ffd6ea;
+    --lilac: #f7c6e0;
+    --gold: #ffb703;
+    --plum-text: #4a0e2e;
+    --green: #2fbf71;
+    --shadow: 0 10px 24px rgba(179, 24, 107, 0.14);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Nunito', sans-serif;
+    background: radial-gradient(circle at 10% 0%, #ffe3f3 0%, var(--pink-bg) 55%);
+    color:var(--plum-text);
+    padding-bottom:60px;
+  }
+  h1,h2,h3{ font-family:'Baloo 2', cursive; margin:0; }
+  .hero{
+    background: linear-gradient(135deg, var(--hot-pink), #ff6fb0 60%, var(--gold));
+    padding:46px 20px 54px;
+    text-align:center;
+    color:white;
+    border-radius:0 0 40px 40px;
+    box-shadow: var(--shadow);
+  }
+  .hero h1{ font-size:2.4rem; letter-spacing:0.5px; text-shadow: 0 3px 0 rgba(0,0,0,0.08); }
+  .hero p{ margin-top:10px; font-size:1.05rem; font-weight:700; opacity:0.95; }
+  .hero .badge{
+    display:inline-block; margin-top:16px; background:rgba(255,255,255,0.25);
+    padding:6px 18px; border-radius:999px; font-weight:800; letter-spacing:1px; font-size:0.8rem;
+  }
+
+  .container{ max-width:980px; margin:0 auto; padding:0 20px; }
+
+  .stage{
+    background:var(--pink-card);
+    border-radius:28px;
+    box-shadow:var(--shadow);
+    margin-top:-30px;
+    padding:30px 30px 34px;
+    position:relative;
+    border: 3px solid var(--soft-pink);
+  }
+  .stage + .stage{ margin-top:34px; }
+
+  .stage-eyebrow{
+    display:flex; align-items:center; gap:12px; margin-bottom:6px;
+  }
+  .stage-num{
+    background:var(--hot-pink); color:white; width:40px; height:40px; border-radius:14px;
+    display:flex; align-items:center; justify-content:center; font-family:'Baloo 2';
+    font-size:1.1rem; font-weight:800; flex-shrink:0; transform:rotate(-4deg);
+  }
+  .stage-time{
+    margin-left:auto; background:var(--soft-pink); color:var(--deep-magenta); font-weight:800;
+    font-size:0.8rem; padding:5px 14px; border-radius:999px;
+  }
+  .stage h2{ font-size:1.5rem; color:var(--deep-magenta); }
+  .stage .sub{ color:#8a3c68; font-weight:700; margin:4px 0 20px; font-size:0.95rem; }
+
+  .pill-row{ display:flex; flex-wrap:wrap; gap:10px; margin:10px 0; }
+  .pill{
+    background:var(--soft-pink); color:var(--deep-magenta); font-weight:800; padding:8px 16px;
+    border-radius:999px; font-size:0.9rem;
+  }
+
+  /* WARM UP */
+  .warmup-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:6px; }
+  .warmup-card{
+    border-radius:20px; padding:18px 20px; font-weight:700;
+  }
+  .warmup-card.believer{ background:#ffe0ef; border:2px dashed var(--hot-pink); }
+  .warmup-card.skeptic{ background:#fff3d6; border:2px dashed var(--gold); }
+  .warmup-card h3{ font-size:1.05rem; margin-bottom:8px; }
+  .warmup-card ul{ margin:0; padding-left:18px; font-weight:600; color:#5c2545; line-height:1.55; }
+
+  .vote-bar{ display:flex; gap:14px; margin-top:18px; align-items:center; flex-wrap:wrap; }
+  .vote-btn{
+    flex:1; min-width:150px; border:none; cursor:pointer; padding:14px 10px; border-radius:16px;
+    font-family:'Baloo 2'; font-size:1rem; font-weight:700; color:white; transition:transform .15s ease;
+  }
+  .vote-btn:hover{ transform:translateY(-2px); }
+  .vote-btn.believer-btn{ background:var(--hot-pink); }
+  .vote-btn.skeptic-btn{ background:#ff9d3d; }
+  .vote-count{ font-family:'Baloo 2'; font-size:1.3rem; }
+  .vote-note{ font-size:0.85rem; color:#8a3c68; margin-top:10px; font-weight:700; }
+
+  /* ZODIAC GRID */
+  .zodiac-grid{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:14px; margin-top:14px;
+  }
+  .zodiac-card{
+    background:var(--pink-bg); border:2px solid var(--soft-pink); border-radius:18px; padding:14px;
+    text-align:center;
+  }
+  .zodiac-card .sym{ font-size:1.8rem; }
+  .zodiac-card .name{ font-family:'Baloo 2'; font-weight:700; color:var(--deep-magenta); margin:4px 0; }
+  .zodiac-card .dates{ font-size:0.72rem; color:#a15682; font-weight:700; }
+  .zodiac-card .trait{ font-size:0.82rem; color:#5c2545; font-weight:700; margin-top:6px; }
+
+  /* VOCAB TASK */
+  .vocab-instructions{
+    background:#fff3d6; border-left:6px solid var(--gold); padding:14px 18px; border-radius:12px;
+    font-weight:700; color:#7a5300; margin-bottom:18px;
+  }
+  .match-wrap{ display:grid; grid-template-columns:1fr 1fr; gap:26px; }
+  .match-col h3{ font-size:1rem; color:var(--deep-magenta); margin-bottom:10px; }
+  .match-item{
+    background:var(--pink-bg); border:2px solid var(--soft-pink); border-radius:14px; padding:12px 14px;
+    margin-bottom:10px; cursor:pointer; font-weight:700; transition:all .15s ease; user-select:none;
+  }
+  .match-item:hover{ border-color:var(--hot-pink); }
+  .match-item.selected{ background:var(--soft-pink); border-color:var(--hot-pink); }
+  .match-item.correct{ background:#d8f5e3; border-color:var(--green); color:#1c7a45; cursor:default; }
+  .match-item.wrong-flash{ background:#ffd6d6; border-color:#e04b4b; }
+  #matchProgress{ margin-top:16px; font-family:'Baloo 2'; color:var(--deep-magenta); font-size:1.05rem; }
+  #matchReset{
+    margin-top:12px; background:var(--hot-pink); color:white; border:none; padding:10px 20px;
+    border-radius:12px; font-weight:800; cursor:pointer; font-family:'Nunito'; display:none;
+  }
+
+  /* GUESS THE SIGN */
+  .celeb-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:22px; margin-top:10px; }
+  .celeb-card{
+    background:var(--pink-bg); border:2px solid var(--soft-pink); border-radius:20px; padding:18px; text-align:center;
+  }
+  .celeb-avatar{
+    width:76px; height:76px; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center;
+    justify-content:center; font-size:2rem; background:linear-gradient(135deg,var(--hot-pink),var(--gold)); color:white;
+    font-family:'Baloo 2';
+  }
+  .celeb-name{ font-family:'Baloo 2'; font-weight:700; color:var(--deep-magenta); margin-bottom:12px; }
+  .sign-btns{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:10px; }
+  .sign-chip{
+    background:white; border:2px solid var(--soft-pink); padding:6px 12px; border-radius:999px;
+    font-weight:700; font-size:0.8rem; cursor:pointer; color:var(--deep-magenta); position:relative;
+  }
+  .sign-chip .n{ margin-left:5px; font-size:0.72rem; background:var(--soft-pink); border-radius:999px; padding:1px 6px; }
+  .sign-chip.correct-reveal{ background:var(--green); border-color:var(--green); color:white; }
+  .sign-chip.wrong-reveal{ opacity:0.45; }
+  .reveal-btn{
+    background:var(--deep-magenta); color:white; border:none; padding:8px 18px; border-radius:12px;
+    font-weight:800; cursor:pointer; font-size:0.85rem;
+  }
+  .fact{ margin-top:10px; font-size:0.82rem; font-weight:700; color:#5c2545; display:none; }
+
+  .wrap-up{
+    background:linear-gradient(135deg, var(--deep-magenta), var(--hot-pink));
+    color:white; border-radius:24px; padding:26px 30px; margin-top:34px; box-shadow:var(--shadow);
+  }
+  .wrap-up h2{ font-size:1.4rem; }
+  .wrap-up ol{ margin-top:12px; padding-left:20px; font-weight:700; line-height:1.7; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">SPEAKING CLUB · LESSON PLAN · LEVEL B1+</div>
+  <h1>✨ Zodiac Signs & Guessing Game ✨</h1>
+  <p>Learn the signs, watch real people guess them, then test your own intuition</p>
+</div>
+
+<div class="container">
+
+  <!-- STAGE 1: WARM UP -->
+  <div class="stage">
+    <div class="stage-eyebrow">
+      <div class="stage-num">1</div>
+      <h2>Warm-Up: Believer or Skeptic?</h2>
+      <div class="stage-time">5–7 min</div>
+    </div>
+    <div class="sub">Goal: find out who in the group believes in horoscopes and who doesn't — get everyone talking before the topic starts.</div>
+
+    <div class="vote-bar">
+      <button class="vote-btn believer-btn" onclick="vote('believer')">🔮 I believe in horoscopes <span class="vote-count" id="believerCount">0</span></button>
+      <button class="vote-btn skeptic-btn" onclick="vote('skeptic')">🙄 I'm a total skeptic <span class="vote-count" id="skepticCount">0</span></button>
+    </div>
+    <div class="vote-note">Everyone clicks their button once. Look at the score together, then discuss in pairs:</div>
+
+    <div class="warmup-grid" style="margin-top:16px;">
+      <div class="warmup-card believer">
+        <h3>🔮 If you believe...</h3>
+        <ul>
+          <li>Do you know your Sun, Moon, and Rising sign?</li>
+          <li>Has a horoscope ever been surprisingly accurate?</li>
+          <li>Do you check your horoscope before big decisions?</li>
+        </ul>
+      </div>
+      <div class="warmup-card skeptic">
+        <h3>🙄 If you're skeptical...</h3>
+        <ul>
+          <li>Why do you think astrology is so popular?</li>
+          <li>Have you ever secretly checked your horoscope anyway?</li>
+          <li>What convinces people something is "so true"?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 2: ZODIAC 101 -->
+  <div class="stage">
+    <div class="stage-eyebrow">
+      <div class="stage-num">2</div>
+      <h2>Zodiac Signs 101</h2>
+      <div class="stage-time">8–10 min</div>
+    </div>
+    <div class="sub">Goal: learn (or review) the 12 signs and one key trait for each, so the guessing game later makes sense.</div>
+
+    <div class="zodiac-grid">
+      <div class="zodiac-card"><div class="sym">♈</div><div class="name">Aries</div><div class="dates">Mar 21 – Apr 19</div><div class="trait">bold, competitive</div></div>
+      <div class="zodiac-card"><div class="sym">♉</div><div class="name">Taurus</div><div class="dates">Apr 20 – May 20</div><div class="trait">stubborn, loyal</div></div>
+      <div class="zodiac-card"><div class="sym">♊</div><div class="name">Gemini</div><div class="dates">May 21 – Jun 20</div><div class="trait">contrary, curious</div></div>
+      <div class="zodiac-card"><div class="sym">♋</div><div class="name">Cancer</div><div class="dates">Jun 21 – Jul 22</div><div class="trait">emotional, caring</div></div>
+      <div class="zodiac-card"><div class="sym">♌</div><div class="name">Leo</div><div class="dates">Jul 23 – Aug 22</div><div class="trait">confident, proud</div></div>
+      <div class="zodiac-card"><div class="sym">♍</div><div class="name">Virgo</div><div class="dates">Aug 23 – Sep 22</div><div class="trait">detailed, hardworking</div></div>
+      <div class="zodiac-card"><div class="sym">♎</div><div class="name">Libra</div><div class="dates">Sep 23 – Oct 22</div><div class="trait">balanced, social</div></div>
+      <div class="zodiac-card"><div class="sym">♏</div><div class="name">Scorpio</div><div class="dates">Oct 23 – Nov 21</div><div class="trait">intense, mysterious</div></div>
+      <div class="zodiac-card"><div class="sym">♐</div><div class="name">Sagittarius</div><div class="dates">Nov 22 – Dec 21</div><div class="trait">independent, honest</div></div>
+      <div class="zodiac-card"><div class="sym">♑</div><div class="name">Capricorn</div><div class="dates">Dec 22 – Jan 19</div><div class="trait">hardworking, picky</div></div>
+      <div class="zodiac-card"><div class="sym">♒</div><div class="name">Aquarius</div><div class="dates">Jan 20 – Feb 18</div><div class="trait">eccentric, generic-hater 😉</div></div>
+      <div class="zodiac-card"><div class="sym">♓</div><div class="name">Pisces</div><div class="dates">Feb 19 – Mar 20</div><div class="trait">emotional, dreamy</div></div>
+    </div>
+  </div>
+
+  <!-- STAGE 3: VIDEO + VOCAB -->
+  <div class="stage">
+    <div class="stage-eyebrow">
+      <div class="stage-num">3</div>
+      <h2>Watch: "Guess My Zodiac Sign"</h2>
+      <div class="stage-time">12–15 min</div>
+    </div>
+    <div class="sub">Goal: watch the video, then lock in 10 key adjectives from it.</div>
+
+    <div class="vocab-instructions">
+      📺 Watch the clip once for general understanding. Then read the 10 words below before watching again — try to catch each word in context!
+    </div>
+
+    <div class="pill-row">
+      <div class="pill">generic</div>
+      <div class="pill">contrary</div>
+      <div class="pill">eccentric</div>
+      <div class="pill">exhausted</div>
+      <div class="pill">picky</div>
+      <div class="pill">balanced</div>
+      <div class="pill">hardworking</div>
+      <div class="pill">emotional</div>
+      <div class="pill">independent</div>
+      <div class="pill">detailed</div>
+    </div>
+
+    <h3 style="margin-top:24px; color:var(--deep-magenta); font-size:1.05rem;">🧠 Memory Task: Match the word to its meaning</h3>
+    <p style="font-weight:700; color:#8a3c68; margin-top:-6px;">Click a word on the left, then click its definition on the right. Correct pairs turn green.</p>
+
+    <div class="match-wrap">
+      <div class="match-col">
+        <h3>WORDS</h3>
+        <div id="wordsCol"></div>
+      </div>
+      <div class="match-col">
+        <h3>DEFINITIONS</h3>
+        <div id="defsCol"></div>
+      </div>
+    </div>
+    <div id="matchProgress">Matched: 0 / 10</div>
+    <button id="matchReset" onclick="resetMatch()">Reset activity</button>
+  </div>
+
+  <!-- STAGE 4: GUESS THE SIGN -->
+  <div class="stage">
+    <div class="stage-eyebrow">
+      <div class="stage-num">4</div>
+      <h2>Now YOU Guess the Zodiac Sign!</h2>
+      <div class="stage-time">15–18 min</div>
+    </div>
+    <div class="sub">Goal: as a group, vote on each person's zodiac sign, then reveal the real answer.</div>
+    <div class="vocab-instructions">🗳️ For each person, discuss and click the sign you think is correct — everyone can vote, clicks add up. Then click "Reveal answer!"</div>
+
+    <div class="celeb-grid" id="celebGrid"></div>
+  </div>
+
+  <div class="wrap-up">
+    <h2>💬 Wrap-Up Discussion</h2>
+    <ol>
+      <li>Did anyone's real sign surprise you? Why / why not?</li>
+      <li>Which of today's 10 words describes YOU best? Give an example.</li>
+      <li>Do you think knowing someone's sign changes how you see them?</li>
+    </ol>
+  </div>
+
+</div>
+
+<script>
+  // ---- Warm-up voting ----
+  let believerCount = 0, skepticCount = 0;
+  function vote(type){
+    if(type === 'believer'){ believerCount++; document.getElementById('believerCount').textContent = believerCount; }
+    else { skepticCount++; document.getElementById('skepticCount').textContent = skepticCount; }
+  }
+
+  // ---- Matching activity ----
+  const pairs = [
+    {word:"generic", def:"not specific — general and ordinary"},
+    {word:"contrary", def:"liking to disagree or do the opposite"},
+    {word:"eccentric", def:"unusual or a little strange in behavior"},
+    {word:"exhausted", def:"extremely tired"},
+    {word:"picky", def:"very careful and selective about choices"},
+    {word:"balanced", def:"calm and stable, not easily upset"},
+    {word:"hardworking", def:"working with a lot of effort and energy"},
+    {word:"emotional", def:"showing feelings easily"},
+    {word:"independent", def:"not needing others; able to do things alone"},
+    {word:"detailed", def:"paying close attention to small things; thorough"}
+  ];
+
+  let shuffledWords = [...pairs].sort(()=>Math.random()-0.5);
+  let shuffledDefs = [...pairs].sort(()=>Math.random()-0.5);
+  let selectedWord = null, selectedDef = null, matchedCount = 0;
+
+  function renderMatch(){
+    const wordsCol = document.getElementById('wordsCol');
+    const defsCol = document.getElementById('defsCol');
+    wordsCol.innerHTML = '';
+    defsCol.innerHTML = '';
+    shuffledWords.forEach(p=>{
+      const el = document.createElement('div');
+      el.className = 'match-item';
+      el.dataset.word = p.word;
+      el.textContent = p.word;
+      el.onclick = () => selectWord(el, p.word);
+      wordsCol.appendChild(el);
+    });
+    shuffledDefs.forEach(p=>{
+      const el = document.createElement('div');
+      el.className = 'match-item';
+      el.dataset.def = p.def;
+      el.textContent = p.def;
+      el.onclick = () => selectDef(el, p.def);
+      defsCol.appendChild(el);
+    });
+  }
+
+  function selectWord(el, word){
+    if(el.classList.contains('correct')) return;
+    document.querySelectorAll('#wordsCol .match-item').forEach(i=>i.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedWord = {el, word};
+    tryMatch();
+  }
+  function selectDef(el, def){
+    if(el.classList.contains('correct')) return;
+    document.querySelectorAll('#defsCol .match-item').forEach(i=>i.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedDef = {el, def};
+    tryMatch();
+  }
+  function tryMatch(){
+    if(!selectedWord || !selectedDef) return;
+    const pair = pairs.find(p=>p.word === selectedWord.word);
+    if(pair && pair.def === selectedDef.def){
+      selectedWord.el.classList.remove('selected');
+      selectedDef.el.classList.remove('selected');
+      selectedWord.el.classList.add('correct');
+      selectedDef.el.classList.add('correct');
+      matchedCount++;
+      document.getElementById('matchProgress').textContent = `Matched: ${matchedCount} / 10`;
+      if(matchedCount === 10){
+        document.getElementById('matchProgress').textContent = '🎉 All matched! Great job!';
+        document.getElementById('matchReset').style.display = 'inline-block';
+      }
+    } else {
+      selectedWord.el.classList.add('wrong-flash');
+      selectedDef.el.classList.add('wrong-flash');
+      setTimeout(()=>{
+        selectedWord.el.classList.remove('selected','wrong-flash');
+        selectedDef.el.classList.remove('selected','wrong-flash');
+      }, 500);
+    }
+    selectedWord = null; selectedDef = null;
+  }
+  function resetMatch(){
+    matchedCount = 0;
+    shuffledWords = [...pairs].sort(()=>Math.random()-0.5);
+    shuffledDefs = [...pairs].sort(()=>Math.random()-0.5);
+    document.getElementById('matchProgress').textContent = 'Matched: 0 / 10';
+    document.getElementById('matchReset').style.display = 'none';
+    renderMatch();
+  }
+  renderMatch();
+
+  // ---- Guess the sign game ----
+  const signs = ["Pisces","Cancer","Leo","Virgo","Aries","Gemini"];
+  const celebs = [
+    {name:"Lady Gaga", emoji:"🎤", answer:"Aries", fact:"Born March 28 — a fiery Aries known for bold reinvention."},
+    {name:"Kanye West", emoji:"🎧", answer:"Gemini", fact:"Born June 8 — a Gemini, famous for changing his mind often."},
+    {name:"Jennifer Lopez", emoji:"💃", answer:"Leo", fact:"Born July 24 — a confident, spotlight-loving Leo."},
+    {name:"Zendaya", emoji:"🎬", answer:"Virgo", fact:"Born September 1 — a detailed, hardworking Virgo."},
+    {name:"Tom Hanks", emoji:"🎥", answer:"Cancer", fact:"Born July 9 — a warm, emotional Cancer."},
+    {name:"Justin Bieber", emoji:"🎵", answer:"Pisces", fact:"Born March 1 — a dreamy, emotional Pisces."}
+  ];
+
+  const celebGrid = document.getElementById('celebGrid');
+  celebs.forEach((c, idx)=>{
+    const card = document.createElement('div');
+    card.className = 'celeb-card';
+    const chipsHtml = signs.map(s => `<button class="sign-chip" data-sign="${s}" onclick="voteSign(${idx}, '${s}', this)">${s} <span class="n">0</span></button>`).join('');
+    card.innerHTML = `
+      <div class="celeb-avatar">${c.emoji}</div>
+      <div class="celeb-name">${c.name}</div>
+      <div class="sign-btns" id="signbtns-${idx}">${chipsHtml}</div>
+      <button class="reveal-btn" onclick="reveal(${idx})">Reveal answer 🔎</button>
+      <div class="fact" id="fact-${idx}">${c.fact}</div>
+    `;
+    celebGrid.appendChild(card);
+  });
+
+  const voteTallies = celebs.map(()=> ({}));
+
+  function voteSign(idx, sign, btn){
+    voteTallies[idx][sign] = (voteTallies[idx][sign] || 0) + 1;
+    btn.querySelector('.n').textContent = voteTallies[idx][sign];
+  }
+
+  function reveal(idx){
+    const container = document.getElementById(`signbtns-${idx}`);
+    const answer = celebs[idx].answer;
+    container.querySelectorAll('.sign-chip').forEach(chip=>{
+      if(chip.dataset.sign === answer){ chip.classList.add('correct-reveal'); }
+      else { chip.classList.add('wrong-reveal'); }
+    });
+    document.getElementById(`fact-${idx}`).style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
