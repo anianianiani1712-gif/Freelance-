@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COP30 à Belém — Vocabulaire de l'engagement écologique</title>
+<style>
+  :root {
+    --canopy: #1b3a2f;
+    --moss: #3d6b4f;
+    --fern: #6f9c76;
+    --sprout: #a8c98a;
+    --sand: #f3ecd9;
+    --bark: #4a3a2c;
+    --clay: #c9793f;
+    --ink: #1f2a22;
+    --paper: #faf7ee;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Iowan Old Style', 'Georgia', serif;
+    background:
+      radial-gradient(ellipse at top left, rgba(168,201,138,0.25), transparent 55%),
+      radial-gradient(ellipse at bottom right, rgba(61,107,79,0.2), transparent 55%),
+      var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 0 0 60px 0;
+  }
+
+  .hero {
+    background: linear-gradient(160deg, var(--canopy) 0%, var(--moss) 65%, var(--fern) 100%);
+    color: var(--sand);
+    padding: 48px 32px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle, rgba(250,247,238,0.08) 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: 0.5;
+  }
+
+  .hero-inner {
+    max-width: 820px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .eyebrow {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 12px;
+    color: var(--sprout);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 26px;
+    height: 1px;
+    background: var(--sprout);
+    display: inline-block;
+  }
+
+  h1 {
+    font-size: 42px;
+    margin: 0 0 8px 0;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--sprout);
+  }
+
+  .subtitle {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 15px;
+    color: rgba(250,247,238,0.75);
+    max-width: 560px;
+  }
+
+  .container {
+    max-width: 820px;
+    margin: -28px auto 0;
+    padding: 0 24px;
+  }
+
+  .card {
+    background: var(--paper);
+    border: 1px solid rgba(74,58,44,0.12);
+    border-radius: 2px;
+    box-shadow: 0 18px 40px rgba(27,58,47,0.12);
+    padding: 40px 44px;
+  }
+
+  .article-head {
+    border-bottom: 2px solid var(--canopy);
+    padding-bottom: 18px;
+    margin-bottom: 28px;
+  }
+
+  .article-head .kicker {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--moss);
+    font-weight: 600;
+  }
+
+  .article-head h2 {
+    font-size: 26px;
+    margin: 6px 0 0 0;
+    color: var(--canopy);
+    font-weight: 400;
+  }
+
+  .speaker {
+    font-weight: 700;
+    color: var(--canopy);
+    margin: 30px 0 10px 0;
+    font-size: 17px;
+  }
+
+  .quote {
+    font-size: 16.5px;
+  }
+
+  .quote p { margin: 0 0 12px 0; }
+
+  select.blank {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    padding: 4px 8px;
+    border: none;
+    border-bottom: 2px solid var(--clay);
+    background: var(--sprout);
+    color: var(--canopy);
+    border-radius: 3px 3px 0 0;
+    font-weight: 600;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    min-width: 140px;
+    text-align: center;
+    transition: all 0.15s ease;
+  }
+
+  select.blank:hover {
+    background: var(--fern);
+  }
+
+  select.blank.correct {
+    background: #cfe6b8;
+    border-bottom-color: var(--moss);
+    color: var(--canopy);
+  }
+
+  select.blank.incorrect {
+    background: #f3d3c4;
+    border-bottom-color: var(--clay);
+    color: #7a3a1a;
+  }
+
+  select.blank.unanswered {
+    background: var(--sand);
+    border-bottom-color: rgba(74,58,44,0.3);
+  }
+
+  .word-bank {
+    margin-top: 32px;
+    padding: 20px 22px;
+    background: rgba(168,201,138,0.18);
+    border-left: 3px solid var(--moss);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .word-bank .label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--moss);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .word-chip {
+    display: inline-block;
+    background: var(--paper);
+    border: 1px solid rgba(61,107,79,0.35);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    margin: 3px 4px;
+    color: var(--bark);
+  }
+
+  .actions {
+    margin-top: 34px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  button {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.3px;
+    padding: 13px 26px;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.15s ease;
+  }
+
+  button:active { transform: scale(0.97); }
+
+  .btn-check {
+    background: var(--canopy);
+    color: var(--sand);
+  }
+
+  .btn-check:hover { box-shadow: 0 6px 16px rgba(27,58,47,0.35); }
+
+  .btn-reset {
+    background: transparent;
+    color: var(--bark);
+    border: 1.5px solid rgba(74,58,44,0.3) !important;
+  }
+
+  .btn-reveal {
+    background: var(--clay);
+    color: var(--sand);
+  }
+
+  .score-badge {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--canopy);
+    background: var(--sprout);
+    padding: 10px 18px;
+    border-radius: 20px;
+    display: none;
+  }
+
+  .source {
+    text-align: right;
+    font-style: italic;
+    color: var(--moss);
+    margin-top: 28px;
+    font-size: 14px;
+  }
+
+  footer {
+    max-width: 820px;
+    margin: 30px auto 0;
+    padding: 0 24px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    color: var(--moss);
+    text-align: center;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 36px 20px 48px; }
+    h1 { font-size: 30px; }
+    .card { padding: 28px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Vocabulaire &middot; Engagement écologique</div>
+    <h1>La COP30 à <em>Belém</em></h1>
+    <div class="subtitle">Réemploie le vocabulaire de l'engagement écologique — vu avec les Jeux de la Francophonie — dans un nouveau contexte : le sommet climatique de Belém, au Brésil.</div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="card">
+
+    <div class="article-head">
+      <div class="kicker">Libération donne la parole</div>
+      <h2>À des jeunes présents à la COP30</h2>
+    </div>
+
+    <div class="speaker">Léa Munoz, 22 ans, déléguée ONG</div>
+    <div class="quote">
+      <p>« Je suis venue à Belém parce que je suis très
+      <select class="blank" data-answer="soucieuse"></select>
+      du sort des forêts tropicales. Depuis trois ans, j'essaye de
+      <select class="blank" data-answer="tendre vers"></select>
+      une vie plus respectueuse de la planète, mais
+      <select class="blank" data-answer="je tiens à préciser que"></select>
+      un individu seul ne peut pas tout changer.</p>
+
+      <p><select class="blank" data-answer="mon" data-cap="true"></select>
+      <select class="blank" data-answer="engagement" data-alt="démarche"></select>
+      militant a commencé au lycée, avec des marches pour le climat. Aujourd'hui, j'
+      <select class="blank" data-answer="alimente"></select>
+      un blog qui explique les enjeux de la COP aux jeunes. Je pense que les États doivent
+      <select class="blank" data-answer="contraindre"></select>
+      les multinationales à réduire leurs émissions, et
+      <select class="blank" data-answer="encadrer"></select>
+      plus strictement les industries polluantes.</p>
+
+      <p>Mon <select class="blank" data-answer="attrait"></select>
+      pour l'écologie vient aussi de ma famille : mes parents m'ont toujours encouragée dans cette
+      <select class="blank" data-answer="démarche"></select>. »</p>
+    </div>
+
+    <div class="speaker">Thiago Alves, 19 ans, étudiant brésilien</div>
+    <div class="quote">
+      <p>« Ici à Belém, j'ai choisi une
+      <select class="blank" data-answer="filière"></select>
+      universitaire liée aux énergies renouvelables. Je veux
+      <select class="blank" data-answer="tendre vers"></select>
+      un monde où les <select class="blank" data-answer="trajets"></select>
+      en avion seront moins nombreux et où on pourra
+      <select class="blank" data-answer="diminuer"></select>
+      notre empreinte carbone.</p>
+
+      <p>Mais <select class="blank" data-answer="agir dans son coin"></select>
+      ce n'est pas grand-chose. C'est pour ça que je
+      <select class="blank" data-answer="milite pour"></select>
+      une véritable prise de conscience internationale : ce sont surtout
+      <select class="blank" data-answer="les plus puissants"></select>
+      — les grandes entreprises et les gouvernements riches — qui doivent changer leur
+      <select class="blank" data-answer="comportement"></select>
+      en premier. Les efforts individuels ne sont pas
+      <select class="blank" data-answer="suffisants"></select>. »</p>
+    </div>
+
+    <div class="word-bank">
+      <div class="label">Banque de mots</div>
+      <span class="word-chip">comportement</span>
+      <span class="word-chip">tendre vers</span>
+      <span class="word-chip">soucieuse</span>
+      <span class="word-chip">trajets</span>
+      <span class="word-chip">diminuer</span>
+      <span class="word-chip">attrait</span>
+      <span class="word-chip">démarche</span>
+      <span class="word-chip">engagement</span>
+      <span class="word-chip">filière</span>
+      <span class="word-chip">contraindre</span>
+      <span class="word-chip">encadrer</span>
+      <span class="word-chip">alimente</span>
+      <span class="word-chip">agir dans son coin</span>
+      <span class="word-chip">suffisants</span>
+      <span class="word-chip">milite pour</span>
+      <span class="word-chip">les plus puissants</span>
+      <span class="word-chip">je tiens à préciser que</span>
+      <span class="word-chip">mon</span>
+    </div>
+
+    <div class="actions">
+      <button class="btn-check" onclick="checkAnswers()">Vérifier mes réponses</button>
+      <button class="btn-reveal" onclick="revealAnswers()">Voir les réponses</button>
+      <button class="btn-reset" onclick="resetExercise()">Recommencer</button>
+      <div class="score-badge" id="scoreBadge"></div>
+    </div>
+
+    <div class="source">Inspiré de <em>Libération</em>, adapté pour l'apprentissage du FLE</div>
+  </div>
+</div>
+
+<footer>Fiche de vocabulaire &middot; Club de conversation &middot; Écologie &amp; engagement</footer>
+
+<script>
+  const wordBank = [
+    "comportement", "tendre vers", "soucieuse", "trajets", "diminuer",
+    "attrait", "démarche", "engagement", "filière", "contraindre",
+    "encadrer", "alimente", "agir dans son coin", "suffisants",
+    "milite pour", "les plus puissants", "je tiens à préciser que", "mon"
+  ];
+
+  function shuffle(array) {
+    const a = array.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function capitalize(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  function buildSelects() {
+    const selects = document.querySelectorAll('select.blank');
+    selects.forEach(sel => {
+      sel.innerHTML = '<option value="">— choisir —</option>';
+      const options = shuffle(wordBank);
+      options.forEach(word => {
+        const opt = document.createElement('option');
+        const display = sel.dataset.cap === "true" ? capitalize(word) : word;
+        opt.value = word;
+        opt.textContent = display;
+        sel.appendChild(opt);
+      });
+      sel.classList.remove('correct', 'incorrect', 'unanswered');
+    });
+  }
+
+  function checkAnswers() {
+    const selects = document.querySelectorAll('select.blank');
+    let correct = 0;
+    selects.forEach(sel => {
+      sel.classList.remove('correct', 'incorrect', 'unanswered');
+      const answer = sel.dataset.answer;
+      const alt = sel.dataset.alt;
+      if (!sel.value) {
+        sel.classList.add('unanswered');
+      } else if (sel.value === answer || sel.value === alt) {
+        sel.classList.add('correct');
+        correct++;
+      } else {
+        sel.classList.add('incorrect');
+      }
+    });
+    const badge = document.getElementById('scoreBadge');
+    badge.style.display = 'inline-block';
+    badge.textContent = `Score : ${correct} / ${selects.length}`;
+  }
+
+  function revealAnswers() {
+    const selects = document.querySelectorAll('select.blank');
+    selects.forEach(sel => {
+      sel.value = sel.dataset.answer;
+      sel.classList.remove('incorrect', 'unanswered');
+      sel.classList.add('correct');
+    });
+    const badge = document.getElementById('scoreBadge');
+    badge.style.display = 'inline-block';
+    badge.textContent = `Réponses affichées`;
+  }
+
+  function resetExercise() {
+    buildSelects();
+    document.getElementById('scoreBadge').style.display = 'none';
+  }
+
+  buildSelects();
+</script>
+
+</body>
+</html>
