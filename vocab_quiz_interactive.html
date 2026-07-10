@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocab Quiz — May & June</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f3ef;min-height:100vh}
+.header{background:#1a2744;color:#fff;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:17px;font-weight:600}
+.header .sub{font-size:12px;opacity:.6;margin-top:2px}
+.score-pill{background:rgba(255,255,255,.15);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:600}
+.mode-select{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:1.5rem;max-width:600px;margin:0 auto}
+.mode-card{background:#fff;border:1.5px solid #e2dfd8;border-radius:14px;padding:1.25rem;cursor:pointer;transition:all .15s;text-align:center}
+.mode-card:hover{border-color:#1a2744;transform:translateY(-2px)}
+.mode-card .icon{font-size:30px;margin-bottom:.5rem}
+.mode-card h3{font-size:15px;font-weight:600;color:#1a2744;margin-bottom:.25rem}
+.mode-card p{font-size:12px;color:#888;line-height:1.4}
+.game-area{max-width:620px;margin:0 auto;padding:1rem 1rem 3rem}
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem}
+.prog-bar{flex:1;height:5px;background:#e2dfd8;border-radius:3px;overflow:hidden}
+.prog-fill{height:5px;background:#1d9e75;border-radius:3px;transition:width .4s}
+.prog-lbl{font-size:12px;color:#888;white-space:nowrap}
+.cat-badge{display:inline-block;font-size:11px;background:#eef0f8;color:#1a2744;border-radius:20px;padding:3px 10px;margin-bottom:.75rem;font-weight:500}
+/* WORD STORM */
+.ws-question{background:#1a2744;color:#fff;border-radius:14px;padding:1.5rem;text-align:center;margin-bottom:1rem}
+.ws-question .label{font-size:11px;opacity:.6;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem}
+.ws-question .word{font-size:26px;font-weight:700;line-height:1.3}
+.ws-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.ws-opt{padding:12px 16px;background:#fff;border:1.5px solid #e2dfd8;border-radius:11px;font-size:14px;cursor:pointer;transition:all .12s;line-height:1.4;text-align:left}
+.ws-opt:hover:not([disabled]){background:#f4f3ef;border-color:#1a2744}
+.ws-opt.correct{background:#e4f5ee;border-color:#1d9e75;color:#0f6e56;font-weight:600}
+.ws-opt.wrong{background:#fdeee8;border-color:#e8613a;color:#993c1d}
+.ws-feedback{text-align:center;padding:.65rem 1rem;border-radius:10px;font-size:14px;font-weight:500;margin-bottom:.75rem}
+.ws-feedback.ok{background:#e4f5ee;color:#0f6e56}
+.ws-feedback.bad{background:#fdeee8;color:#993c1d}
+/* TYPE IT */
+.ti-card{background:#fff;border:1px solid #e2dfd8;border-radius:14px;padding:1.5rem;margin-bottom:1rem}
+.ti-question{font-size:15px;color:#888;margin-bottom:.5rem}
+.ti-word{font-size:24px;font-weight:700;color:#1a2744;margin-bottom:1.25rem}
+.ti-hint-row{font-size:13px;color:#aaa;margin-bottom:.75rem}
+.ti-hint-letter{display:inline-block;width:20px;text-align:center;border-bottom:2px solid #ddd;margin:0 2px;font-size:16px;font-weight:600;color:#1a2744}
+.ti-hint-letter.revealed{color:#e8613a}
+.ti-input-row{display:flex;gap:8px;margin-bottom:.75rem}
+.ti-input{flex:1;padding:10px 14px;border:1.5px solid #e2dfd8;border-radius:9px;font-size:15px;font-family:inherit;outline:none;transition:border-color .12s}
+.ti-input:focus{border-color:#1a2744}
+.ti-input.correct{border-color:#1d9e75;background:#e4f5ee;color:#0f6e56}
+.ti-input.wrong{border-color:#e8613a;background:#fdeee8;color:#993c1d}
+.ti-actions{display:flex;gap:8px}
+.btn-check{padding:10px 22px;background:#1d9e75;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;transition:background .12s}
+.btn-check:hover{background:#0f6e56}
+.btn-hint{padding:10px 16px;background:#fff;border:1.5px solid #e2dfd8;border-radius:9px;font-size:13px;color:#888;cursor:pointer}
+.btn-hint:hover{background:#f4f3ef}
+.btn-skip{padding:10px 16px;background:#fff;border:1.5px solid #e2dfd8;border-radius:9px;font-size:13px;color:#888;cursor:pointer}
+/* SORT IT */
+.sort-prompt{text-align:center;font-size:15px;color:#666;margin-bottom:.75rem}
+.sort-word{background:#1a2744;color:#fff;border-radius:12px;padding:1rem 1.5rem;text-align:center;font-size:22px;font-weight:700;margin-bottom:1.25rem}
+.sort-bins{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:.75rem}
+.sort-bin{border:2px dashed #e2dfd8;border-radius:12px;padding:1rem;min-height:90px;text-align:center;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.sort-bin:hover{border-color:#1a2744;background:#f0f2f8}
+.sort-bin.correct{border-color:#1d9e75;background:#e4f5ee;border-style:solid}
+.sort-bin.wrong{border-color:#e8613a;background:#fdeee8;border-style:solid;animation:shake .3s}
+.sort-bin-label{font-size:13px;font-weight:600;color:#1a2744}
+.sort-bin-sub{font-size:11px;color:#888}
+/* SPEEDRUN */
+.sr-container{background:#1a2744;border-radius:14px;padding:1.5rem;margin-bottom:1rem;text-align:center;color:#fff}
+.sr-timer{font-size:40px;font-weight:700;margin-bottom:.25rem}
+.sr-timer.urgent{color:#e8613a}
+.sr-label{font-size:12px;opacity:.6;margin-bottom:1rem}
+.sr-word{font-size:22px;font-weight:700;margin-bottom:1.5rem;line-height:1.3}
+.sr-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sr-opt{padding:10px 14px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;font-size:13px;cursor:pointer;transition:all .12s;text-align:left}
+.sr-opt:hover{background:rgba(255,255,255,.2)}
+.sr-opt.correct{background:#1d9e75;border-color:#1d9e75}
+.sr-opt.wrong{background:#e8613a;border-color:#e8613a}
+/* SHARED */
+.btn-next{display:block;margin:0 auto;padding:10px 32px;background:#1a2744;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;transition:background .12s}
+.btn-next:hover{background:#2a3d6e}
+.done{text-align:center;padding:2.5rem 1rem}
+.done-icon{font-size:52px;margin-bottom:1rem}
+.done-title{font-size:22px;font-weight:700;color:#1a2744;margin-bottom:.5rem}
+.done-sub{font-size:14px;color:#888;margin-bottom:.5rem}
+.done-stars{font-size:28px;margin-bottom:1.25rem;letter-spacing:4px}
+.btn-home{padding:10px 28px;background:#e8613a;color:#fff;border:none;border-radius:9px;font-size:15px;cursor:pointer;font-weight:600;margin:0 6px}
+.btn-again{padding:10px 28px;background:#fff;border:1.5px solid #e2dfd8;color:#1a2744;border-radius:9px;font-size:15px;cursor:pointer;font-weight:600;margin:0 6px}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.streak{display:inline-flex;align-items:center;gap:4px;background:#fff3e0;border-radius:20px;padding:3px 10px;font-size:12px;color:#e65100;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header h1">Vocab Quiz</div>
+    <div class="sub">May & June — 40 words</div>
+  </div>
+  <div class="score-pill" id="header-score" style="display:none">0 / 0</div>
+</div>
+
+<div id="root"></div>
+
+<script>
+const ALL_WORDS = [
+  {en:'nephew',ru:'племянник',cat:'Family'},
+  {en:'niece',ru:'племянница',cat:'Family'},
+  {en:'to tidy your room',ru:'убирать комнату',cat:'Family'},
+  {en:'to give birth',ru:'родить',cat:'Family'},
+  {en:'bargain',ru:'выгодная покупка',cat:'Shopping'},
+  {en:'receipt',ru:'чек',cat:'Shopping'},
+  {en:'second-hand',ru:'подержанный',cat:'Shopping'},
+  {en:'reliable',ru:'надёжный',cat:'Shopping'},
+  {en:'damaged',ru:'повреждённый',cat:'Shopping'},
+  {en:'crowded',ru:'переполненный людьми',cat:'Shopping'},
+  {en:'picky',ru:'придирчивый',cat:'Shopping'},
+  {en:'run out of',ru:'закончиться',cat:'Shopping'},
+  {en:'to wear',ru:'носить',cat:'Clothes'},
+  {en:'cotton',ru:'хлопок',cat:'Clothes'},
+  {en:'leather',ru:'кожа',cat:'Clothes'},
+  {en:'silk',ru:'шёлк',cat:'Clothes'},
+  {en:'wool',ru:'шерсть',cat:'Clothes'},
+  {en:'vivid',ru:'яркий, насыщенный',cat:'Clothes'},
+  {en:'transparent',ru:'прозрачный',cat:'Clothes'},
+  {en:'thumb',ru:'большой палец',cat:'Body'},
+  {en:'index finger',ru:'указательный палец',cat:'Body'},
+  {en:'ring finger',ru:'безымянный палец',cat:'Body'},
+  {en:'pinky',ru:'мизинец',cat:'Body'},
+  {en:'a relief',ru:'облегчение',cat:'Emotions'},
+  {en:'have a tantrum',ru:'закатить истерику',cat:'Emotions'},
+  {en:'have a breakdown',ru:'нервный срыв',cat:'Emotions'},
+  {en:"it's on me",ru:'я угощаю',cat:'Emotions'},
+  {en:'to sneeze',ru:'чихать',cat:'Health'},
+  {en:'to be allergic to',ru:'быть аллергичным на',cat:'Health'},
+  {en:'stuffy nose',ru:'заложенный нос',cat:'Health'},
+  {en:'to take pills',ru:'принимать таблетки',cat:'Health'},
+  {en:'toddler',ru:'малыш, начинающий ходить',cat:'Kids'},
+  {en:'parenting',ru:'родительство',cat:'Kids'},
+  {en:'named after',ru:'назван в честь',cat:'Kids'},
+  {en:'namesake',ru:'тёзка',cat:'Kids'},
+  {en:'slide',ru:'горка',cat:'Playground'},
+  {en:'seesaw',ru:'качели-балансир',cat:'Playground'},
+  {en:'monkey bars',ru:'шведская стенка',cat:'Playground'},
+  {en:'sandpit',ru:'песочница',cat:'Playground'},
+  {en:'to come across',ru:'наткнуться случайно',cat:'Phrases'},
+];
+
+function shuffle(arr){return[...arr].sort(()=>Math.random()-.5)}
+
+let words=shuffle(ALL_WORDS).slice(0,40);
+let currentMode='home';
+let qIdx=0,correct=0,total=0,streak=0,maxStreak=0;
+let answered=false;
+let hints=0;
+let srInterval=null,srTime=0;
+
+function render(html){document.getElementById('root').innerHTML=html}
+
+function home(){
+  currentMode='home';
+  document.getElementById('header-score').style.display='none';
+  render(`
+    <div style="padding:1.25rem 1rem .5rem;max-width:600px;margin:0 auto">
+      <p style="font-size:14px;color:#888;margin-bottom:1rem">Pick a game mode to start:</p>
+    </div>
+    <div class="mode-select">
+      <div class="mode-card" onclick="startMode('wordstorm')">
+        <div class="icon">⚡</div>
+        <h3>Word storm</h3>
+        <p>See a Russian word, pick the right English translation from 4 options</p>
+      </div>
+      <div class="mode-card" onclick="startMode('typeit')">
+        <div class="icon">✏️</div>
+        <h3>Type it</h3>
+        <p>See the Russian, type the English word — use hints if you're stuck</p>
+      </div>
+      <div class="mode-card" onclick="startMode('sortit')">
+        <div class="icon">🗂️</div>
+        <h3>True or false</h3>
+        <p>A word and a translation appear — is the pair correct or not?</p>
+      </div>
+      <div class="mode-card" onclick="startMode('speedrun')">
+        <div class="icon">⏱️</div>
+        <h3>Speed round</h3>
+        <p>5 seconds per question — quick-fire quiz against the clock!</p>
+      </div>
+    </div>`)
+}
+
+function startMode(mode){
+  currentMode=mode;
+  words=shuffle(ALL_WORDS).slice(0,40);
+  qIdx=0;correct=0;total=0;streak=0;maxStreak=0;answered=false;hints=0;
+  document.getElementById('header-score').style.display='block';
+  updateHeaderScore();
+  if(mode==='speedrun') srStart();
+  else next();
+}
+
+function updateHeaderScore(){
+  document.getElementById('header-score').textContent=correct+' / '+total;
+}
+
+function next(){
+  answered=false;hints=0;
+  if(qIdx>=words.length){showDone();return;}
+  if(currentMode==='wordstorm') renderWordstorm();
+  else if(currentMode==='typeit') renderTypeit();
+  else if(currentMode==='sortit') renderSortit();
+  else if(currentMode==='speedrun') renderSpeedrun();
+}
+
+// ===== WORDSTORM =====
+function renderWordstorm(){
+  const w=words[qIdx];
+  const wrongs=shuffle(words.filter(x=>x.en!==w.en)).slice(0,3).map(x=>x.en);
+  const opts=shuffle([w.en,...wrongs]);
+  render(`
+    <div class="game-area">
+      <div class="prog-row">
+        <div class="prog-bar"><div class="prog-fill" style="width:${(qIdx/words.length)*100}%"></div></div>
+        <span class="prog-lbl">${qIdx+1} / ${words.length}</span>
+      </div>
+      <div class="ws-question">
+        <div class="label">What's the English word?</div>
+        <div class="word">${w.ru}</div>
+      </div>
+      <span class="cat-badge">${w.cat}</span>
+      ${streak>=2?`<div style="margin-bottom:.75rem"><span class="streak">🔥 ${streak} in a row!</span></div>`:''}
+      <div class="ws-grid">
+        ${opts.map(o=>`<button class="ws-opt" onclick="checkWS(this,'${o.replace(/'/g,"\\'")}','${w.en.replace(/'/g,"\\'")}')">${o}</button>`).join('')}
+      </div>
+      <div id="ws-fb" style="display:none"></div>
+      <button class="btn-next" id="btn-next" style="display:none" onclick="qIdx++;next()">Next →</button>
+    </div>`);
+}
+
+function checkWS(btn,chosen,correct_ans){
+  if(answered)return;
+  answered=true;total++;
+  document.querySelectorAll('.ws-opt').forEach(b=>{b.disabled=true;if(b.textContent===correct_ans)b.classList.add('correct');});
+  const fb=document.getElementById('ws-fb');
+  if(chosen===correct_ans){
+    correct++;streak++;if(streak>maxStreak)maxStreak=streak;
+    btn.classList.add('correct');
+    fb.className='ws-feedback ok';fb.textContent='Correct! ✓';
+  } else {
+    streak=0;btn.classList.add('wrong');
+    fb.className='ws-feedback bad';fb.textContent='The answer is: '+correct_ans;
+  }
+  fb.style.display='block';
+  document.getElementById('btn-next').style.display='block';
+  updateHeaderScore();
+}
+
+// ===== TYPE IT =====
+function renderTypeit(){
+  const w=words[qIdx];
+  const masked=w.en.split('').map((_,i)=>i<hints?`<span class="ti-hint-letter revealed">${w.en[i]}</span>`:`<span class="ti-hint-letter">_</span>`).join('');
+  render(`
+    <div class="game-area">
+      <div class="prog-row">
+        <div class="prog-bar"><div class="prog-fill" style="width:${(qIdx/words.length)*100}%"></div></div>
+        <span class="prog-lbl">${qIdx+1} / ${words.length}</span>
+      </div>
+      <div class="ti-card">
+        <span class="cat-badge">${w.cat}</span>
+        <div class="ti-question">Type the English translation:</div>
+        <div class="ti-word">${w.ru}</div>
+        <div class="ti-hint-row">${masked}</div>
+        <div class="ti-input-row">
+          <input class="ti-input" id="ti-in" placeholder="Type here..." autocomplete="off" autocorrect="off" spellcheck="false">
+        </div>
+        <div class="ti-actions">
+          <button class="btn-check" onclick="checkTI('${w.en.replace(/'/g,"\\'")}')" >Check ✓</button>
+          <button class="btn-hint" onclick="revealHint('${w.en.replace(/'/g,"\\'")}')">Hint 💡</button>
+          <button class="btn-skip" onclick="skipTI('${w.en.replace(/'/g,"\\'")}')">Skip →</button>
+        </div>
+        <div id="ti-fb" style="display:none;margin-top:.75rem"></div>
+      </div>
+    </div>`);
+  document.getElementById('ti-in').focus();
+  document.getElementById('ti-in').addEventListener('keydown',e=>{if(e.key==='Enter')checkTI(w.en);});
+}
+
+function revealHint(ans){
+  hints++;
+  renderTypeit();
+}
+
+function checkTI(ans){
+  if(answered)return;
+  const inp=document.getElementById('ti-in');
+  const val=inp.value.trim().toLowerCase();
+  answered=true;total++;
+  const fb=document.getElementById('ti-fb');
+  if(val===ans.toLowerCase()||(ans.startsWith('to ')&&val===ans.slice(3).toLowerCase())){
+    correct++;streak++;if(streak>maxStreak)maxStreak=streak;
+    inp.classList.add('correct');
+    fb.className='ws-feedback ok';fb.textContent='Correct! ✓';
+  } else {
+    streak=0;inp.classList.add('wrong');
+    fb.className='ws-feedback bad';fb.textContent='Answer: '+ans;
+  }
+  fb.style.display='block';
+  inp.disabled=true;
+  document.querySelectorAll('.btn-check,.btn-hint,.btn-skip').forEach(b=>{b.disabled=true;b.style.opacity='.4';});
+  updateHeaderScore();
+  setTimeout(()=>{qIdx++;next();},1200);
+}
+
+function skipTI(ans){
+  total++;streak=0;
+  const fb=document.getElementById('ti-fb');
+  fb.className='ws-feedback bad';fb.textContent='Answer: '+ans;fb.style.display='block';
+  document.querySelectorAll('.btn-check,.btn-hint,.btn-skip').forEach(b=>{b.disabled=true;b.style.opacity='.4';});
+  updateHeaderScore();
+  setTimeout(()=>{qIdx++;next();},1000);
+}
+
+// ===== TRUE / FALSE =====
+let sortCorrectBin='';
+function renderSortit(){
+  const w=words[qIdx];
+  const showWrong=Math.random()>.5;
+  let displayRu=w.ru;
+  if(showWrong){
+    const other=words.find(x=>x.en!==w.en);
+    displayRu=other?other.ru:w.ru;
+  }
+  sortCorrectBin=showWrong?'false':'true';
+  render(`
+    <div class="game-area">
+      <div class="prog-row">
+        <div class="prog-bar"><div class="prog-fill" style="width:${(qIdx/words.length)*100}%"></div></div>
+        <span class="prog-lbl">${qIdx+1} / ${words.length}</span>
+      </div>
+      <span class="cat-badge">${w.cat}</span>
+      <p class="sort-prompt">Is this translation correct?</p>
+      <div class="sort-word">${w.en} = ${displayRu}</div>
+      ${streak>=2?`<div style="text-align:center;margin-bottom:.75rem"><span class="streak">🔥 ${streak} in a row!</span></div>`:''}
+      <div class="sort-bins">
+        <div class="sort-bin" id="bin-true" onclick="checkSort('true')">
+          <div class="sort-bin-label" style="color:#1d9e75;font-size:22px">✓</div>
+          <div class="sort-bin-label">Correct</div>
+          <div class="sort-bin-sub">the pair matches</div>
+        </div>
+        <div class="sort-bin" id="bin-false" onclick="checkSort('false')">
+          <div class="sort-bin-label" style="color:#e8613a;font-size:22px">✗</div>
+          <div class="sort-bin-label">Wrong</div>
+          <div class="sort-bin-sub">the pair is wrong</div>
+        </div>
+      </div>
+      <div id="sort-fb" style="display:none;text-align:center;padding:.65rem;border-radius:10px;font-size:14px;font-weight:500;margin-bottom:.75rem"></div>
+      <button class="btn-next" id="btn-next" style="display:none" onclick="qIdx++;next()">Next →</button>
+    </div>`);
+}
+
+function checkSort(chosen){
+  if(answered)return;
+  answered=true;total++;
+  const correct_ans=sortCorrectBin;
+  const binTrue=document.getElementById('bin-true');
+  const binFalse=document.getElementById('bin-false');
+  binTrue.onclick=null;binFalse.onclick=null;
+  const fb=document.getElementById('sort-fb');
+  const correctBinEl=correct_ans==='true'?binTrue:binFalse;
+  const chosenBinEl=chosen==='true'?binTrue:binFalse;
+  if(chosen===correct_ans){
+    correct++;streak++;if(streak>maxStreak)maxStreak=streak;
+    chosenBinEl.classList.add('correct');
+    fb.className='ws-feedback ok';fb.textContent='Correct! ✓';
+  } else {
+    streak=0;
+    chosenBinEl.classList.add('wrong');
+    correctBinEl.classList.add('correct');
+    const w=words[qIdx];
+    fb.className='ws-feedback bad';
+    fb.textContent=correct_ans==='true'?'Correct pair: '+w.en+' = '+w.ru:'That pair was wrong!';
+  }
+  fb.style.display='block';
+  document.getElementById('btn-next').style.display='block';
+  updateHeaderScore();
+}
+
+// ===== SPEEDRUN =====
+function srStart(){
+  srTime=5;
+  qIdx=0;correct=0;total=0;streak=0;answered=false;
+  renderSpeedrun();
+}
+
+function renderSpeedrun(){
+  if(qIdx>=words.length){clearInterval(srInterval);showDone();return;}
+  const w=words[qIdx];
+  const wrongs=shuffle(words.filter(x=>x.en!==w.en)).slice(0,3).map(x=>x.en);
+  const opts=shuffle([w.en,...wrongs]);
+  srTime=5;answered=false;
+  render(`
+    <div class="game-area">
+      <div class="prog-row">
+        <div class="prog-bar"><div class="prog-fill" style="width:${(qIdx/words.length)*100}%"></div></div>
+        <span class="prog-lbl">${qIdx+1} / ${words.length}</span>
+      </div>
+      <div class="sr-container">
+        <div class="sr-timer${srTime<=2?' urgent':''}" id="sr-timer">5</div>
+        <div class="sr-label">seconds</div>
+        <div class="sr-word">${w.ru}</div>
+        <div class="sr-opts">
+          ${opts.map(o=>`<button class="sr-opt" id="sropt-${opts.indexOf(o)}" onclick="checkSR(this,'${o.replace(/'/g,"\\'")}','${w.en.replace(/'/g,"\\'")}')">${o}</button>`).join('')}
+        </div>
+      </div>
+      <div id="sr-fb" style="display:none" class="ws-feedback"></div>
+    </div>`);
+  clearInterval(srInterval);
+  srInterval=setInterval(()=>{
+    srTime--;
+    const el=document.getElementById('sr-timer');
+    if(!el){clearInterval(srInterval);return;}
+    el.textContent=srTime;
+    if(srTime<=2)el.classList.add('urgent');
+    if(srTime<=0){
+      clearInterval(srInterval);
+      if(!answered){
+        total++;streak=0;
+        updateHeaderScore();
+        const fb=document.getElementById('sr-fb');
+        if(fb){fb.className='ws-feedback bad';fb.textContent='Time up! Answer: '+w.en;fb.style.display='block';}
+        document.querySelectorAll('.sr-opt').forEach(b=>{b.disabled=true;if(b.textContent===w.en)b.classList.add('correct');});
+        setTimeout(()=>{qIdx++;renderSpeedrun();},1000);
+      }
+    }
+  },1000);
+}
+
+function checkSR(btn,chosen,correct_ans){
+  if(answered)return;
+  clearInterval(srInterval);
+  answered=true;total++;
+  document.querySelectorAll('.sr-opt').forEach(b=>{b.disabled=true;if(b.textContent===correct_ans)b.classList.add('correct');});
+  const fb=document.getElementById('sr-fb');
+  if(chosen===correct_ans){
+    correct++;streak++;if(streak>maxStreak)maxStreak=streak;
+    btn.classList.add('correct');
+    fb.className='ws-feedback ok';fb.textContent='Correct! ✓';
+  } else {
+    streak=0;btn.classList.add('wrong');
+    fb.className='ws-feedback bad';fb.textContent='Answer: '+correct_ans;
+  }
+  fb.style.display='block';
+  updateHeaderScore();
+  setTimeout(()=>{qIdx++;renderSpeedrun();},900);
+}
+
+function showDone(){
+  clearInterval(srInterval);
+  const pct=Math.round((correct/total)*100);
+  const stars=pct>=90?'⭐⭐⭐':pct>=70?'⭐⭐':pct>=50?'⭐':'';
+  const msg=pct>=90?'Excellent work!':pct>=70?'Good job!':pct>=50?'Keep practising!':'Don\'t give up!';
+  render(`<div class="done">
+    <div class="done-icon">${pct>=70?'🎉':'📚'}</div>
+    <div class="done-title">${correct} / ${total} correct</div>
+    <div class="done-stars">${stars}</div>
+    <div class="done-sub">${msg}</div>
+    ${maxStreak>=3?`<div class="done-sub" style="margin-top:.25rem">Best streak: 🔥 ${maxStreak} in a row</div>`:''}
+    <div style="margin-top:1.5rem">
+      <button class="btn-again" onclick="startMode('${currentMode}')">Play again</button>
+      <button class="btn-home" onclick="home()">Choose mode</button>
+    </div>
+  </div>`);
+  document.getElementById('header-score').style.display='none';
+}
+
+home();
+</script>
+</body>
+</html>
