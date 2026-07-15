@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xes Jeux de la Francophonie — Erevan 2027</title>
+<style>
+  :root {
+    --blue: #2e6fb0;
+    --yellow: #e8b23a;
+    --purple: #7a4f9e;
+    --green: #4a9560;
+    --red: #d15b3f;
+    --ink: #22222a;
+    --paper: #fdfbf7;
+    --line: #e2ddd2;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    padding-bottom: 60px;
+  }
+
+  .hero {
+    background: linear-gradient(120deg, var(--blue) 0%, var(--purple) 50%, var(--red) 100%);
+    color: white;
+    padding: 42px 28px 50px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: "";
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    border: 18px solid rgba(255,255,255,0.15);
+  }
+
+  .hero-inner { max-width: 900px; margin: 0 auto; position: relative; }
+
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--yellow);
+    margin-bottom: 10px;
+  }
+
+  h1 { font-size: 34px; margin: 0 0 10px 0; font-weight: 700; }
+  .hero p { max-width: 640px; font-size: 15px; opacity: 0.92; margin: 0; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  section.card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: 0 12px 28px rgba(30,20,10,0.06);
+    padding: 32px 34px;
+    margin-top: -26px;
+    position: relative;
+    margin-bottom: 28px;
+  }
+
+  section.card:not(:first-of-type) { margin-top: 28px; }
+
+  h2 {
+    font-size: 20px;
+    margin: 0 0 6px 0;
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  h2 .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--yellow); display: inline-block;
+  }
+
+  .instructions { font-size: 14px; color: #555; margin-bottom: 22px; }
+
+  /* --- Drag and drop game --- */
+  .pool {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 16px;
+    background: #f7f5ef;
+    border: 1.5px dashed var(--line);
+    border-radius: 8px;
+    min-height: 60px;
+    margin-bottom: 24px;
+  }
+
+  .chip {
+    padding: 9px 16px;
+    border-radius: 20px;
+    background: white;
+    border: 2px solid var(--purple);
+    color: var(--purple);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+
+  .chip:active { cursor: grabbing; }
+  .chip.dragging { opacity: 0.4; }
+  .chip:hover { box-shadow: 0 4px 10px rgba(122,79,158,0.25); transform: translateY(-1px); }
+
+  .zones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .zone {
+    border-radius: 10px;
+    padding: 16px;
+    min-height: 260px;
+    border: 2.5px solid;
+  }
+
+  .zone.sport { border-color: var(--blue); background: rgba(46,111,176,0.06); }
+  .zone.culture { border-color: var(--red); background: rgba(209,91,63,0.06); }
+
+  .zone-title {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .zone.sport .zone-title { color: var(--blue); }
+  .zone.culture .zone-title { color: var(--red); }
+
+  .zone-body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 200px;
+    align-content: flex-start;
+  }
+
+  .zone-body.dragover { background: rgba(0,0,0,0.04); border-radius: 8px; }
+
+  .chip.placed-sport { border-color: var(--blue); color: var(--blue); }
+  .chip.placed-culture { border-color: var(--red); color: var(--red); }
+
+  .chip.wrong { border-color: #c0392b !important; color: #c0392b !important; animation: shake 0.3s; }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+
+  .game-actions { margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+  button {
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 13.5px;
+    padding: 11px 22px;
+    border-radius: 22px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+  button:active { transform: scale(0.96); }
+
+  .btn-primary { background: var(--blue); color: white; }
+  .btn-secondary { background: transparent; border: 2px solid var(--line) !important; color: var(--ink); }
+  .btn-ghost { background: var(--yellow); color: #4a3300; }
+
+  .game-score {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--green);
+    display: none;
+    padding: 8px 16px;
+    background: rgba(74,149,96,0.1);
+    border-radius: 20px;
+  }
+
+  /* --- Vocabulary section --- */
+  .subtitle-block {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--purple);
+    margin: 26px 0 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .subtitle-block .num {
+    background: var(--purple);
+    color: white;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .passage {
+    background: #f7f5ef;
+    border-radius: 10px;
+    padding: 24px 26px;
+    font-size: 15px;
+    line-height: 1.9;
+  }
+
+  .passage .caption {
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+
+  .passage p { margin: 0 0 12px 0; }
+
+  select.blank {
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border: none;
+    border-bottom: 2px solid var(--purple);
+    background: #efe6f5;
+    color: var(--purple);
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    min-width: 130px;
+    text-align: center;
+  }
+
+  select.blank:hover { background: #e3d3ee; }
+
+  select.blank.correct {
+    background: rgba(74,149,96,0.18);
+    border-bottom-color: var(--green);
+    color: #2c6b3f;
+  }
+
+  select.blank.incorrect {
+    background: rgba(209,91,63,0.18);
+    border-bottom-color: var(--red);
+    color: #a13f28;
+  }
+
+  select.blank.unanswered {
+    background: #ece7db;
+    border-bottom-color: var(--line);
+    color: var(--ink);
+  }
+
+  .exo-actions {
+    margin-top: 18px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .exo-score {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--green);
+    display: none;
+    padding: 7px 14px;
+    background: rgba(74,149,96,0.1);
+    border-radius: 18px;
+  }
+
+  .word-bank-mini {
+    margin-top: 14px;
+    font-size: 12.5px;
+    color: #888;
+  }
+
+  .word-bank-mini span {
+    display: inline-block;
+    background: white;
+    border: 1px solid var(--line);
+    padding: 2px 9px;
+    border-radius: 12px;
+    margin: 2px 3px;
+  }
+
+  footer {
+    max-width: 900px;
+    margin: 10px auto 0;
+    padding: 0 24px;
+    font-size: 12px;
+    color: #999;
+    text-align: center;
+  }
+
+  @media (max-width: 640px) {
+    .zones { grid-template-columns: 1fr; }
+    h1 { font-size: 26px; }
+    section.card { padding: 22px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">CIJF · Organisation internationale de la Francophonie</div>
+    <h1>Les Xes Jeux de la Francophonie — Erevan 2027</h1>
+    <p>Du 23 juillet au 1er août 2027, la capitale arménienne accueillera pour la première fois les Jeux de la Francophonie : 10 disciplines sportives et 10 concours culturels réunissant la jeunesse francophone.</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <section class="card">
+    <h2><span class="dot"></span>Activité 1 — Sport ou culture ?</h2>
+    <p class="instructions">Fais glisser chacune des 20 catégories vers la bonne colonne : <strong>Sport</strong> ou <strong>Culture</strong>.</p>
+
+    <div class="pool" id="pool"></div>
+
+    <div class="zones">
+      <div class="zone sport">
+        <div class="zone-title">🏅 Sport</div>
+        <div class="zone-body" id="zone-sport" data-zone="sport"></div>
+      </div>
+      <div class="zone culture">
+        <div class="zone-title">🎭 Culture</div>
+        <div class="zone-body" id="zone-culture" data-zone="culture"></div>
+      </div>
+    </div>
+
+    <div class="game-actions">
+      <button class="btn-primary" onclick="checkGame()">Vérifier</button>
+      <button class="btn-ghost" onclick="revealGame()">Voir les réponses</button>
+      <button class="btn-secondary" onclick="resetGame()">Recommencer</button>
+      <div class="game-score" id="gameScore"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="dot"></span>Activité 2 — Vocabulaire clé : Erevan 2027</h2>
+    <p class="instructions">13 mots et expressions clés ont été retirés du texte officiel de présentation. Remets-les à leur place, puis réutilise-les dans de nouvelles phrases.</p>
+
+    <div class="subtitle-block"><span class="num">1</span>Remets les mots dans le texte original</div>
+    <div class="passage">
+      <div class="caption">Communiqué du CIJF</div>
+      <p>Après l'édition 2023 à Kinshasa (République démocratique du Congo), c'est Erevan, capitale de l'Arménie, qui
+      <select class="blank" data-answer="accueillera"></select>
+      les prochains Jeux de la Francophonie du 23 juillet au 1er août 2027.</p>
+
+      <p>Pour la première fois de leur histoire, les Jeux de la Francophonie se tiendront en Arménie,
+      <select class="blank" data-answer="une première historique"></select>
+      qui marque
+      <select class="blank" data-answer="l'ancrage"></select>
+      de la Francophonie dans la zone de l'Europe centrale et orientale. Erevan, ville millénaire au
+      <select class="blank" data-answer="carrefour"></select>
+      de l'Orient et de l'Occident, offre un cadre exceptionnel pour célébrer
+      <select class="blank" data-answer="la diversité"></select>
+      et
+      <select class="blank" data-answer="la jeunesse francophone"></select>. La capitale arménienne
+      <select class="blank" data-answer="se prépare à"></select>
+      accueillir les jeunes concurrents des Xes Jeux de la Francophonie.</p>
+
+      <p><strong>RESPECT</strong> — Placés sous le signe du respect, les Xes Jeux de la Francophonie
+      <select class="blank" data-answer="valorisent"></select>
+      le dialogue et
+      <select class="blank" data-answer="la courtoisie"></select>
+      entre toutes les délégations.</p>
+
+      <p><strong>INCLUSION</strong> — Ouverts à tous les États et gouvernements membres de l'OIF, les Xes Jeux de la Francophonie
+      <select class="blank" data-answer="célèbrent"></select>
+      la diversité des
+      <select class="blank" data-answer="parcours"></select>
+      et des
+      <select class="blank" data-answer="talents"></select>.</p>
+
+      <p><strong>AMITIÉ</strong> — Les Xes Jeux de la Francophonie
+      <select class="blank" data-answer="tissent des liens durables"></select>
+      entre les jeunesses francophones des cinq continents.</p>
+    </div>
+
+    <div class="exo-actions">
+      <button class="btn-primary" onclick="checkExo('passage')">Vérifier</button>
+      <button class="btn-ghost" onclick="revealExo('passage')">Voir les réponses</button>
+      <button class="btn-secondary" onclick="resetExo('passage')">Recommencer</button>
+      <div class="exo-score" id="score-passage"></div>
+    </div>
+
+    <div class="subtitle-block"><span class="num">2</span>Réutilise ces mots dans de nouvelles phrases</div>
+    <div class="passage">
+      <div class="caption">Nouveau contexte — entraîne-toi</div>
+      <p>1. Après Kinshasa en 2023, le Comité international des Jeux
+      <select class="blank" data-answer="accueillera"></select>
+      la prochaine édition à Erevan.</p>
+
+      <p>2. C'est
+      <select class="blank" data-answer="une première historique"></select>
+      : jamais les Jeux de la Francophonie ne s'étaient tenus en Europe orientale.</p>
+
+      <p>3. Ce choix marque
+      <select class="blank" data-answer="l'ancrage"></select>
+      durable de la Francophonie dans cette région du monde.</p>
+
+      <p>4. Erevan est connue pour être un
+      <select class="blank" data-answer="carrefour"></select>
+      culturel entre plusieurs civilisations.</p>
+
+      <p>5. Les organisateurs veulent mettre en valeur
+      <select class="blank" data-answer="la diversité"></select>
+      des athlètes venus de tous les continents.</p>
+
+      <p>6. Ces Jeux sont avant tout pensés pour
+      <select class="blank" data-answer="la jeunesse francophone"></select>, âgée de 18 à 35 ans.</p>
+
+      <p>7. La ville
+      <select class="blank" data-answer="se prépare à"></select>
+      recevoir des milliers de jeunes délégués francophones.</p>
+
+      <p>8. Les Jeux
+      <select class="blank" data-answer="valorisent"></select>
+      autant le sport que la création artistique.</p>
+
+      <p>9. Malgré la compétition,
+      <select class="blank" data-answer="la courtoisie"></select>
+      entre les délégations reste une valeur essentielle.</p>
+
+      <p>10. Chaque édition
+      <select class="blank" data-answer="célèbrent" data-alt="célèbre"></select>
+      la richesse des cultures francophones.</p>
+
+      <p>11. Le concours culturel met en avant
+      <select class="blank" data-answer="parcours" data-alt="les parcours"></select>
+      personnels des jeunes artistes.</p>
+
+      <p>12. Les Jeux permettent aussi de révéler de nouveaux
+      <select class="blank" data-answer="talents" data-alt="les talents"></select>
+      dans le sport comme dans l'art.</p>
+
+      <p>13. Beaucoup d'anciens participants affirment que les Jeux
+      <select class="blank" data-answer="tissent des liens durables"></select>
+      entre les jeunes du monde entier.</p>
+    </div>
+
+    <div class="exo-actions">
+      <button class="btn-primary" onclick="checkExo('phrases')">Vérifier</button>
+      <button class="btn-ghost" onclick="revealExo('phrases')">Voir les réponses</button>
+      <button class="btn-secondary" onclick="resetExo('phrases')">Recommencer</button>
+      <div class="exo-score" id="score-phrases"></div>
+    </div>
+
+    <div class="word-bank-mini">
+      Banque de mots :
+      <span>accueillera</span><span>une première historique</span><span>l'ancrage</span>
+      <span>carrefour</span><span>la diversité</span><span>la jeunesse francophone</span>
+      <span>se prépare à</span><span>valorisent</span><span>la courtoisie</span>
+      <span>célèbrent</span><span>parcours</span><span>talents</span>
+      <span>tissent des liens durables</span>
+    </div>
+  </section>
+
+</div>
+
+<footer>Fiche pédagogique · Club de conversation · Jeux de la Francophonie, Erevan 2027</footer>
+
+<script>
+  // ---------- ACTIVITÉ 1 : DRAG AND DROP ----------
+  const items = [
+    { name: "Athlétisme", category: "sport" },
+    { name: "Para-athlétisme", category: "sport" },
+    { name: "Judo", category: "sport" },
+    { name: "Football", category: "sport" },
+    { name: "Tennis de table", category: "sport" },
+    { name: "Basket 3x3", category: "sport" },
+    { name: "Breaking", category: "sport" },
+    { name: "Haltérophilie", category: "sport" },
+    { name: "Basket fauteuil 3x3", category: "sport" },
+    { name: "Échecs", category: "sport" },
+    { name: "Chanson", category: "culture" },
+    { name: "Création numérique", category: "culture" },
+    { name: "Contes et conteurs", category: "culture" },
+    { name: "Danse de création", category: "culture" },
+    { name: "Jonglerie avec ballon (Freestyle ball)", category: "culture" },
+    { name: "Littérature / Nouvelle", category: "culture" },
+    { name: "Peinture", category: "culture" },
+    { name: "Photographie", category: "culture" },
+    { name: "Sculpture / Installation", category: "culture" },
+    { name: "Théâtre", category: "culture" },
+  ];
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  const pool = document.getElementById('pool');
+  let draggedChip = null;
+
+  function makeChip(item) {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.textContent = item.name;
+    chip.draggable = true;
+    chip.dataset.category = item.category;
+    chip.dataset.name = item.name;
+
+    chip.addEventListener('dragstart', (e) => {
+      draggedChip = chip;
+      setTimeout(() => chip.classList.add('dragging'), 0);
+    });
+    chip.addEventListener('dragend', () => {
+      chip.classList.remove('dragging');
+      draggedChip = null;
+    });
+    return chip;
+  }
+
+  function initGame() {
+    pool.innerHTML = '';
+    document.getElementById('zone-sport').innerHTML = '';
+    document.getElementById('zone-culture').innerHTML = '';
+    const shuffled = shuffle(items);
+    shuffled.forEach(item => pool.appendChild(makeChip(item)));
+    document.getElementById('gameScore').style.display = 'none';
+  }
+
+  [document.getElementById('zone-sport'), document.getElementById('zone-culture'), pool].forEach(zone => {
+    zone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      zone.classList.add('dragover');
+    });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      if (draggedChip) {
+        draggedChip.classList.remove('wrong', 'placed-sport', 'placed-culture');
+        zone.appendChild(draggedChip);
+      }
+    });
+  });
+
+  function checkGame() {
+    let correct = 0;
+    let total = 0;
+    ['zone-sport', 'zone-culture'].forEach(zoneId => {
+      const zoneCat = zoneId === 'zone-sport' ? 'sport' : 'culture';
+      const zone = document.getElementById(zoneId);
+      zone.querySelectorAll('.chip').forEach(chip => {
+        total++;
+        chip.classList.remove('wrong', 'placed-sport', 'placed-culture');
+        if (chip.dataset.category === zoneCat) {
+          correct++;
+          chip.classList.add(zoneCat === 'sport' ? 'placed-sport' : 'placed-culture');
+        } else {
+          chip.classList.add('wrong');
+        }
+      });
+    });
+    const badge = document.getElementById('gameScore');
+    badge.style.display = 'inline-block';
+    badge.textContent = `Score : ${correct} / ${items.length}`;
+  }
+
+  function revealGame() {
+    const zoneSport = document.getElementById('zone-sport');
+    const zoneCulture = document.getElementById('zone-culture');
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.classList.remove('wrong');
+      if (chip.dataset.category === 'sport') {
+        chip.classList.add('placed-sport');
+        zoneSport.appendChild(chip);
+      } else {
+        chip.classList.add('placed-culture');
+        zoneCulture.appendChild(chip);
+      }
+    });
+    const badge = document.getElementById('gameScore');
+    badge.style.display = 'inline-block';
+    badge.textContent = 'Réponses affichées';
+  }
+
+  function resetGame() { initGame(); }
+
+  initGame();
+
+  // ---------- ACTIVITÉ 2 : TEXTES À TROUS ----------
+  const wordBank = [
+    "accueillera", "une première historique", "l'ancrage", "carrefour",
+    "la diversité", "la jeunesse francophone", "se prépare à", "valorisent",
+    "la courtoisie", "célèbrent", "parcours", "talents", "tissent des liens durables"
+  ];
+
+  function shuffleWords(array) {
+    const a = array.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function buildExoSelects(sectionClass) {
+    // sectionClass unused directly; we rebuild all selects globally by container order
+  }
+
+  function initAllSelects() {
+    document.querySelectorAll('select.blank').forEach(sel => {
+      sel.innerHTML = '<option value="">— choisir —</option>';
+      const options = shuffleWords(wordBank);
+      options.forEach(word => {
+        const opt = document.createElement('option');
+        opt.value = word;
+        opt.textContent = word;
+        sel.appendChild(opt);
+      });
+      sel.classList.remove('correct', 'incorrect', 'unanswered');
+    });
+  }
+
+  function getPassageSelects(which) {
+    // which: 'passage' = first .passage block, 'phrases' = second .passage block
+    const passages = document.querySelectorAll('.passage');
+    const target = which === 'passage' ? passages[0] : passages[1];
+    return target.querySelectorAll('select.blank');
+  }
+
+  function checkExo(which) {
+    const selects = getPassageSelects(which);
+    let correct = 0;
+    selects.forEach(sel => {
+      sel.classList.remove('correct', 'incorrect', 'unanswered');
+      const answer = sel.dataset.answer;
+      const alt = sel.dataset.alt;
+      if (!sel.value) {
+        sel.classList.add('unanswered');
+      } else if (sel.value === answer || sel.value === alt) {
+        sel.classList.add('correct');
+        correct++;
+      } else {
+        sel.classList.add('incorrect');
+      }
+    });
+    const badge = document.getElementById('score-' + which);
+    badge.style.display = 'inline-block';
+    badge.textContent = `Score : ${correct} / ${selects.length}`;
+  }
+
+  function revealExo(which) {
+    const selects = getPassageSelects(which);
+    selects.forEach(sel => {
+      sel.value = sel.dataset.answer;
+      sel.classList.remove('incorrect', 'unanswered');
+      sel.classList.add('correct');
+    });
+    const badge = document.getElementById('score-' + which);
+    badge.style.display = 'inline-block';
+    badge.textContent = 'Réponses affichées';
+  }
+
+  function resetExo(which) {
+    const selects = getPassageSelects(which);
+    selects.forEach(sel => {
+      sel.value = '';
+      sel.classList.remove('correct', 'incorrect', 'unanswered');
+    });
+    document.getElementById('score-' + which).style.display = 'none';
+  }
+
+  initAllSelects();
+</script>
+
+</body>
+</html>
