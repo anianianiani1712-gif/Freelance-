@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Futur Proche</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#152238;
+    --navy-2:#1d2f4d;
+    --navy-3:#24395e;
+    --coral:#e8674a;
+    --coral-2:#f3906f;
+    --cream:#faf3e7;
+    --cream-2:#f1e6d3;
+    --ink:#182338;
+    --board-amber:#ffb238;
+    --line:rgba(250,243,231,0.14);
+    --shadow: 0 20px 50px -20px rgba(0,0,0,0.5);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.55;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    letter-spacing:-0.01em;
+  }
+  .mono{font-family:'Space Mono',monospace;}
+
+  /* ===== HERO / DEPARTURE BOARD ===== */
+  .hero{
+    background:
+      radial-gradient(120% 140% at 15% -10%, #22345a 0%, var(--navy) 55%),
+      var(--navy);
+    color:var(--cream);
+    padding: 64px 24px 56px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; inset:0;
+    background-image: linear-gradient(rgba(250,243,231,0.035) 1px, transparent 1px);
+    background-size: 100% 3px;
+    pointer-events:none;
+  }
+  .hero-inner{max-width:920px;margin:0 auto;position:relative;}
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--coral-2);
+    display:flex;align-items:center;gap:10px;
+    margin-bottom:22px;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--board-amber);box-shadow:0 0 10px var(--board-amber);animation:pulse 1.6s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+
+  .hero h1{
+    font-size:clamp(40px,7vw,72px);
+    font-weight:600;
+    margin:0 0 6px;
+    line-height:0.98;
+  }
+  .hero h1 em{font-style:italic;color:var(--coral-2);font-weight:500;}
+  .hero-sub{
+    max-width:520px;
+    color:rgba(250,243,231,0.72);
+    font-size:16px;
+    margin:14px 0 36px;
+  }
+
+  /* departure board */
+  .board{
+    background: #0e1830;
+    border:1px solid rgba(250,243,231,0.1);
+    border-radius:10px;
+    padding:6px;
+    box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,255,255,0.02);
+    overflow-x:auto;
+  }
+  .board-row{
+    display:grid;
+    grid-template-columns: 70px 1fr 90px 90px 100px;
+    gap:0;
+    font-family:'Space Mono',monospace;
+    font-size:14px;
+    color:var(--board-amber);
+    padding:11px 14px;
+    border-bottom:1px dashed rgba(255,178,56,0.14);
+    white-space:nowrap;
+  }
+  .board-row:last-child{border-bottom:none;}
+  .board-row.head{
+    color:rgba(250,243,231,0.4);
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    border-bottom:1px solid rgba(250,243,231,0.12);
+  }
+  .board-row span{overflow:hidden;text-overflow:ellipsis;}
+  .board-row .neg{color:var(--coral-2);}
+  .tag{
+    font-size:10px; letter-spacing:.08em; text-transform:uppercase;
+    padding:2px 7px; border-radius:20px; border:1px solid currentColor;
+  }
+
+  /* ===== SECTIONS ===== */
+  section{max-width:920px;margin:0 auto;padding:56px 24px;}
+  .section-head{margin-bottom:30px;}
+  .section-head .num{
+    font-family:'Space Mono',monospace;
+    color:var(--coral);
+    font-size:13px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+    display:block;
+  }
+  .section-head h2{font-size:clamp(26px,4vw,36px);margin:0;font-weight:600;}
+  .section-head p{color:#5b6478;margin:10px 0 0;max-width:640px;}
+
+  /* rule cards */
+  .rules{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:680px){.rules{grid-template-columns:1fr;}}
+  .rule-card{
+    background:#fff;
+    border:1px solid var(--cream-2);
+    border-radius:14px;
+    padding:22px 24px;
+    box-shadow:0 2px 0 var(--cream-2);
+  }
+  .rule-card h3{
+    font-size:15px;margin:0 0 12px;font-weight:600;
+    display:flex;align-items:center;gap:8px;
+    color:var(--navy);
+  }
+  .rule-card h3 .badge{
+    background:var(--navy);color:var(--cream);
+    font-family:'Space Mono',monospace;
+    font-size:11px;padding:3px 8px;border-radius:6px;
+  }
+  .formula{
+    font-family:'Space Mono',monospace;
+    font-size:13px;
+    background:var(--cream);
+    border-radius:8px;
+    padding:10px 12px;
+    margin-bottom:14px;
+    color:var(--navy);
+  }
+  .rule-card ul{margin:0;padding-left:0;list-style:none;}
+  .rule-card li{
+    font-size:14.5px;
+    padding:6px 0;
+    border-top:1px solid var(--cream-2);
+    color:#3a4256;
+  }
+  .rule-card li:first-child{border-top:none;}
+  .rule-card .fr{color:var(--ink);}
+  .rule-card .en{color:#8a8f9c;font-size:13px;}
+  .neg-word{color:var(--coral);font-weight:600;}
+
+  /* time expressions */
+  .time-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+  }
+  @media(max-width:680px){.time-grid{grid-template-columns:repeat(2,1fr);}}
+  .time-chip{
+    background:var(--navy);color:var(--cream);
+    border-radius:10px;padding:14px 10px;text-align:center;
+    font-size:13.5px;
+  }
+  .time-chip small{display:block;color:var(--coral-2);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;}
+
+  /* exercises */
+  .ex-block{
+    background:#fff;
+    border-radius:16px;
+    border:1px solid var(--cream-2);
+    padding:26px 26px 22px;
+    margin-bottom:22px;
+    box-shadow:0 2px 0 var(--cream-2);
+  }
+  .ex-title{
+    display:flex;align-items:center;gap:10px;
+    font-weight:600;font-size:16px;margin:0 0 4px;color:var(--navy);
+  }
+  .ex-title .n{
+    width:28px;height:28px;border-radius:8px;
+    background:var(--coral);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Space Mono',monospace;font-size:13px;flex:none;
+  }
+  .ex-instructions{color:#6b7280;font-size:14px;margin:6px 0 18px;}
+
+  .fill-line{
+    display:flex;align-items:center;flex-wrap:wrap;gap:8px;
+    font-size:15px; margin-bottom:12px; padding:10px 0;
+    border-bottom:1px dashed var(--cream-2);
+  }
+  .fill-line:last-of-type{border-bottom:none;}
+  .fill-line .num-b{
+    font-family:'Space Mono',monospace;color:#9aa1b0;font-size:13px;min-width:18px;
+  }
+  input.blank{
+    border:none; border-bottom:2px solid var(--cream-2);
+    background:transparent; font-family:'Inter',sans-serif;
+    font-size:15px; padding:3px 4px; min-width:120px;
+    color:var(--navy); outline:none; text-align:center;
+  }
+  input.blank:focus{border-bottom-color:var(--coral);}
+  input.blank.correct{border-bottom-color:#4c9a6a;background:rgba(76,154,106,0.08);}
+  input.blank.incorrect{border-bottom-color:var(--coral);background:rgba(232,103,74,0.08);}
+
+  .btn{
+    font-family:'Space Mono',monospace;
+    font-size:12.5px; letter-spacing:.04em;
+    background:var(--navy); color:var(--cream);
+    border:none; border-radius:8px; padding:10px 18px;
+    cursor:pointer; transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{background:var(--navy-3); transform:translateY(-1px);}
+  .btn.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--cream-2);}
+  .btn.ghost:hover{border-color:var(--coral);color:var(--coral);background:transparent;}
+  .btn-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center;}
+  .score-note{font-family:'Space Mono',monospace;font-size:12.5px;color:#6b7280;}
+
+  /* matching exercise */
+  .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:600px){.match-grid{grid-template-columns:1fr;}}
+  .match-col h4{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#9aa1b0;margin:0 0 10px;}
+  .match-item{
+    display:flex;gap:10px;align-items:flex-start;
+    padding:10px 12px;border-radius:8px;
+    border:1.5px solid var(--cream-2);margin-bottom:8px;
+    cursor:pointer; font-size:14.5px; transition:.15s;
+  }
+  .match-item.selected{border-color:var(--coral);background:rgba(232,103,74,0.06);}
+  .match-item .letter, .match-item .digit{
+    font-family:'Space Mono',monospace;font-weight:700;color:var(--navy);flex:none;
+  }
+  .match-item.paired-correct{border-color:#4c9a6a;background:rgba(76,154,106,0.08);}
+  .match-item.paired-wrong{border-color:var(--coral);background:rgba(232,103,74,0.08);}
+
+  /* word order builder */
+  .word-bank{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+  .word-chip{
+    background:var(--cream); border:1.5px solid var(--cream-2);
+    padding:7px 13px; border-radius:20px; cursor:pointer;
+    font-size:14px; user-select:none; transition:.12s;
+  }
+  .word-chip:hover{border-color:var(--coral);}
+  .word-chip.used{opacity:0.25; pointer-events:none;}
+  .sentence-slot{
+    min-height:44px; border:2px dashed var(--cream-2); border-radius:10px;
+    padding:8px 10px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+    margin-bottom:12px; font-size:15px;
+  }
+  .sentence-slot .word-chip.placed{background:var(--navy);color:var(--cream);border-color:var(--navy);}
+  .result-msg{font-size:13.5px;font-family:'Space Mono',monospace;margin-top:8px;min-height:18px;}
+  .result-msg.ok{color:#3f8a5c;}
+  .result-msg.no{color:var(--coral);}
+
+  /* reveal textareas */
+  textarea.answer-box{
+    width:100%; min-height:90px; border:1.5px solid var(--cream-2);
+    border-radius:10px; padding:12px; font-family:'Inter',sans-serif;
+    font-size:14.5px; resize:vertical; color:var(--ink);
+  }
+  textarea.answer-box:focus{outline:none;border-color:var(--coral);}
+  .model-answer{
+    display:none; margin-top:14px; padding:16px 18px;
+    background:var(--cream); border-left:3px solid var(--coral);
+    border-radius:0 10px 10px 0; font-size:14.5px; color:var(--navy);
+  }
+  .model-answer.show{display:block;}
+  .model-answer .label{
+    font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--coral);display:block;margin-bottom:8px;
+  }
+
+  /* schedule / itinerary card - departure-board themed */
+  .itin{
+    background:var(--navy); color:var(--cream); border-radius:14px;
+    padding:20px 22px; margin-bottom:16px;
+  }
+  .itin h4{
+    font-family:'Space Mono',monospace; font-size:13px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--coral-2); margin:0 0 12px;
+    border-bottom:1px solid rgba(250,243,231,0.14); padding-bottom:10px;
+  }
+  .itin-row{display:grid;grid-template-columns:64px 1fr; gap:12px; font-size:14px; padding:6px 0; align-items:baseline;}
+  .itin-row .t{font-family:'Space Mono',monospace;color:var(--board-amber);}
+  .itin-row .a{color:rgba(250,243,231,0.85);}
+
+  footer{
+    text-align:center; padding:40px 24px 60px; color:#9aa1b0;
+    font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.04em;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .eyebrow .dot{animation:none;}
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow"><span class="dot"></span> GRAMMAIRE&nbsp;·&nbsp;NIVEAU A2–B1</div>
+    <h1>Le futur <em>proche</em></h1>
+    <p class="hero-sub">Ce qui va arriver — dans une minute, ou dans dix ans. La grammaire du prochain départ.</p>
+
+    <div class="board">
+      <div class="board-row head"><span>QUAI</span><span>SUJET</span><span>ALLER</span><span>+ VERBE</span><span>STATUT</span></div>
+      <div class="board-row"><span>01</span><span>je</span><span>vais</span><span>infinitif</span><span class="tag">à l'heure</span></div>
+      <div class="board-row"><span>02</span><span>tu</span><span>vas</span><span>infinitif</span><span class="tag">à l'heure</span></div>
+      <div class="board-row"><span>03</span><span>il / elle / on</span><span>va</span><span>infinitif</span><span class="tag">à l'heure</span></div>
+      <div class="board-row"><span>04</span><span>nous</span><span>allons</span><span>infinitif</span><span class="tag">à l'heure</span></div>
+      <div class="board-row"><span>05</span><span>vous</span><span>allez</span><span>infinitif</span><span class="tag">à l'heure</span></div>
+      <div class="board-row"><span>06</span><span>ils / elles</span><span>vont</span><span>infinitif</span><span class="tag">à l'heure</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- QUAND L'UTILISER -->
+<section>
+  <div class="section-head">
+    <span class="num">01 — Quand l'utiliser</span>
+    <h2>Deux façons d'exprimer le futur</h2>
+    <p>Le futur proche est <strong>plus utilisé à l'oral</strong> que le futur simple. Il sert pour deux situations bien différentes.</p>
+  </div>
+  <div class="rules">
+    <div class="rule-card">
+      <h3><span class="badge">1</span> Action immédiate ou proche</h3>
+      <ul>
+        <li><span class="fr">Le train va arriver.</span><br><span class="en">The train is going to arrive.</span></li>
+        <li><span class="fr">Je vais manger.</span><br><span class="en">I'm going to eat.</span></li>
+        <li><span class="fr">Vous allez partir ?</span><br><span class="en">Are you about to leave?</span></li>
+        <li><span class="fr">Chut !! Raphaël va faire un discours.</span><br><span class="en">Shh! Raphaël is about to give a speech.</span></li>
+      </ul>
+    </div>
+    <div class="rule-card">
+      <h3><span class="badge">2</span> Projet / prévision datée</h3>
+      <ul>
+        <li><span class="fr">Elle va commencer une formation en septembre.</span><br><span class="en">She's going to start training in September.</span></li>
+        <li><span class="fr">Ils vont habiter au Japon dans trois ans.</span><br><span class="en">They will live in Japan in three years.</span></li>
+        <li><span class="fr">Je vais aller au Hellfest, l'année prochaine.</span><br><span class="en">I'm going to Hellfest next year.</span></li>
+        <li><span class="fr">Qu'est-ce que tu vas faire à Noël ?</span><br><span class="en">What are you going to do at Christmas?</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CONSTRUCTION -->
+<section style="padding-top:0;">
+  <div class="section-head">
+    <span class="num">02 — Construction</span>
+    <h2>ALLER au présent + infinitif</h2>
+  </div>
+  <div class="rules">
+    <div class="rule-card">
+      <h3><span class="badge">forme simple</span></h3>
+      <div class="formula">sujet + ALLER (présent) + INFINITIF</div>
+      <ul>
+        <li class="fr">Il va se coucher bientôt.</li>
+        <li class="fr">Vous allez vous rencontrer à quelle heure ?</li>
+      </ul>
+    </div>
+    <div class="rule-card">
+      <h3><span class="badge">négation</span></h3>
+      <div class="formula">sujet + <span class="neg-word">NE</span> + ALLER + <span class="neg-word">PAS</span> + INFINITIF</div>
+      <ul>
+        <li class="fr">Il <span class="neg-word">ne</span> va <span class="neg-word">pas</span> aller à la piscine.</li>
+        <li class="fr">Je <span class="neg-word">ne</span> vais <span class="neg-word">pas</span> pouvoir venir ce soir.</li>
+        <li class="fr">Vous <span class="neg-word">n'</span>allez <span class="neg-word">pas</span> manger ?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="rule-card" style="margin-top:16px;">
+    <h3><span class="badge">verbes pronominaux</span></h3>
+    <div class="formula">sujet + ALLER (présent) + PRONOM + INFINITIF</div>
+    <ul>
+      <li class="fr">Je <span class="neg-word">ne</span> vais <span class="neg-word">pas</span> me marier avec Paul.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- EXPRESSIONS DE TEMPS -->
+<section style="padding-top:0;">
+  <div class="section-head">
+    <span class="num">03 — Repères temporels</span>
+    <h2>Quelques expressions de temps</h2>
+  </div>
+  <div class="time-grid">
+    <div class="time-chip"><small>aujourd'hui</small>ce soir</div>
+    <div class="time-chip"><small>cette semaine</small>ce mois-ci</div>
+    <div class="time-chip"><small>demain</small>la semaine prochaine</div>
+    <div class="time-chip"><small>le mois prochain</small>l'année prochaine</div>
+  </div>
+  <p style="margin-top:20px;color:#5b6478;font-size:14.5px;">
+    <em>Qu'est-ce que tu vas faire… ce soir&nbsp;? demain midi&nbsp;? le weekend prochain&nbsp;? pour les prochaines vacances&nbsp;? l'année prochaine&nbsp;? dans 10 ans&nbsp;?</em>
+  </p>
+</section>
+
+<!-- EXERCICE 1 - MATCHING -->
+<section style="padding-top:0;">
+  <div class="section-head">
+    <span class="num">04 — Exercices</span>
+    <h2>À vous de jouer</h2>
+  </div>
+
+  <div class="ex-block">
+    <p class="ex-title"><span class="n">1</span>Associer les éléments</p>
+    <p class="ex-instructions">Clique sur une lettre à gauche, puis sur le numéro qui la complète correctement à droite.</p>
+    <div class="match-grid">
+      <div class="match-col">
+        <h4>Sujets</h4>
+        <div class="match-item" data-key="a"><span class="letter">a.</span> Marie</div>
+        <div class="match-item" data-key="b"><span class="letter">b.</span> Les étudiants</div>
+        <div class="match-item" data-key="c"><span class="letter">c.</span> Ton frère et toi</div>
+        <div class="match-item" data-key="d"><span class="letter">d.</span> Je</div>
+        <div class="match-item" data-key="e"><span class="letter">e.</span> Mes amis et moi</div>
+        <div class="match-item" data-key="f"><span class="letter">f.</span> Tu</div>
+      </div>
+      <div class="match-col">
+        <h4>Suites possibles</h4>
+        <div class="match-item" data-key="1"><span class="digit">1.</span> ne vont pas arriver à l'heure !</div>
+        <div class="match-item" data-key="2"><span class="digit">2.</span> allez aller en Irlande ?</div>
+        <div class="match-item" data-key="3"><span class="digit">3.</span> vas bien t'amuser à la fête de Vincent.</div>
+        <div class="match-item" data-key="4"><span class="digit">4.</span> allons travailler sur un projet important.</div>
+        <div class="match-item" data-key="5"><span class="digit">5.</span> vais partir à 18h.</div>
+        <div class="match-item" data-key="6"><span class="digit">6.</span> va se reposer après ses examens.</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="checkMatch()">Vérifier</button>
+      <button class="btn ghost" onclick="resetMatch()">Recommencer</button>
+      <span class="score-note" id="match-score"></span>
+    </div>
+  </div>
+
+  <!-- EXERCICE 2 -->
+  <div class="ex-block">
+    <p class="ex-title"><span class="n">2</span>Complète avec le bon verbe</p>
+    <p class="ex-instructions">Banque de verbes : être malade · pleuvoir · fermer · partir · tomber · commencer — conjugue au futur proche.</p>
+    <div id="ex2"></div>
+    <div class="btn-row">
+      <button class="btn" onclick="checkFill('ex2')">Vérifier</button>
+      <button class="btn ghost" onclick="revealFill('ex2')">Voir les réponses</button>
+      <span class="score-note" id="ex2-score"></span>
+    </div>
+  </div>
+
+  <!-- EXERCICE 3 -->
+  <div class="ex-block">
+    <p class="ex-title"><span class="n">3</span>Habitude vs. futur proche</p>
+    <p class="ex-instructions">Exemple donné : <em>D'habitude, je rentre tard le soir. Mais, ce soir, je vais rentrer plus tôt.</em></p>
+    <div id="ex3"></div>
+    <div class="btn-row">
+      <button class="btn" onclick="checkFill('ex3')">Vérifier</button>
+      <button class="btn ghost" onclick="revealFill('ex3')">Voir les réponses</button>
+      <span class="score-note" id="ex3-score"></span>
+    </div>
+  </div>
+
+  <!-- EXERCICE 4 - WORD ORDER -->
+  <div class="ex-block">
+    <p class="ex-title"><span class="n">4</span>Remets les mots dans l'ordre</p>
+    <p class="ex-instructions">Clique les mots dans le bon ordre pour construire la phrase.</p>
+    <div id="ex4"></div>
+  </div>
+
+  <!-- EXERCICE 5 -->
+  <div class="ex-block">
+    <p class="ex-title"><span class="n">5</span>Conjuguer au futur proche</p>
+    <p class="ex-instructions">Banque de verbes : se coucher · acheter · faire · (ne pas) partir · commencer · aller · jouer · arrêter</p>
+    <div id="ex5"></div>
+    <div class="btn-row">
+      <button class="btn" onclick="checkFill('ex5')">Vérifier</button>
+      <button class="btn ghost" onclick="revealFill('ex5')">Voir les réponses</button>
+      <span class="score-note" id="ex5-score"></span>
+    </div>
+  </div>
+
+  <!-- EXERCICE 6 - Malika itinerary -->
+  <div class="ex-block">
+    <p class="ex-title"><span class="n">6</span>Décris le programme de Malika</p>
+    <p class="ex-instructions">Regarde le planning ci-dessous et écris-le au futur proche. Le lundi est déjà fait pour t'aider — continue avec mardi et mercredi.</p>
+
+    <div class="itin">
+      <h4>Lundi</h4>
+      <div class="itin-row"><span class="t">10h</span><span class="a">Préparation du voyage à Paris</span></div>
+      <div class="itin-row"><span class="t">13h</span><span class="a">Déjeuner avec Mélanie + donner les clés de l'appartement</span></div>
+      <div class="itin-row"><span class="t">15h</span><span class="a">Départ à la gare (partir)</span></div>
+      <div class="itin-row"><span class="t">16h30</span><span class="a">Arrivée à Paris</span></div>
+    </div>
+    <p style="font-size:14.5px;color:#3a4256;font-style:italic;margin-top:-6px;">Lundi, à dix heures, Malika va préparer son voyage à Paris. À 13 heures, elle va déjeuner avec Mélanie et donner les clés de son appartement. Son train va partir à 15h et elle va arriver à Paris à 16h30.</p>
+
+    <div class="itin">
+      <h4>Mardi</h4>
+      <div class="itin-row"><span class="t">10–12h</span><span class="a">Visite de l'exposition De Vinci</span></div>
+      <div class="itin-row"><span class="t">12h30</span><span class="a">Déjeuner avec grand-mère + courses pour elle</span></div>
+      <div class="itin-row"><span class="t">16h</span><span class="a">Inscription à l'université</span></div>
+      <div class="itin-row"><span class="t">20h</span><span class="a">Cinéma avec Paul et Bodo</span></div>
+    </div>
+    <textarea class="answer-box" id="malika-mardi" placeholder="Écris ton texte pour mardi ici…"></textarea>
+
+    <div class="itin" style="margin-top:16px;">
+      <h4>Mercredi</h4>
+      <div class="itin-row"><span class="t">17h30</span><span class="a">Taxi</span></div>
+      <div class="itin-row"><span class="t">18h25</span><span class="a">Départ en train</span></div>
+      <div class="itin-row"><span class="t">19h55</span><span class="a">Arrivée à Nice</span></div>
+      <div class="itin-row"><span class="t">20h15</span><span class="a">Clés Mélanie + retour appartement</span></div>
+    </div>
+    <textarea class="answer-box" id="malika-mercredi" placeholder="Écris ton texte pour mercredi ici…"></textarea>
+
+    <div class="btn-row">
+      <button class="btn ghost" onclick="toggleModel('malika-model')">Voir le modèle</button>
+    </div>
+    <div class="model-answer" id="malika-model">
+      <span class="label">Modèle de réponse</span>
+      Mardi, de 10 heures à midi, Malika va visiter l'exposition De Vinci. À midi et demi elle va déjeuner avec sa grand-mère et ensuite elle va faire les courses pour elle. Puis, à 16 heures, elle va s'inscrire à l'université. Et à 20 heures elle va aller au cinéma, elle va regarder un film avec Paul et Bodo.<br><br>
+      Mercredi, elle va prendre un taxi à 17h30 pour aller à la gare, son train va partir à 18h25 et va arriver à Nice à 19h55. Elle va reprendre les clés de son appartement et, enfin, elle va rentrer chez elle.
+    </div>
+  </div>
+
+  <!-- EXERCICE 7 - Fathia -->
+  <div class="ex-block">
+    <p class="ex-title"><span class="n">7</span>Mets le texte au futur proche</p>
+    <p class="ex-instructions">Réécris ce texte au présent en le transformant au futur proche.</p>
+    <div class="rule-card" style="margin-bottom:14px;">
+      <p style="margin:0;font-size:14.5px;color:#3a4256;">Cette année, Fathia a 25 ans, elle change de vie : elle arrête de travailler, elle part de son appartement, elle va à la campagne. Elle vend sa voiture, elle fait de nouvelles études, elle rencontre d'autres amis et, ensemble, ils sortent au cinéma : ils regardent des films du cinéma asiatique. Moi… je ne suis pas comme elle, je reste ici !</p>
+    </div>
+    <textarea class="answer-box" id="fathia-answer" style="min-height:130px;" placeholder="Réécris le texte au futur proche ici…"></textarea>
+    <div class="btn-row">
+      <button class="btn ghost" onclick="toggleModel('fathia-model')">Voir le modèle</button>
+    </div>
+    <div class="model-answer" id="fathia-model">
+      <span class="label">Modèle de réponse</span>
+      L'année prochaine, Fathia va avoir 25 ans, elle va changer de vie : elle va arrêter de travailler, elle va partir de son appartement, elle va aller à la campagne. Elle va vendre sa voiture, elle va faire de nouvelles études, elle va rencontrer d'autres amis et, ensemble, ils vont sortir au cinéma : ils vont regarder des films du cinéma asiatique. Moi… je ne vais pas être comme elle, je vais rester ici !
+    </div>
+  </div>
+
+</section>
+
+<footer>LE FUTUR PROCHE — FICHE DE GRAMMAIRE</footer>
+
+<script>
+/* ================= MATCHING EXERCISE 1 ================= */
+const matchAnswers = {a:'6', b:'1', c:'2', d:'5', e:'4', f:'3'};
+let selectedLetter = null;
+let pairs = {}; // letter -> digit chosen
+
+document.querySelectorAll('.match-col:first-child .match-item').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    if(el.classList.contains('paired-correct')||el.classList.contains('paired-wrong')) return;
+    document.querySelectorAll('.match-col:first-child .match-item').forEach(x=>x.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedLetter = el.dataset.key;
+  });
+});
+document.querySelectorAll('.match-col:last-child .match-item').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    if(!selectedLetter) return;
+    const digit = el.dataset.key;
+    pairs[selectedLetter] = digit;
+    const leftEl = document.querySelector(`.match-col:first-child .match-item[data-key="${selectedLetter}"]`);
+    leftEl.classList.remove('selected');
+    leftEl.dataset.chosen = digit;
+    leftEl.innerHTML += ` <span class="mono" style="color:#9aa1b0;font-size:12px;">→ ${digit}</span>`;
+    selectedLetter = null;
+  });
+});
+function checkMatch(){
+  let correct = 0;
+  Object.keys(matchAnswers).forEach(letter=>{
+    const leftEl = document.querySelector(`.match-col:first-child .match-item[data-key="${letter}"]`);
+    if(!leftEl) return;
+    const chosen = pairs[letter];
+    leftEl.classList.remove('paired-correct','paired-wrong');
+    if(chosen === matchAnswers[letter]){ leftEl.classList.add('paired-correct'); correct++; }
+    else if(chosen){ leftEl.classList.add('paired-wrong'); }
+  });
+  document.getElementById('match-score').textContent = `${correct} / 6 correctes`;
+}
+function resetMatch(){
+  pairs = {};
+  document.querySelectorAll('.match-col:first-child .match-item').forEach(el=>{
+    el.classList.remove('paired-correct','paired-wrong','selected');
+    delete el.dataset.chosen;
+  });
+  document.querySelectorAll('.match-col:first-child .match-item').forEach((el,i)=>{
+    const letters = ['a','b','c','d','e','f'];
+    const texts = ["Marie","Les étudiants","Ton frère et toi","Je","Mes amis et moi","Tu"];
+    el.innerHTML = `<span class="letter">${letters[i]}.</span> ${texts[i]}`;
+  });
+  document.getElementById('match-score').textContent = '';
+}
+
+/* ================= FILL-IN EXERCISES ================= */
+function normalize(s){
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[’]/g,"'")
+    .replace(/\s+/g,' ')
+    .trim();
+}
+
+const exercisesData = {
+  ex2: {
+    lines: [
+      {before:"Vite ! le train ", after:".", answers:["va partir"]},
+      {before:"Je prends mon parapluie, je pense qu'il ", after:".", answers:["va pleuvoir"]},
+      {before:"Il faut entrer, le spectacle ", after:".", answers:["va commencer"]},
+      {before:"Il est 19h25, les magasins ", after:".", answers:["vont fermer"]},
+      {before:"Tes cheveux ", after:", si tu continues à mettre du gel !", answers:["vont tomber"]},
+      {before:"Il fait froid et vous n'avez pas de pull, vous ", after:".", answers:["allez etre malade","allez être malade"]}
+    ]
+  },
+  ex3: {
+    lines: [
+      {before:"D'habitude, je pars à l'école à 8 h. Mais ", after:" à 9 h.", answers:["demain, je vais partir","demain je vais partir"]},
+      {before:"D'habitude, je regarde un film. Mais ", after:".", answers:["aujourd'hui, je vais regarder un match de foot","aujourd'hui je vais regarder un match de foot"]},
+      {before:"D'habitude, je dîne seul. Mais ", after:".", answers:["ce soir, je vais diner avec mon colocataire","ce soir je vais diner avec mon colocataire","ce soir, je vais dîner avec mon colocataire","ce soir je vais dîner avec mon colocataire"]},
+      {before:"D'habitude, j'achète un sandwich, le midi. Mais ", after:".", answers:["aujourd'hui je vais manger au restaurant","aujourd'hui, je vais manger au restaurant"]},
+      {before:"Aujourd'hui il fait beau. Mais demain ", after:".", answers:["il ne va pas faire beau","il va pleuvoir"]},
+      {before:"Cette année j'habite à Lyon. Mais ", after:".", answers:["l'annee prochaine, je vais habiter a toulouse","l'année prochaine, je vais habiter à toulouse","l'annee prochaine je vais habiter a toulouse"]}
+    ]
+  },
+  ex5: {
+    lines: [
+      {before:"Nous ", after:" en voyage cette année.", answers:["n'allons pas partir","nallons pas partir"]},
+      {before:"Je ", after:" une nouvelle voiture !", answers:["vais acheter"]},
+      {before:"Paul ", after:" de travailler l'année prochaine, c'est la retraite !", answers:["va arreter","va arrêter"]},
+      {before:"Chut !! Le film ", after:".", answers:["va commencer"]},
+      {before:"Il fait beau, nous ", after:" à la plage.", answers:["allons aller"]},
+      {before:"Demain, je ", after:" au foot avec mes amis.", answers:["vais jouer"]},
+      {before:"Je suis fatiguée, je ", after:".", answers:["vais me coucher"]},
+      {before:"Qu'est-ce que tu ", after:" l'année prochaine ?", answers:["vas faire"]}
+    ]
+  }
+};
+
+function buildFill(id){
+  const container = document.getElementById(id);
+  const data = exercisesData[id];
+  data.lines.forEach((line,i)=>{
+    const div = document.createElement('div');
+    div.className = 'fill-line';
+    div.innerHTML = `<span class="num-b">${i+1}.</span> ${line.before}<input type="text" class="blank" data-idx="${i}"> ${line.after}`;
+    container.appendChild(div);
+  });
+}
+['ex2','ex3','ex5'].forEach(buildFill);
+
+function checkFill(id){
+  const data = exercisesData[id];
+  const inputs = document.querySelectorAll(`#${id} input.blank`);
+  let correct = 0;
+  inputs.forEach(inp=>{
+    const idx = +inp.dataset.idx;
+    const userVal = normalize(inp.value);
+    const ok = data.lines[idx].answers.some(a=>normalize(a)===userVal);
+    inp.classList.remove('correct','incorrect');
+    if(userVal.length===0) return;
+    if(ok){ inp.classList.add('correct'); correct++; }
+    else{ inp.classList.add('incorrect'); }
+  });
+  document.getElementById(`${id}-score`).textContent = `${correct} / ${data.lines.length} correctes`;
+}
+function revealFill(id){
+  const data = exercisesData[id];
+  const inputs = document.querySelectorAll(`#${id} input.blank`);
+  inputs.forEach(inp=>{
+    const idx = +inp.dataset.idx;
+    inp.value = data.lines[idx].answers[0];
+    inp.classList.remove('incorrect');
+    inp.classList.add('correct');
+  });
+  document.getElementById(`${id}-score`).textContent = 'Réponses affichées';
+}
+
+/* ================= WORD ORDER EXERCISE 4 ================= */
+const ex4Data = [
+  {words:["je","ne","vais","pas","aller","à","la","piscine","ce","soir"], answer:"je ne vais pas aller à la piscine ce soir"},
+  {words:["nous","allons","nous","voir","ce","weekend"], answer:"nous allons nous voir ce weekend"},
+  {words:["il","ne","va","pas","travailler","l'","été","prochain"], answer:"il ne va pas travailler l'été prochain"},
+  {words:["notre","fille","va","avoir","un","bébé","en","février"], answer:"notre fille va avoir un bébé en février"},
+  {words:["qu'","est","-ce","que","tu","vas","faire","pour","les","vacances","?"], answer:"qu'est-ce que tu vas faire pour les vacances ?"}
+];
+
+function shuffle(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function buildEx4(){
+  const container = document.getElementById('ex4');
+  ex4Data.forEach((item,i)=>{
+    const wrap = document.createElement('div');
+    wrap.style.marginBottom = '22px';
+    wrap.style.paddingBottom = '18px';
+    wrap.style.borderBottom = i<ex4Data.length-1 ? '1px dashed #f1e6d3' : 'none';
+
+    const label = document.createElement('div');
+    label.className = 'num-b mono';
+    label.style.marginBottom = '8px';
+    label.textContent = `${i+1}.`;
+    wrap.appendChild(label);
+
+    const slot = document.createElement('div');
+    slot.className = 'sentence-slot';
+    slot.id = `ex4-slot-${i}`;
+    wrap.appendChild(slot);
+
+    const bank = document.createElement('div');
+    bank.className = 'word-bank';
+    bank.id = `ex4-bank-${i}`;
+    shuffle(item.words).forEach(w=>{
+      const chip = document.createElement('span');
+      chip.className = 'word-chip';
+      chip.textContent = w;
+      chip.onclick = ()=>{
+        if(chip.classList.contains('used')) return;
+        chip.classList.add('used');
+        const placed = document.createElement('span');
+        placed.className = 'word-chip placed';
+        placed.textContent = w;
+        placed.onclick = ()=>{
+          slot.removeChild(placed);
+          chip.classList.remove('used');
+          document.getElementById(`ex4-result-${i}`).textContent = '';
+        };
+        slot.appendChild(placed);
+      };
+      bank.appendChild(chip);
+    });
+    wrap.appendChild(bank);
+
+    const btnRow = document.createElement('div');
+    btnRow.className = 'btn-row';
+    const checkBtn = document.createElement('button');
+    checkBtn.className = 'btn';
+    checkBtn.textContent = 'Vérifier';
+    checkBtn.onclick = ()=>{
+      const built = Array.from(slot.querySelectorAll('.word-chip')).map(c=>c.textContent).join(' ');
+      const result = document.getElementById(`ex4-result-${i}`);
+      if(normalize(built.replace(/\s*-\s*/g,'-')) === normalize(item.answer.replace(/\s*-\s*/g,'-'))){
+        result.textContent = '✓ Correct !';
+        result.className = 'result-msg ok';
+      } else {
+        result.textContent = '✗ Pas tout à fait — réessaie.';
+        result.className = 'result-msg no';
+      }
+    };
+    const resetBtn = document.createElement('button');
+    resetBtn.className = 'btn ghost';
+    resetBtn.textContent = 'Recommencer';
+    resetBtn.onclick = ()=>{
+      slot.innerHTML = '';
+      bank.querySelectorAll('.word-chip').forEach(c=>c.classList.remove('used'));
+      document.getElementById(`ex4-result-${i}`).textContent = '';
+    };
+    btnRow.appendChild(checkBtn);
+    btnRow.appendChild(resetBtn);
+    const resultMsg = document.createElement('div');
+    resultMsg.className = 'result-msg';
+    resultMsg.id = `ex4-result-${i}`;
+    wrap.appendChild(btnRow);
+    wrap.appendChild(resultMsg);
+    container.appendChild(wrap);
+  });
+}
+buildEx4();
+
+/* ================= MODEL ANSWER TOGGLES ================= */
+function toggleModel(id){
+  document.getElementById(id).classList.toggle('show');
+}
+</script>
+
+</body>
+</html>
