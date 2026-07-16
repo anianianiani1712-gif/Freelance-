@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La routine de Marcel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#152238;
+    --navy-2:#1d2f4d;
+    --navy-3:#24395e;
+    --coral:#e8674a;
+    --coral-2:#f3906f;
+    --cream:#faf3e7;
+    --cream-2:#f1e6d3;
+    --ink:#182338;
+    --good:#3f8a5c;
+    --good-bg:rgba(63,138,92,0.09);
+    --bad-bg:rgba(232,103,74,0.09);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.6;}
+  h1,h2,h3{font-family:'Fraunces',serif;letter-spacing:-0.01em;}
+  .mono{font-family:'Space Mono',monospace;}
+
+  /* ===== HERO ===== */
+  .hero{
+    background:radial-gradient(120% 140% at 85% -10%, #22345a 0%, var(--navy) 55%), var(--navy);
+    color:var(--cream); padding:60px 24px 50px; position:relative; overflow:hidden;
+  }
+  .hero-inner{max-width:900px;margin:0 auto;position:relative;}
+  .eyebrow{
+    font-family:'Space Mono',monospace;font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--coral-2);display:flex;align-items:center;gap:10px;margin-bottom:20px;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:#ffb238;box-shadow:0 0 10px #ffb238;animation:pulse 1.6s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+  .hero h1{font-size:clamp(38px,7vw,66px);font-weight:600;margin:0 0 6px;line-height:1.0;}
+  .hero h1 em{font-style:italic;color:var(--coral-2);font-weight:500;}
+  .hero-sub{max-width:520px;color:rgba(250,243,231,.72);font-size:16px;margin:14px 0 0;}
+
+  /* clock strip */
+  .clock-strip{display:flex;gap:0;margin-top:38px;border-radius:12px;overflow:hidden;border:1px solid rgba(250,243,231,.12);}
+  .clock-seg{flex:1;padding:16px 14px;border-right:1px solid rgba(250,243,231,.1);}
+  .clock-seg:last-child{border-right:none;}
+  .clock-seg .time{font-family:'Space Mono',monospace;color:#ffb238;font-size:13px;letter-spacing:.04em;}
+  .clock-seg .lbl{font-size:12.5px;color:rgba(250,243,231,.65);margin-top:4px;}
+  @media(max-width:680px){.clock-strip{flex-wrap:wrap;}.clock-seg{flex:1 1 50%;border-bottom:1px solid rgba(250,243,231,.1);}}
+
+  section{max-width:900px;margin:0 auto;padding:52px 24px;}
+  .section-head{margin-bottom:28px;}
+  .section-head .num{font-family:'Space Mono',monospace;color:var(--coral);font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px;display:block;}
+  .section-head h2{font-size:clamp(24px,4vw,34px);margin:0;font-weight:600;}
+  .section-head p{color:#5b6478;margin:10px 0 0;max-width:600px;}
+
+  /* ===== READING TEXT ===== */
+  .day-block{
+    display:grid;grid-template-columns:90px 1fr;gap:18px;
+    margin-bottom:26px;
+  }
+  @media(max-width:560px){.day-block{grid-template-columns:64px 1fr;}}
+  .day-marker{
+    text-align:right;
+  }
+  .day-marker .period{
+    font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--coral); display:block; margin-bottom:4px;
+  }
+  .day-marker .time{font-family:'Space Mono',monospace;font-size:13px;color:#9aa1b0;}
+  .day-text{
+    background:#fff;border:1px solid var(--cream-2);border-radius:14px;padding:18px 22px;
+    box-shadow:0 2px 0 var(--cream-2); font-size:15.5px;
+  }
+  .day-text .pv{
+    color:var(--navy); font-weight:600; border-bottom:2px dotted var(--coral); cursor:help;
+  }
+  select.pv-select{
+    font-family:'Space Mono',monospace; font-size:12.5px; color:var(--coral);
+    border:none; border-bottom:2px solid var(--coral-2); background-color:var(--cream);
+    border-radius:6px 6px 0 0; padding:2px 18px 2px 6px; margin:0 2px; cursor:pointer;
+    appearance:none; -webkit-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23e8674a'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 5px center;
+  }
+  select.pv-select.correct{border-bottom-color:var(--good); background-color:var(--good-bg); color:var(--good);}
+  select.pv-select.incorrect{border-bottom-color:var(--coral); background-color:var(--bad-bg); color:var(--coral);}
+
+  /* ===== MULTIPLE CHOICE ===== */
+  .mc-block{
+    background:#fff;border:1px solid var(--cream-2);border-radius:16px;
+    padding:22px 24px 20px;margin-bottom:16px;box-shadow:0 2px 0 var(--cream-2);
+  }
+  .mc-q{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;}
+  .mc-q .n{
+    width:28px;height:28px;border-radius:8px;background:var(--navy);color:var(--cream);
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;
+    font-size:13px;flex:none;
+  }
+  .mc-q p{margin:0;font-size:15.5px;font-weight:600;color:var(--ink);padding-top:3px;}
+  .mc-options{display:flex;flex-direction:column;gap:8px;margin-left:40px;}
+  .mc-option{
+    display:flex;align-items:center;gap:10px;padding:11px 16px;border-radius:10px;
+    border:1.5px solid var(--cream-2);cursor:pointer;font-size:14.5px;transition:.15s;
+    background:var(--cream);
+  }
+  .mc-option:hover{border-color:var(--coral);}
+  .mc-option .mark{
+    width:20px;height:20px;border-radius:50%;border:1.5px solid #c9c1ae;flex:none;
+    display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;
+  }
+  .mc-option.correct{background:var(--good-bg);border-color:var(--good);}
+  .mc-option.correct .mark{background:var(--good);border-color:var(--good);}
+  .mc-option.wrong{background:var(--bad-bg);border-color:var(--coral);}
+  .mc-option.wrong .mark{background:var(--coral);border-color:var(--coral);}
+  .mc-option.disabled-option{cursor:default;}
+  .mc-feedback{
+    margin-left:40px;margin-top:4px;font-family:'Space Mono',monospace;font-size:12.5px;
+    min-height:16px;
+  }
+  .mc-feedback.ok{color:var(--good);}
+  .mc-feedback.no{color:var(--coral);}
+
+  .score-banner{
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--navy);color:var(--cream);border-radius:12px;padding:16px 22px;
+    margin-top:6px; font-family:'Space Mono',monospace; font-size:13.5px;
+  }
+  .score-banner .big{font-size:22px;color:#ffb238;}
+  .btn{
+    font-family:'Space Mono',monospace;font-size:12.5px;letter-spacing:.04em;
+    background:var(--navy);color:var(--cream);border:none;border-radius:8px;padding:10px 18px;
+    cursor:pointer;transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{background:var(--navy-3);transform:translateY(-1px);}
+  .btn.ghost{background:transparent;color:var(--cream);border:1.5px solid rgba(250,243,231,.3);}
+
+  /* ===== PRONOMINAL VERBS EXERCISE ===== */
+  .verb-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;}
+  @media(max-width:600px){.verb-grid{grid-template-columns:1fr;}}
+  .verb-row{
+    display:flex;align-items:center;gap:10px;font-size:15px;
+    padding:8px 0;border-bottom:1px dashed var(--cream-2);
+  }
+  .verb-row .fr-form{min-width:130px;color:var(--navy);font-weight:600;}
+  .verb-row select.blank{
+    flex:1;border:none;border-bottom:2px solid var(--cream-2);background-color:transparent;
+    font-family:'Inter',sans-serif;font-size:14.5px;padding:6px 22px 6px 4px;color:var(--navy);outline:none;
+    cursor:pointer; appearance:none; -webkit-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23e8674a'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 6px center;
+  }
+  .verb-row select.blank:focus{border-bottom-color:var(--coral);}
+  .verb-row select.blank.correct{border-bottom-color:var(--good);background-color:var(--good-bg);}
+  .verb-row select.blank.incorrect{border-bottom-color:var(--coral);background-color:var(--bad-bg);}
+  .verb-row .example-tag{
+    font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+    color:#9aa1b0;
+  }
+  .btn-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;align-items:center;}
+  .btn-row .light{background:var(--coral);color:#fff;}
+  .btn-row .light:hover{background:var(--coral-2);}
+  .btn.ghost-light{background:transparent;color:var(--navy);border:1.5px solid var(--cream-2);}
+  .btn.ghost-light:hover{border-color:var(--coral);color:var(--coral);}
+  .score-note{font-family:'Space Mono',monospace;font-size:12.5px;color:#6b7280;}
+
+  footer{text-align:center;padding:40px 24px 60px;color:#9aa1b0;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.04em;}
+
+  @media (prefers-reduced-motion: reduce){.eyebrow .dot{animation:none;}*{transition:none !important;}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow"><span class="dot"></span> COMPRÉHENSION ÉCRITE&nbsp;·&nbsp;A1–A2</div>
+    <h1>La routine de <em>Marcel</em></h1>
+    <p class="hero-sub">Un jour ordinaire, heure par heure — verbes pronominaux et vocabulaire du quotidien.</p>
+
+    <div class="clock-strip">
+      <div class="clock-seg"><span class="time">MATIN</span><span class="lbl">réveil, toilette, école</span></div>
+      <div class="clock-seg"><span class="time">13H00</span><span class="lbl">retour, déjeuner</span></div>
+      <div class="clock-seg"><span class="time">APRÈS-MIDI</span><span class="lbl">devoirs, parc, amis</span></div>
+      <div class="clock-seg"><span class="time">SOIR</span><span class="lbl">lecture, dîner, coucher</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- READING TEXT -->
+<section>
+  <div class="section-head">
+    <span class="num">01 — Lecture</span>
+    <h2>Le texte</h2>
+    <p>Choisis la bonne forme du verbe pour compléter le texte — <strong>les verbes ont été retirés</strong>, à toi de les remettre.<br><span class="mono" style="color:#9aa1b0;font-size:12.5px;">Exemple : je ___ de bonne heure → me réveille</span></p>
+  </div>
+
+  <div class="day-block">
+    <div class="day-marker"><span class="period">Matin</span><span class="time">7h–8h</span></div>
+    <div class="day-text">
+      Chaque matin, je <select class="pv-select" data-idx="0"></select> de bonne heure et je fais ma toilette : je <select class="pv-select" data-idx="1"></select> le visage, je <select class="pv-select" data-idx="2"></select> les dents, je <select class="pv-select" data-idx="3"></select>, je <select class="pv-select" data-idx="4"></select>. Ensuite, je prends le petit déjeuner : du lait aux céréales et une tasse de chocolat.
+    </div>
+  </div>
+
+  <div class="day-block">
+    <div class="day-marker"><span class="period">Départ</span><span class="time">7h30</span></div>
+    <div class="day-text">
+      À sept heures trente je pars pour l'école. D'habitude je prends le bus mais le vendredi je vais à pied.
+    </div>
+  </div>
+
+  <div class="day-block">
+    <div class="day-marker"><span class="period">École</span><span class="time">8h–13h</span></div>
+    <div class="day-text">
+      À l'école — pas le temps de m'ennuyer : je lis, j'écris, je fais des problèmes. J'aime beaucoup le français, la géographie et l'histoire.
+    </div>
+  </div>
+
+  <div class="day-block">
+    <div class="day-marker"><span class="period">Retour</span><span class="time">13h00</span></div>
+    <div class="day-text">
+      Je rentre à la maison à 13 heures. Je prends le déjeuner puis je <select class="pv-select" data-idx="5"></select>.
+    </div>
+  </div>
+
+  <div class="day-block">
+    <div class="day-marker"><span class="period">Après-midi</span><span class="time">14h–18h</span></div>
+    <div class="day-text">
+      L'après-midi, je fais mes devoirs, ensuite je vais dans le parc où je <select class="pv-select" data-idx="6"></select> avec mes amis.
+    </div>
+  </div>
+
+  <div class="day-block">
+    <div class="day-marker"><span class="period">Soir</span><span class="time">18h–21h</span></div>
+    <div class="day-text">
+      Le soir, je lis un peu, je joue sur l'ordinateur ou je regarde la télé. On dîne, je prends un bain puis je <select class="pv-select" data-idx="7"></select> tôt parce que le lendemain j'ai une autre journée très chargée.
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn" onclick="checkVerbs()" style="background:var(--coral);">Vérifier</button>
+    <button class="btn ghost-light" onclick="revealVerbs()">Voir les réponses</button>
+    <span class="score-note" id="verb-score"></span>
+  </div>
+</section>
+
+<!-- MULTIPLE CHOICE -->
+<section style="padding-top:0;">
+  <div class="section-head">
+    <span class="num">02 — Compréhension</span>
+    <h2>Choisis la variante correcte</h2>
+  </div>
+
+  <div id="mc-container"></div>
+
+  <div class="score-banner">
+    <span>Ton score</span>
+    <span><span class="big" id="mc-total">0</span> / 5</span>
+  </div>
+</section>
+
+<footer>LA ROUTINE DE MARCEL — COMPRÉHENSION ÉCRITE</footer>
+
+<script>
+/* ============ MULTIPLE CHOICE ============ */
+const mcData = [
+  {
+    q:"1) Chaque matin, Marcel se lève :",
+    options:["tard","tôt"],
+    correct:1
+  },
+  {
+    q:"2) Après qu'il fait sa toilette, Marcel prend :",
+    options:["le déjeuner","le petit déjeuner","le dîner"],
+    correct:1
+  },
+  {
+    q:"3) Marcel part pour l'école :",
+    options:["à sept heures et quart","à sept heures et demie","à sept heures moins le quart"],
+    correct:1
+  },
+  {
+    q:"4) À l'école, Marcel :",
+    options:["s'ennuie","ne s'ennuie pas"],
+    correct:1
+  },
+  {
+    q:"5) Marcel rentre à la maison :",
+    options:["à treize heures","à une heure treize"],
+    correct:0
+  }
+];
+
+let mcAnswered = new Array(mcData.length).fill(false);
+let mcScore = 0;
+
+function buildMC(){
+  const container = document.getElementById('mc-container');
+  mcData.forEach((item,qi)=>{
+    const block = document.createElement('div');
+    block.className = 'mc-block';
+
+    const qDiv = document.createElement('div');
+    qDiv.className = 'mc-q';
+    qDiv.innerHTML = `<span class="n">${qi+1}</span><p>${item.q.replace(/^\d\)\s*/,'')}</p>`;
+    block.appendChild(qDiv);
+
+    const optsDiv = document.createElement('div');
+    optsDiv.className = 'mc-options';
+
+    item.options.forEach((opt,oi)=>{
+      const optEl = document.createElement('div');
+      optEl.className = 'mc-option';
+      optEl.innerHTML = `<span class="mark"></span><span>${opt}</span>`;
+      optEl.onclick = ()=>{
+        if(mcAnswered[qi]) return;
+        mcAnswered[qi] = true;
+        const allOpts = optsDiv.querySelectorAll('.mc-option');
+        allOpts.forEach(o=>o.classList.add('disabled-option'));
+        if(oi === item.correct){
+          optEl.classList.add('correct');
+          optEl.querySelector('.mark').textContent = '✓';
+          mcScore++;
+          feedback.textContent = 'Correct !';
+          feedback.className = 'mc-feedback ok';
+        } else {
+          optEl.classList.add('wrong');
+          optEl.querySelector('.mark').textContent = '✗';
+          allOpts[item.correct].classList.add('correct');
+          allOpts[item.correct].querySelector('.mark').textContent = '✓';
+          feedback.textContent = 'Pas tout à fait — la bonne réponse est en vert.';
+          feedback.className = 'mc-feedback no';
+        }
+        document.getElementById('mc-total').textContent = mcScore;
+      };
+      optsDiv.appendChild(optEl);
+    });
+    block.appendChild(optsDiv);
+
+    const feedback = document.createElement('div');
+    feedback.className = 'mc-feedback';
+    block.appendChild(feedback);
+
+    container.appendChild(block);
+  });
+}
+buildMC();
+
+/* ============ PRONOMINAL VERBS ============ */
+const verbData = [
+  {conj:"me réveille", answer:"me reveille", display:"se réveiller"},
+  {conj:"me lave", answer:"me lave", display:"se laver"},
+  {conj:"me brosse", answer:"me brosse", display:"se brosser"},
+  {conj:"me peigne", answer:"me peigne", display:"se peigner"},
+  {conj:"m'habille", answer:"m'habille", display:"s'habiller"},
+  {conj:"me repose", answer:"me repose", display:"se reposer"},
+  {conj:"me rencontre", answer:"me rencontre", display:"se rencontrer"},
+  {conj:"me couche", answer:"me couche", display:"se coucher"}
+];
+
+function normalize(s){
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[’]/g,"'")
+    .replace(/\s+/g,' ')
+    .trim();
+}
+
+function shuffleArr(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function buildVerbSelects(){
+  const selects = document.querySelectorAll('select.pv-select');
+  selects.forEach(select=>{
+    const idx = +select.dataset.idx;
+    const v = verbData[idx];
+    const distractorPool = verbData.map(x=>x.conj).filter(d=>d!==v.conj);
+    const distractors = shuffleArr(distractorPool).slice(0,3);
+    const options = shuffleArr([v.conj, ...distractors]);
+
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = '…';
+    select.appendChild(placeholder);
+
+    options.forEach(opt=>{
+      const o = document.createElement('option');
+      o.value = opt;
+      o.textContent = opt;
+      select.appendChild(o);
+    });
+  });
+}
+buildVerbSelects();
+
+function checkVerbs(){
+  const selects = document.querySelectorAll('select.pv-select');
+  let correct = 0;
+  selects.forEach(sel=>{
+    const idx = +sel.dataset.idx;
+    const userVal = normalize(sel.value);
+    sel.classList.remove('correct','incorrect');
+    if(sel.value.length===0) return;
+    if(userVal === normalize(verbData[idx].answer)){
+      sel.classList.add('correct');
+      correct++;
+    } else {
+      sel.classList.add('incorrect');
+    }
+  });
+  document.getElementById('verb-score').textContent = `${correct} / ${verbData.length} correctes`;
+}
+
+function revealVerbs(){
+  const selects = document.querySelectorAll('select.pv-select');
+  selects.forEach(sel=>{
+    const idx = +sel.dataset.idx;
+    sel.value = verbData[idx].conj;
+    sel.classList.remove('incorrect');
+    sel.classList.add('correct');
+  });
+  document.getElementById('verb-score').textContent = 'Réponses affichées';
+}
+</script>
+
+</body>
+</html>
