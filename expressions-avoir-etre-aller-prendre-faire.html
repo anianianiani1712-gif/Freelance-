@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expressions avec AVOIR, ÊTRE, ALLER, PRENDRE, FAIRE</title>
+<style>
+  :root {
+    --pink-dark: #d63384;
+    --pink-mid: #f8a5c2;
+    --pink-light: #fde6f0;
+    --pink-bg: #fff5fa;
+    --cream: #fffaf5;
+    --text-dark: #4a2540;
+    --success: #4caf50;
+    --error: #e74c3c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--pink-bg), var(--pink-light));
+    margin: 0;
+    padding: 20px;
+    color: var(--text-dark);
+  }
+  .container {
+    max-width: 1150px;
+    margin: 0 auto;
+    background: var(--cream);
+    border-radius: 20px;
+    padding: 30px 25px;
+    box-shadow: 0 10px 30px rgba(214, 51, 132, 0.15);
+  }
+  h1 {
+    text-align: center;
+    color: var(--pink-dark);
+    font-size: 1.6em;
+    margin-bottom: 5px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #a0567c;
+    margin-bottom: 25px;
+    font-size: 0.95em;
+  }
+  .bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    padding: 20px;
+    background: var(--pink-light);
+    border-radius: 14px;
+    margin-bottom: 30px;
+    min-height: 60px;
+    border: 2px dashed var(--pink-mid);
+  }
+  .card {
+    background: white;
+    border: 2px solid var(--pink-mid);
+    color: var(--pink-dark);
+    padding: 9px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+    font-size: 0.9em;
+    white-space: nowrap;
+  }
+  .card:active { cursor: grabbing; }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(214, 51, 132, 0.25);
+  }
+  .card.dragging { opacity: 0.4; }
+  .card.correct { border-color: var(--success); background: #eafaf0; color: #2e7d32; }
+  .card.incorrect { border-color: var(--error); background: #fdecea; color: #c0392b; }
+
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+  .column {
+    background: white;
+    border-radius: 14px;
+    padding: 12px;
+    min-height: 420px;
+    border: 2px solid var(--pink-mid);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .column-header {
+    text-align: center;
+    font-weight: 700;
+    color: white;
+    background: var(--pink-dark);
+    padding: 8px;
+    border-radius: 10px;
+    font-size: 0.95em;
+    letter-spacing: 0.5px;
+  }
+  .drop-zone {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 360px;
+    border-radius: 10px;
+    padding: 4px;
+    transition: background 0.2s;
+  }
+  .drop-zone.dragover {
+    background: var(--pink-light);
+  }
+  .drop-zone .card { width: 100%; text-align: center; white-space: normal; }
+
+  .buttons {
+    text-align: center;
+    margin-top: 25px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  button {
+    background: var(--pink-dark);
+    color: white;
+    border: none;
+    padding: 12px 26px;
+    border-radius: 25px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+  button:hover { background: #b52a6f; transform: translateY(-2px); }
+  button.secondary { background: white; color: var(--pink-dark); border: 2px solid var(--pink-mid); }
+  button.secondary:hover { background: var(--pink-light); }
+
+  #result {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 1.1em;
+    font-weight: 700;
+    min-height: 30px;
+  }
+
+  @media (max-width: 900px) {
+    .columns { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .columns { grid-template-columns: 1fr; }
+    .card { font-size: 0.85em; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🌸 Expressions avec AVOIR, ÊTRE, ALLER, PRENDRE, FAIRE</h1>
+  <p class="subtitle">Fais glisser chaque expression dans la bonne colonne (A1-A2)</p>
+
+  <div class="bank" id="bank"></div>
+
+  <div class="columns">
+    <div class="column">
+      <div class="column-header">AVOIR</div>
+      <div class="drop-zone" data-verb="avoir"></div>
+    </div>
+    <div class="column">
+      <div class="column-header">ÊTRE</div>
+      <div class="drop-zone" data-verb="etre"></div>
+    </div>
+    <div class="column">
+      <div class="column-header">ALLER</div>
+      <div class="drop-zone" data-verb="aller"></div>
+    </div>
+    <div class="column">
+      <div class="column-header">PRENDRE</div>
+      <div class="drop-zone" data-verb="prendre"></div>
+    </div>
+    <div class="column">
+      <div class="column-header">FAIRE</div>
+      <div class="drop-zone" data-verb="faire"></div>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button onclick="checkAnswers()">✓ Vérifier</button>
+    <button class="secondary" onclick="resetGame()">↺ Recommencer</button>
+    <button class="secondary" onclick="showAnswer()">👁 Voir la solution</button>
+  </div>
+
+  <div id="result"></div>
+</div>
+
+<script>
+const expressions = [
+  {text: "avoir faim", verb: "avoir"},
+  {text: "avoir soif", verb: "avoir"},
+  {text: "avoir chaud", verb: "avoir"},
+  {text: "avoir froid", verb: "avoir"},
+  {text: "avoir peur", verb: "avoir"},
+  {text: "avoir raison", verb: "avoir"},
+  {text: "avoir tort", verb: "avoir"},
+  {text: "avoir besoin de", verb: "avoir"},
+  {text: "avoir envie de", verb: "avoir"},
+  {text: "avoir mal à", verb: "avoir"},
+
+  {text: "être en retard", verb: "etre"},
+  {text: "être à l'heure", verb: "etre"},
+  {text: "être d'accord", verb: "etre"},
+  {text: "être en forme", verb: "etre"},
+  {text: "être fatigué(e)", verb: "etre"},
+  {text: "être content(e)", verb: "etre"},
+  {text: "être en train de", verb: "etre"},
+  {text: "être en vacances", verb: "etre"},
+  {text: "être malade", verb: "etre"},
+
+  {text: "aller bien / mal", verb: "aller"},
+  {text: "ça va", verb: "aller"},
+  {text: "aller à pied", verb: "aller"},
+  {text: "aller faire les courses", verb: "aller"},
+  {text: "aller voir", verb: "aller"},
+  {text: "aller chercher", verb: "aller"},
+  {text: "aller dormir", verb: "aller"},
+  {text: "aller au travail", verb: "aller"},
+  {text: "aller en voiture", verb: "aller"},
+
+  {text: "prendre le temps", verb: "prendre"},
+  {text: "prendre une décision", verb: "prendre"},
+  {text: "prendre un café", verb: "prendre"},
+  {text: "prendre le bus / le train", verb: "prendre"},
+  {text: "prendre une douche", verb: "prendre"},
+  {text: "prendre des photos", verb: "prendre"},
+  {text: "prendre rendez-vous", verb: "prendre"},
+  {text: "prendre l'air", verb: "prendre"},
+  {text: "prendre soin de", verb: "prendre"},
+
+  {text: "faire les courses", verb: "faire"},
+  {text: "faire la cuisine", verb: "faire"},
+  {text: "faire du sport", verb: "faire"},
+  {text: "faire attention", verb: "faire"},
+  {text: "faire beau / mauvais", verb: "faire"},
+  {text: "faire ses devoirs", verb: "faire"},
+  {text: "faire la fête", verb: "faire"},
+  {text: "faire un voyage", verb: "faire"},
+  {text: "faire de son mieux", verb: "faire"}
+];
+
+let draggedCard = null;
+
+function shuffle(array) {
+  const a = [...array];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function createCard(exp, index) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.draggable = true;
+  card.textContent = exp.text;
+  card.dataset.verb = exp.verb;
+  card.dataset.id = index;
+  card.addEventListener('dragstart', () => {
+    draggedCard = card;
+    setTimeout(() => card.classList.add('dragging'), 0);
+  });
+  card.addEventListener('dragend', () => {
+    card.classList.remove('dragging');
+  });
+  return card;
+}
+
+function initGame() {
+  const bank = document.getElementById('bank');
+  bank.innerHTML = '';
+  const shuffled = shuffle(expressions.map((e, i) => ({...e, id: i})));
+  shuffled.forEach(e => bank.appendChild(createCard(e, e.id)));
+
+  document.querySelectorAll('.drop-zone').forEach(zone => {
+    zone.innerHTML = '';
+    zone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      zone.classList.add('dragover');
+    });
+    zone.addEventListener('dragleave', () => {
+      zone.classList.remove('dragover');
+    });
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      if (draggedCard) {
+        draggedCard.classList.remove('correct', 'incorrect');
+        zone.appendChild(draggedCard);
+      }
+    });
+  });
+
+  bank.addEventListener('dragover', (e) => e.preventDefault());
+  bank.addEventListener('drop', (e) => {
+    e.preventDefault();
+    if (draggedCard) {
+      draggedCard.classList.remove('correct', 'incorrect');
+      bank.appendChild(draggedCard);
+    }
+  });
+
+  document.getElementById('result').textContent = '';
+}
+
+function checkAnswers() {
+  let correct = 0;
+  let total = 0;
+  document.querySelectorAll('.drop-zone').forEach(zone => {
+    const verb = zone.dataset.verb;
+    zone.querySelectorAll('.card').forEach(card => {
+      total++;
+      if (card.dataset.verb === verb) {
+        card.classList.remove('incorrect');
+        card.classList.add('correct');
+        correct++;
+      } else {
+        card.classList.remove('correct');
+        card.classList.add('incorrect');
+      }
+    });
+  });
+
+  const bankCount = document.getElementById('bank').children.length;
+  const result = document.getElementById('result');
+  if (bankCount > 0) {
+    result.style.color = '#a0567c';
+    result.textContent = `Il reste ${bankCount} carte(s) à placer dans la banque.`;
+  } else if (correct === expressions.length) {
+    result.style.color = '#2e7d32';
+    result.textContent = `🎉 Bravo ! ${correct}/${expressions.length} — Parfait !`;
+  } else {
+    result.style.color = '#c0392b';
+    result.textContent = `${correct}/${expressions.length} correctes. Corrige les cartes en rouge et réessaie !`;
+  }
+}
+
+function resetGame() {
+  initGame();
+}
+
+function showAnswer() {
+  document.querySelectorAll('.drop-zone').forEach(zone => {
+    const verb = zone.dataset.verb;
+    document.querySelectorAll('.card').forEach(card => {
+      if (card.dataset.verb === verb) {
+        card.classList.remove('incorrect');
+        card.classList.add('correct');
+        zone.appendChild(card);
+      }
+    });
+  });
+  document.getElementById('result').style.color = '#a0567c';
+  document.getElementById('result').textContent = 'Voici la solution complète.';
+}
+
+initGame();
+</script>
+</body>
+</html>
