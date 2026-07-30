@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilan — Jeux de la Francophonie 2023</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF7EF;
+    --forest: #2B5C44;
+    --forest-dark: #1D4432;
+    --mint: #D9EAD9;
+    --mint-soft: #EEF5EA;
+    --gold: #C69A2E;
+    --terracotta: #C1683B;
+    --ink: #24312A;
+    --wrong: #B5544A;
+    --wrong-bg: #F7E6E3;
+    --right-bg: #E1F0DE;
+    --shadow: 0 4px 14px rgba(43,92,68,0.14);
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Work Sans', sans-serif;
+    line-height: 1.55;
+    padding: 0 0 60px;
+  }
+
+  header.hero {
+    background: linear-gradient(135deg, var(--forest) 0%, var(--forest-dark) 100%);
+    color: var(--cream);
+    padding: 44px 24px 38px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header.hero::after {
+    content: "";
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(198,154,46,0.18);
+  }
+  header.hero::before {
+    content: "";
+    position: absolute;
+    left: -50px; bottom: -70px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  header.hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    margin: 0 0 8px;
+    position: relative;
+  }
+  header.hero p.sub {
+    margin: 0;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    position: relative;
+  }
+
+  main {
+    max-width: 780px;
+    margin: -22px auto 0;
+    padding: 0 20px;
+    position: relative;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 26px;
+    margin-bottom: 28px;
+  }
+
+  .eyebrow {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--terracotta);
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    color: var(--forest-dark);
+    font-size: 1.35rem;
+    margin: 0 0 14px;
+  }
+
+  .bilan-text {
+    font-size: 1.02rem;
+  }
+  .bilan-text p {
+    margin: 0 0 14px;
+    text-indent: 2em;
+  }
+  .bilan-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .instructions {
+    background: var(--mint-soft);
+    border-left: 4px solid var(--forest);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    margin-bottom: 20px;
+  }
+
+  /* --- Exercise 1: reorder --- */
+  #order-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .order-item {
+    background: var(--mint-soft);
+    border: 2px solid var(--mint);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: grab;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  }
+  .order-item.dragging { opacity: 0.4; }
+  .order-item.correct { border-color: var(--forest); background: var(--right-bg); }
+  .order-item.incorrect { border-color: var(--wrong); background: var(--wrong-bg); }
+  .order-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    color: var(--forest);
+    background: #fff;
+    min-width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.95rem;
+  }
+  .order-text { flex: 1; font-size: 0.95rem; }
+  .move-btns { display: flex; flex-direction: column; gap: 3px; }
+  .move-btns button {
+    background: var(--forest);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    width: 26px; height: 22px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    line-height: 1;
+  }
+  .move-btns button:hover { background: var(--forest-dark); }
+
+  /* --- Exercise 2: matching --- */
+  .pool {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 22px;
+    min-height: 46px;
+  }
+  .phrase-card {
+    background: var(--mint-soft);
+    border: 2px solid var(--mint);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    cursor: grab;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .phrase-card.selected {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px rgba(198,154,46,0.35);
+  }
+  .phrase-card.dragging { opacity: 0.4; }
+
+  .zones {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .zone {
+    border: 2px dashed var(--forest);
+    border-radius: 10px;
+    padding: 12px 14px;
+    min-height: 58px;
+    background: #fff;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .zone.dragover { background: var(--mint-soft); }
+  .zone.correct { border-style: solid; border-color: var(--forest); background: var(--right-bg); }
+  .zone.incorrect { border-style: solid; border-color: var(--wrong); background: var(--wrong-bg); }
+  .zone-label {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    color: var(--forest-dark);
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .zone .phrase-card { margin-top: 4px; }
+
+  .check-btn {
+    background: var(--gold);
+    color: #2B2410;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    margin-top: 18px;
+    transition: transform 0.15s, background 0.2s;
+  }
+  .check-btn:hover { background: #B58A25; transform: translateY(-1px); }
+
+  .reset-btn {
+    background: none;
+    border: 2px solid var(--forest);
+    color: var(--forest);
+    padding: 9px 18px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-top: 18px;
+    margin-left: 10px;
+  }
+  .reset-btn:hover { background: var(--mint-soft); }
+
+  .feedback {
+    margin-top: 14px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    min-height: 1.4em;
+  }
+  .feedback.ok { color: var(--forest); }
+  .feedback.ko { color: var(--wrong); }
+
+  footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #6b7a71;
+    margin-top: 10px;
+  }
+
+  @media (max-width: 480px) {
+    .card { padding: 20px 16px; }
+    header.hero { padding: 34px 18px 30px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <p class="sub">Club de conversation française</p>
+  <h1>Les Jeux de la Francophonie 2023 — Kinshasa</h1>
+</header>
+
+<main>
+
+  <section class="card">
+    <p class="eyebrow">Bilan</p>
+    <h2>Retour sur les Jeux de la Francophonie 2023 à Kinshasa</h2>
+    <div class="bilan-text">
+      <p>Cette vidéo de TV5MONDE revient sur les neuvièmes Jeux de la Francophonie, qui se sont déroulés à Kinshasa, capitale de la République démocratique du Congo, à partir du vendredi 28 juillet 2023. Ce bilan présente les faits marquants de l'événement et propose une analyse de sa portée pour la francophonie.</p>
+      <p>L'événement a été organisé sous l'égide de l'Organisation internationale de la Francophonie et a réuni de jeunes athlètes et artistes venus de nombreux pays francophones d'Afrique, comme le Sénégal, le Cameroun, la Côte d'Ivoire, le Burkina Faso, le Bénin et Maurice. La particularité de ces Jeux est de combiner sport et culture&nbsp;: épreuves d'athlétisme (triple saut, sprint, 200&nbsp;mètres) mais aussi concours de chanson, danse, sculpture et conte.</p>
+      <p>Le président congolais Félix Tshisekedi a déclaré les Jeux ouverts, et l'ancien footballeur Lilian Thuram a participé en tant qu'ambassadeur. Le public congolais, très enthousiaste, a marqué les esprits des participants.</p>
+      <p>Cet événement illustre le rôle de la langue française comme lien entre les peuples et comme moyen de créer de vraies relations entre jeunes francophones du monde entier.</p>
+      <p>En somme, ces Jeux ont montré la vitalité de la Francophonie et son ouverture au-delà des frontières linguistiques. La dixième édition devra confirmer cet élan pour les générations futures.</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <p class="eyebrow">Exercice 1</p>
+    <h2>Remets les phrases dans l'ordre</h2>
+    <div class="instructions">
+      Fais glisser les phrases (ou utilise les flèches ▲▼) pour reconstituer le récit des Jeux, du début à la fin. Puis clique sur « Vérifier ».
+    </div>
+    <ul id="order-list"></ul>
+    <button class="check-btn" onclick="checkOrder()">Vérifier</button>
+    <button class="reset-btn" onclick="initOrder()">Recommencer</button>
+    <p id="order-feedback" class="feedback"></p>
+  </section>
+
+  <section class="card">
+    <p class="eyebrow">Exercice 2</p>
+    <h2>Associe chaque phrase à sa partie du bilan</h2>
+    <div class="instructions">
+      Fais glisser chaque phrase vers la bonne catégorie — ou clique sur une phrase puis sur la catégorie choisie. Puis clique sur « Vérifier ».
+    </div>
+    <div class="pool" id="phrase-pool"></div>
+    <div class="zones" id="zones"></div>
+    <button class="check-btn" onclick="checkMatch()">Vérifier</button>
+    <button class="reset-btn" onclick="initMatch()">Recommencer</button>
+    <p id="match-feedback" class="feedback"></p>
+  </section>
+
+  <footer>Club de conversation — Sans Sous-titres 🇫🇷</footer>
+</main>
+
+<script>
+/* ================= EXERCISE 1 : ORDER ================= */
+const correctOrder = [
+  "Les neuvièmes Jeux de la Francophonie se sont déroulés à Kinshasa, capitale de la RDC.",
+  "L'événement a été organisé sous l'égide de l'Organisation internationale de la Francophonie.",
+  "Le président Félix Tshisekedi a déclaré les Jeux ouverts le vendredi 28 juillet 2023.",
+  "Des jeunes venus de nombreux pays francophones ont participé à des épreuves sportives et culturelles.",
+  "Des athlètes comme Hugues Fabrice Zango et Cheikh Tidiane Diouf ont brillé dans leur discipline.",
+  "Le public congolais, très enthousiaste, a marqué les esprits de tous les participants.",
+  "Ces Jeux ont mis en valeur le rôle du français comme langue de rapprochement entre les peuples."
+];
+
+let currentOrder = [];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function initOrder() {
+  currentOrder = shuffle(correctOrder);
+  renderOrder();
+  document.getElementById('order-feedback').textContent = '';
+}
+
+function renderOrder() {
+  const list = document.getElementById('order-list');
+  list.innerHTML = '';
+  currentOrder.forEach((text, idx) => {
+    const li = document.createElement('li');
+    li.className = 'order-item';
+    li.draggable = true;
+    li.dataset.index = idx;
+    li.innerHTML = `
+      <span class="order-num">${idx + 1}</span>
+      <span class="order-text">${text}</span>
+      <div class="move-btns">
+        <button type="button" aria-label="monter" onclick="moveItem(${idx}, -1)">▲</button>
+        <button type="button" aria-label="descendre" onclick="moveItem(${idx}, 1)">▼</button>
+      </div>
+    `;
+    li.addEventListener('dragstart', () => li.classList.add('dragging'));
+    li.addEventListener('dragend', () => {
+      li.classList.remove('dragging');
+      syncOrderFromDOM();
+    });
+    li.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      const dragging = list.querySelector('.dragging');
+      if (!dragging || dragging === li) return;
+      const rect = li.getBoundingClientRect();
+      const next = (e.clientY - rect.top) / rect.height > 0.5;
+      list.insertBefore(dragging, next ? li.nextSibling : li);
+    });
+    list.appendChild(li);
+  });
+}
+
+function syncOrderFromDOM() {
+  const items = [...document.querySelectorAll('#order-list .order-item')];
+  currentOrder = items.map(li => li.querySelector('.order-text').textContent);
+  renderOrder();
+}
+
+function moveItem(idx, dir) {
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= currentOrder.length) return;
+  [currentOrder[idx], currentOrder[newIdx]] = [currentOrder[newIdx], currentOrder[idx]];
+  renderOrder();
+}
+
+function checkOrder() {
+  const items = document.querySelectorAll('#order-list .order-item');
+  let allCorrect = true;
+  items.forEach((li, idx) => {
+    const text = li.querySelector('.order-text').textContent;
+    li.classList.remove('correct', 'incorrect');
+    if (text === correctOrder[idx]) {
+      li.classList.add('correct');
+    } else {
+      li.classList.add('incorrect');
+      allCorrect = false;
+    }
+  });
+  const fb = document.getElementById('order-feedback');
+  if (allCorrect) {
+    fb.textContent = "Parfait ! L'ordre est correct. 🎉";
+    fb.className = 'feedback ok';
+  } else {
+    fb.textContent = "Presque ! Les phrases en rouge ne sont pas encore à la bonne place.";
+    fb.className = 'feedback ko';
+  }
+}
+
+/* ================= EXERCISE 2 : MATCHING ================= */
+const categories = [
+  { key: 'intro', label: 'Introduction' },
+  { key: 'faits', label: 'Présentation des faits' },
+  { key: 'marquants', label: 'Points marquants' },
+  { key: 'analyse', label: 'Analyse' },
+  { key: 'conclusion', label: 'Conclusion' }
+];
+
+const phrases = [
+  { id: 'p1', text: "Les neuvièmes Jeux de la Francophonie ont eu lieu à Kinshasa en juillet 2023.", answer: 'intro' },
+  { id: 'p2', text: "L'Organisation internationale de la Francophonie a organisé l'événement, réunissant athlètes et artistes de nombreux pays francophones.", answer: 'faits' },
+  { id: 'p3', text: "Le président Tshisekedi a déclaré les Jeux ouverts et le public congolais a montré un enthousiasme exceptionnel.", answer: 'marquants' },
+  { id: 'p4', text: "Cet événement illustre le rôle du français comme lien entre les peuples francophones.", answer: 'analyse' },
+  { id: 'p5', text: "Ces Jeux resteront, selon les organisateurs, un exemple pour les générations futures.", answer: 'conclusion' }
+];
+
+let placements = {}; // phraseId -> categoryKey
+let selectedPhraseId = null;
+
+function initMatch() {
+  placements = {};
+  selectedPhraseId = null;
+  renderMatch();
+  document.getElementById('match-feedback').textContent = '';
+}
+
+function renderMatch() {
+  const pool = document.getElementById('phrase-pool');
+  const zonesEl = document.getElementById('zones');
+  pool.innerHTML = '';
+  zonesEl.innerHTML = '';
+
+  // build zones
+  categories.forEach(cat => {
+    const zone = document.createElement('div');
+    zone.className = 'zone';
+    zone.dataset.key = cat.key;
+    zone.innerHTML = `<span class="zone-label">${cat.label}</span>`;
+    zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      const pid = e.dataTransfer.getData('text/plain');
+      placeCard(pid, cat.key);
+    });
+    zone.addEventListener('click', () => {
+      if (selectedPhraseId) {
+        placeCard(selectedPhraseId, cat.key);
+        selectedPhraseId = null;
+      }
+    });
+    zonesEl.appendChild(zone);
+
+    Object.keys(placements).forEach(pid => {
+      if (placements[pid] === cat.key) {
+        zone.appendChild(makeCard(pid));
+      }
+    });
+  });
+
+  // build pool (unplaced cards)
+  phrases.forEach(p => {
+    if (!placements[p.id]) {
+      pool.appendChild(makeCard(p.id));
+    }
+  });
+
+  if (Object.keys(placements).length === 0 && pool.children.length === 0) {
+    // safety no-op
+  }
+}
+
+function makeCard(pid) {
+  const p = phrases.find(x => x.id === pid);
+  const card = document.createElement('div');
+  card.className = 'phrase-card';
+  card.draggable = true;
+  card.dataset.id = pid;
+  card.textContent = p.text;
+  if (selectedPhraseId === pid) card.classList.add('selected');
+  card.addEventListener('dragstart', (e) => {
+    e.dataTransfer.setData('text/plain', pid);
+    card.classList.add('dragging');
+  });
+  card.addEventListener('dragend', () => card.classList.remove('dragging'));
+  card.addEventListener('click', () => {
+    selectedPhraseId = (selectedPhraseId === pid) ? null : pid;
+    renderMatch();
+  });
+  return card;
+}
+
+function placeCard(pid, key) {
+  if (!pid) return;
+  placements[pid] = key;
+  renderMatch();
+}
+
+// allow dropping back into pool to unplace
+document.addEventListener('DOMContentLoaded', () => {
+  const pool = document.getElementById('phrase-pool');
+  pool.addEventListener('dragover', (e) => e.preventDefault());
+  pool.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const pid = e.dataTransfer.getData('text/plain');
+    if (pid) {
+      delete placements[pid];
+      renderMatch();
+    }
+  });
+  pool.addEventListener('click', (e) => {
+    if (e.target === pool && selectedPhraseId) {
+      delete placements[selectedPhraseId];
+      selectedPhraseId = null;
+      renderMatch();
+    }
+  });
+
+  initOrder();
+  initMatch();
+});
+
+function checkMatch() {
+  const zones = document.querySelectorAll('.zone');
+  let allCorrect = true;
+  let allPlaced = Object.keys(placements).length === phrases.length;
+
+  zones.forEach(zone => {
+    zone.classList.remove('correct', 'incorrect');
+    const key = zone.dataset.key;
+    const card = zone.querySelector('.phrase-card');
+    if (card) {
+      const p = phrases.find(x => x.id === card.dataset.id);
+      if (p.answer === key) {
+        zone.classList.add('correct');
+      } else {
+        zone.classList.add('incorrect');
+        allCorrect = false;
+      }
+    }
+  });
+
+  const fb = document.getElementById('match-feedback');
+  if (!allPlaced) {
+    fb.textContent = "Place d'abord toutes les phrases dans une catégorie.";
+    fb.className = 'feedback ko';
+  } else if (allCorrect) {
+    fb.textContent = "Excellent ! Toutes les associations sont correctes. 🎉";
+    fb.className = 'feedback ok';
+  } else {
+    fb.textContent = "Certaines associations (en rouge) ne sont pas correctes. Réessaie !";
+    fb.className = 'feedback ko';
+  }
+}
+</script>
+
+</body>
+</html>
