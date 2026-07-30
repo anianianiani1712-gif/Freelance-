@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Match the sentence halves — Airport & Travel</title>
+<style>
+  :root{
+    --pink-light:#fff0f5;
+    --pink-mid:#ffd6e8;
+    --pink-deep:#ff6fa5;
+    --pink-dark:#d6336c;
+    --navy:#2b2d42;
+    --cream:#fffaf3;
+    --coral:#ff8787;
+    --green-ok:#4caf7d;
+    --shadow:0 4px 14px rgba(214,51,108,0.18);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background:linear-gradient(180deg,var(--pink-light) 0%, #ffffff 60%);
+    color:var(--navy);
+    padding:30px 16px 60px;
+  }
+  .wrap{max-width:960px;margin:0 auto;}
+  h1{
+    text-align:center;
+    color:var(--pink-dark);
+    font-size:1.6rem;
+    margin-bottom:4px;
+  }
+  .subtitle{
+    text-align:center;
+    color:#8a5a72;
+    margin-bottom:28px;
+    font-size:0.95rem;
+  }
+  .board{
+    display:flex;
+    gap:24px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .column{
+    flex:1;
+    min-width:300px;
+    max-width:440px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .col-title{
+    font-weight:600;
+    color:var(--pink-dark);
+    margin-bottom:4px;
+    text-align:center;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    font-size:0.8rem;
+  }
+  .card{
+    background:#fff;
+    border:2px solid var(--pink-mid);
+    border-radius:12px;
+    padding:14px 16px;
+    cursor:pointer;
+    font-size:0.98rem;
+    line-height:1.4;
+    transition:all 0.15s ease;
+    box-shadow:0 2px 6px rgba(0,0,0,0.04);
+    user-select:none;
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .card .num{
+    font-weight:700;
+    color:var(--pink-deep);
+    min-width:18px;
+  }
+  .card:hover{
+    border-color:var(--pink-deep);
+    transform:translateY(-1px);
+    box-shadow:var(--shadow);
+  }
+  .card.selected{
+    background:var(--pink-mid);
+    border-color:var(--pink-dark);
+    box-shadow:var(--shadow);
+  }
+  .card.matched{
+    background:#f2fff6;
+    border-color:var(--green-ok);
+    color:#2f6b4f;
+    cursor:default;
+  }
+  .card.matched:hover{
+    transform:none;
+    box-shadow:none;
+  }
+  .card.wrong{
+    animation:shake 0.35s;
+    border-color:#e05555;
+    background:#fff0f0;
+  }
+  @keyframes shake{
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-6px);}
+    75%{transform:translateX(6px);}
+  }
+  .controls{
+    text-align:center;
+    margin-top:32px;
+    display:flex;
+    gap:14px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  button{
+    background:var(--pink-deep);
+    color:#fff;
+    border:none;
+    padding:11px 22px;
+    border-radius:30px;
+    font-size:0.95rem;
+    cursor:pointer;
+    font-weight:600;
+    box-shadow:var(--shadow);
+    transition:background 0.15s ease;
+  }
+  button:hover{background:var(--pink-dark);}
+  button.secondary{
+    background:#fff;
+    color:var(--pink-dark);
+    border:2px solid var(--pink-deep);
+  }
+  button.secondary:hover{background:var(--pink-mid);}
+  .status{
+    text-align:center;
+    margin-top:18px;
+    font-weight:600;
+    color:var(--pink-dark);
+    min-height:24px;
+  }
+  .win-banner{
+    display:none;
+    text-align:center;
+    margin-top:20px;
+    background:linear-gradient(90deg,var(--pink-deep),var(--coral));
+    color:#fff;
+    padding:16px;
+    border-radius:14px;
+    font-size:1.1rem;
+    font-weight:700;
+    box-shadow:var(--shadow);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>✈️ Match the sentence halves</h1>
+  <p class="subtitle">Click a sentence beginning, then click its matching ending.</p>
+
+  <div class="board">
+    <div class="column" id="leftCol">
+      <div class="col-title">Beginnings</div>
+    </div>
+    <div class="column" id="rightCol">
+      <div class="col-title">Endings</div>
+    </div>
+  </div>
+
+  <div class="status" id="status"></div>
+  <div class="win-banner" id="winBanner">🎉 Well done! All pairs matched correctly!</div>
+
+  <div class="controls">
+    <button class="secondary" id="resetBtn">Reset</button>
+    <button class="secondary" id="checkBtn">Reveal answers</button>
+  </div>
+</div>
+
+<script>
+const pairs = [
+  {id:1, left:"I was able to check in", right:"online, so I had more time to spend in the duty free.", key:"e"},
+  {id:2, left:"It was only when I joined the queue", right:"to board that I realised I was at the wrong gate!", key:"g"},
+  {id:3, left:"We got to the airport in plenty of time but it took ages", right:"to go through security, and we nearly missed our flight.", key:"h"},
+  {id:4, left:"The trains weren't running, so I called", right:"a taxi to take me to the airport.", key:"f"},
+  {id:5, left:"The plane was rather late", right:"taking off, but still managed to land on time.", key:"a"},
+  {id:6, left:"When I checked the departures", right:"board, it said 'delayed' next to my flight.", key:"c"},
+  {id:7, left:"We got stuck in heavy traffic on", right:"the way to the airport and missed the flight.", key:"b"},
+  {id:8, left:"I quickly ran to the boarding", right:"gate, and was the last person to board the plane.", key:"d"},
+];
+
+let selectedLeft = null;
+let selectedRight = null;
+let matchedCount = 0;
+
+function shuffle(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+const leftCol = document.getElementById('leftCol');
+const rightCol = document.getElementById('rightCol');
+const status = document.getElementById('status');
+const winBanner = document.getElementById('winBanner');
+
+const leftOrder = shuffle(pairs);
+const rightOrder = shuffle(pairs);
+
+function buildCards(){
+  leftOrder.forEach(p=>{
+    const card = document.createElement('div');
+    card.className='card';
+    card.dataset.id=p.id;
+    card.dataset.side='left';
+    card.innerHTML = `<span class="num">${p.id}</span><span>${p.left}</span>`;
+    card.addEventListener('click',()=>onCardClick(card,'left',p.id));
+    leftCol.appendChild(card);
+  });
+  rightOrder.forEach(p=>{
+    const card = document.createElement('div');
+    card.className='card';
+    card.dataset.id=p.id;
+    card.dataset.side='right';
+    card.innerHTML = `<span class="num">${p.key}</span><span>${p.right}</span>`;
+    card.addEventListener('click',()=>onCardClick(card,'right',p.id));
+    rightCol.appendChild(card);
+  });
+}
+
+function onCardClick(card, side, id){
+  if(card.classList.contains('matched')) return;
+
+  if(side==='left'){
+    if(selectedLeft) selectedLeft.classList.remove('selected');
+    selectedLeft = card;
+    card.classList.add('selected');
+  } else {
+    if(selectedRight) selectedRight.classList.remove('selected');
+    selectedRight = card;
+    card.classList.add('selected');
+  }
+
+  if(selectedLeft && selectedRight){
+    checkMatch();
+  }
+}
+
+function checkMatch(){
+  const lId = selectedLeft.dataset.id;
+  const rId = selectedRight.dataset.id;
+  if(lId === rId){
+    selectedLeft.classList.remove('selected');
+    selectedRight.classList.remove('selected');
+    selectedLeft.classList.add('matched');
+    selectedRight.classList.add('matched');
+    matchedCount++;
+    status.textContent = `✅ Correct! ${matchedCount} of ${pairs.length} matched.`;
+    selectedLeft = null;
+    selectedRight = null;
+    if(matchedCount === pairs.length){
+      winBanner.style.display='block';
+      status.textContent='';
+    }
+  } else {
+    status.textContent = "❌ Not quite — try again!";
+    selectedLeft.classList.add('wrong');
+    selectedRight.classList.add('wrong');
+    setTimeout(()=>{
+      if(selectedLeft){
+        selectedLeft.classList.remove('selected','wrong');
+      }
+      if(selectedRight){
+        selectedRight.classList.remove('selected','wrong');
+      }
+      selectedLeft = null;
+      selectedRight = null;
+    },600);
+  }
+}
+
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  location.reload();
+});
+
+document.getElementById('checkBtn').addEventListener('click',()=>{
+  document.querySelectorAll('.card').forEach(card=>{
+    card.classList.add('matched');
+    card.classList.remove('selected','wrong');
+  });
+  matchedCount = pairs.length;
+  status.textContent = '';
+  winBanner.textContent = '📖 Answers: 1-e, 2-g, 3-h, 4-f, 5-a, 6-c, 7-b, 8-d';
+  winBanner.style.display='block';
+});
+
+buildCards();
+</script>
+</body>
+</html>
