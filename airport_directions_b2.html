@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Airport Navigation — How Do I Get To...?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FDF6EC;
+    --navy:#16233F;
+    --navy-light:#233658;
+    --gold:#F4A63D;
+    --sky:#4A90C4;
+    --coral:#E85D4C;
+    --green:#3FA796;
+    --paper:#FFFFFF;
+    --line:#E4D9C4;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--cream);
+    font-family:'Inter',sans-serif;
+    color:var(--navy);
+    padding-bottom:60px;
+  }
+  h1,h2,h3,.display{font-family:'Fredoka',sans-serif;}
+
+  .board{
+    background:var(--navy);
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(244,166,61,0.08), transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(74,144,196,0.10), transparent 40%);
+    padding:34px 20px 28px;
+    text-align:center;
+    color:var(--cream);
+    border-bottom:6px solid var(--gold);
+  }
+  .board .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    letter-spacing:4px;
+    font-size:12px;
+    color:var(--gold);
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  .board h1{
+    font-size:clamp(28px,5vw,42px);
+    margin:0 0 14px;
+    font-weight:700;
+  }
+  .flap-row{
+    display:flex;
+    justify-content:center;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:10px;
+  }
+  .flap{
+    background:#0D1730;
+    border:1px solid #35476F;
+    border-radius:4px;
+    padding:8px 12px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:14px;
+    font-weight:700;
+    color:var(--gold);
+    min-width:64px;
+    position:relative;
+  }
+  .flap::after{
+    content:'';
+    position:absolute;
+    left:0;right:0;top:50%;
+    height:1px;
+    background:rgba(0,0,0,0.4);
+  }
+  .flap small{
+    display:block;
+    font-family:'Inter',sans-serif;
+    font-size:9px;
+    font-weight:500;
+    color:#8C9BC2;
+    letter-spacing:1px;
+    margin-top:2px;
+  }
+
+  section{
+    max-width:920px;
+    margin:0 auto;
+    padding:38px 20px 0;
+  }
+  .section-tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:2px;
+    color:var(--sky);
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  section h2{
+    font-size:26px;
+    margin:0 0 16px;
+    color:var(--navy);
+  }
+  section > p.lead{
+    font-size:15px;
+    line-height:1.6;
+    color:#4a5470;
+    max-width:640px;
+    margin:0 0 22px;
+  }
+
+  .map-wrap{
+    background:var(--paper);
+    border-radius:16px;
+    border:1px solid var(--line);
+    padding:16px;
+    box-shadow:0 6px 20px rgba(22,35,63,0.06);
+  }
+  .map-wrap svg{width:100%;height:auto;display:block;}
+  .zone-label{font-family:'Fredoka',sans-serif;font-weight:600;font-size:12.5px;fill:var(--navy);}
+  .zone-sub{font-family:'Inter',sans-serif;font-size:9px;fill:#6b7590;}
+  .legend{
+    display:flex;flex-wrap:wrap;gap:10px 18px;
+    margin-top:14px;font-size:12.5px;color:#4a5470;
+  }
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block;}
+
+  .tip{
+    background:#FFF4E9;
+    border:1px solid #F0D8AE;
+    border-left:4px solid var(--gold);
+    border-radius:10px;
+    padding:16px 18px;
+    margin-top:18px;
+    font-size:14px;
+    line-height:1.65;
+    color:#5a4423;
+  }
+  .tip b{color:var(--coral);}
+  .tip .example{
+    display:flex;gap:18px;margin-top:10px;flex-wrap:wrap;
+  }
+  .tip .example div{
+    flex:1;min-width:220px;
+    background:white;border-radius:8px;padding:10px 12px;
+    border:1px solid #F0D8AE;font-size:13px;
+  }
+  .tip .example strong{display:block;color:var(--navy);margin-bottom:3px;font-family:'Fredoka',sans-serif;}
+
+  .bank-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:680px){.bank-grid{grid-template-columns:1fr;}}
+  .bank-card{
+    background:var(--paper);border:1px solid var(--line);border-radius:14px;
+    padding:18px 20px;
+  }
+  .bank-card h3{
+    margin:0 0 10px;font-size:16px;display:flex;align-items:center;gap:8px;
+  }
+  .bank-card.ask h3{color:var(--coral);}
+  .bank-card.give h3{color:var(--sky);}
+  .bank-card ul{margin:0;padding-left:18px;font-size:14px;line-height:1.85;color:#31405f;}
+  .bank-card li em{font-style:normal;color:var(--navy);font-weight:600;}
+
+  .pass-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  @media(max-width:680px){.pass-grid{grid-template-columns:1fr;}}
+
+  .pass{
+    background:var(--paper);
+    border-radius:12px;
+    position:relative;
+    box-shadow:0 6px 18px rgba(22,35,63,0.08);
+    overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .pass.has-turn{border-top:3px solid var(--coral);}
+  .pass.no-turn{border-top:3px solid var(--line);}
+  .turn-flag{
+    position:absolute;top:10px;right:14px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:9.5px;font-weight:700;letter-spacing:0.5px;
+    padding:3px 8px;border-radius:20px;
+  }
+  .pass.has-turn .turn-flag{background:#FDEDEA;color:var(--coral);}
+  .pass.no-turn .turn-flag{background:#F1F3F7;color:#8892ab;}
+
+  .pass-top{
+    padding:16px 18px 14px;
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .pass-route{flex:1;}
+  .pass-route .from,.pass-route .to{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    font-size:13px;
+    color:var(--navy);
+  }
+  .pass-route .from small,.pass-route .to small{
+    display:block;font-family:'Inter',sans-serif;font-weight:500;
+    font-size:10px;color:#8892ab;letter-spacing:1px;text-transform:uppercase;
+  }
+  .pass-arrow{
+    display:flex;align-items:center;justify-content:center;
+    color:var(--gold);font-size:18px;padding:0 4px;
+  }
+  .pass-gate{
+    font-family:'JetBrains Mono',monospace;
+    background:var(--navy);color:var(--gold);
+    font-size:11px;font-weight:700;
+    padding:4px 9px;border-radius:5px;height:fit-content;
+    align-self:center;
+  }
+  .perforation{
+    height:0;border-top:2px dashed var(--line);
+    margin:0 18px;position:relative;
+  }
+  .perforation::before,.perforation::after{
+    content:'';position:absolute;top:-9px;width:18px;height:18px;
+    background:var(--cream);border-radius:50%;border:1px solid var(--line);
+  }
+  .perforation::before{left:-27px;}
+  .perforation::after{right:-27px;}
+
+  .pass-bottom{padding:16px 18px 18px;}
+  .pass-bottom .task{
+    font-size:14px;line-height:1.55;color:#31405f;margin:0 0 12px;
+  }
+  .pass-bottom .task strong{color:var(--coral);}
+  .reveal-btn{
+    font-family:'Fredoka',sans-serif;
+    background:var(--sky);color:white;border:none;
+    padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;
+    cursor:pointer;transition:background .15s ease;
+  }
+  .reveal-btn:hover{background:#3d7cab;}
+  .model-answer{
+    margin-top:12px;padding:12px 14px;
+    background:#F0FBF9;border-left:3px solid var(--green);
+    border-radius:6px;font-size:13.5px;line-height:1.6;color:#1f4a44;
+    display:none;
+  }
+  .model-answer.show{display:block;}
+  .model-answer b{color:var(--green);}
+
+  .roleplay{
+    background:var(--navy);
+    border-radius:16px;
+    color:var(--cream);
+    padding:26px 24px;
+    margin-top:8px;
+  }
+  .roleplay h3{margin:0 0 8px;font-size:20px;color:var(--gold);}
+  .roleplay p{font-size:14px;line-height:1.65;color:#c9d2e8;margin:0 0 16px;max-width:620px;}
+  .role-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:680px){.role-cols{grid-template-columns:1fr;}}
+  .role-col{
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:10px;padding:14px 16px;
+  }
+  .role-col h4{margin:0 0 8px;font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--sky);}
+  .role-col ol{margin:0;padding-left:18px;font-size:13.5px;line-height:1.7;color:#dbe2f2;}
+
+  footer{
+    text-align:center;color:#9aa4bd;font-size:12px;margin-top:44px;
+  }
+</style>
+</head>
+<body>
+
+<div class="board">
+  <div class="eyebrow">Ani's Speaking Club · B2</div>
+  <h1>✈️ How Do I Get To...?</h1>
+  <div class="flap-row">
+    <div class="flap">GATE<small>Topic</small><br>DIRECT</div>
+    <div class="flap">B2<small>Level</small><br>UPPR-INT</div>
+    <div class="flap">45<small>Duration</small><br>MIN</div>
+    <div class="flap">ON TIME<small>Status</small><br>✓</div>
+  </div>
+</div>
+
+<section id="map">
+  <div class="section-tag">Step 1 · Get your bearings</div>
+  <h2>Terminal Map</h2>
+  <p class="lead">The corridor isn't just one straight line — it branches off in a few places. Every bend in the map below is a real turn: that's where "turn left" or "turn right" actually happens.</p>
+
+  <div class="map-wrap">
+    <svg viewBox="0 0 900 660" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="900" height="660" fill="#FCFAF5"/>
+
+      <g transform="translate(838,54)">
+        <circle r="30" fill="white" stroke="#D8C79E"/>
+        <line x1="0" y1="-22" x2="0" y2="22" stroke="#9aa4bd" stroke-width="1.5"/>
+        <line x1="-22" y1="0" x2="22" y2="0" stroke="#9aa4bd" stroke-width="1.5"/>
+        <text x="0" y="-24" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="700" fill="#E85D4C">N</text>
+        <text x="0" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#9aa4bd">S</text>
+        <text x="30" y="4" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#9aa4bd">E</text>
+        <text x="-30" y="4" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#9aa4bd">W</text>
+      </g>
+
+      <rect x="20" y="30" width="800" height="250" rx="10" fill="#FBEFDD" stroke="#EBD9B4"/>
+      <text x="36" y="52" class="zone-sub" font-weight="700" fill="#B98426">DEPARTURES — GROUND FLOOR</text>
+
+      <g fill="none" stroke="#EADFC4" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M120,190 L780,190"/>
+        <path d="M170,190 L170,95"/>
+        <path d="M610,190 L610,90"/>
+        <path d="M660,190 L660,255"/>
+      </g>
+      <g fill="none" stroke="#E85D4C" stroke-width="2" stroke-dasharray="5 5">
+        <path d="M120,190 L780,190"/>
+        <path d="M170,190 L170,95"/>
+        <path d="M610,190 L610,90"/>
+        <path d="M660,190 L660,255"/>
+      </g>
+      <circle cx="170" cy="190" r="5" fill="#E85D4C"/>
+      <circle cx="610" cy="190" r="5" fill="#E85D4C"/>
+      <circle cx="660" cy="190" r="5" fill="#E85D4C"/>
+
+      <rect x="34" y="160" width="86" height="60" rx="8" fill="#E85D4C"/>
+      <text x="77" y="186" text-anchor="middle" class="zone-label" fill="white">Entrance</text>
+      <text x="77" y="200" text-anchor="middle" class="zone-sub" fill="#FFE3DE">start here</text>
+
+      <rect x="118" y="58" width="104" height="42" rx="7" fill="white" stroke="#EBD9B4"/>
+      <text x="170" y="76" text-anchor="middle" class="zone-label" font-size="11">ℹ️ Info Desk</text>
+      <text x="170" y="90" text-anchor="middle" class="zone-sub">1 turn off spine</text>
+
+      <rect x="150" y="203" width="150" height="55" rx="8" fill="white" stroke="#EBD9B4"/>
+      <text x="225" y="226" text-anchor="middle" class="zone-label">🧳 Check-in</text>
+      <text x="225" y="242" text-anchor="middle" class="zone-sub">Desks A–F · straight ahead</text>
+
+      <rect x="330" y="163" width="110" height="55" rx="8" fill="#EAF3FA" stroke="#CFE3F1"/>
+      <text x="385" y="187" text-anchor="middle" class="zone-label">🛂 Security</text>
+      <text x="385" y="201" text-anchor="middle" class="zone-sub">straight ahead</text>
+
+      <rect x="460" y="203" width="130" height="55" rx="8" fill="white" stroke="#EBD9B4"/>
+      <text x="525" y="226" text-anchor="middle" class="zone-label">🛍️ Duty Free</text>
+      <text x="525" y="242" text-anchor="middle" class="zone-sub">straight ahead</text>
+
+      <rect x="548" y="52" width="120" height="42" rx="7" fill="white" stroke="#EBD9B4"/>
+      <text x="608" y="70" text-anchor="middle" class="zone-label" font-size="11">☕ Café &amp; Lounge</text>
+      <text x="608" y="84" text-anchor="middle" class="zone-sub">1 turn, then straight</text>
+
+      <rect x="672" y="52" width="110" height="42" rx="7" fill="#F1F7F5" stroke="#CFE6DE"/>
+      <text x="727" y="70" text-anchor="middle" class="zone-label" font-size="11">🚻 Toilets</text>
+      <text x="727" y="84" text-anchor="middle" class="zone-sub">past the café</text>
+
+      <rect x="720" y="145" width="130" height="90" rx="8" fill="#16233F"/>
+      <text x="785" y="185" text-anchor="middle" class="zone-label" fill="#F4A63D">🛫 Gates A1–A6</text>
+      <text x="785" y="200" text-anchor="middle" class="zone-sub" fill="#B7C2DD">straight ahead, end of hall</text>
+
+      <text x="150" y="140" class="zone-sub" fill="#B98426" font-weight="700">↰ turn</text>
+      <text x="590" y="140" class="zone-sub" fill="#B98426" font-weight="700">↰ turn</text>
+      <text x="672" y="225" class="zone-sub" fill="#B98426" font-weight="700">turn ↳</text>
+
+      <rect x="20" y="290" width="800" height="80" rx="10" fill="#F4F1EA" stroke="#E4DCC8"/>
+      <text x="36" y="310" class="zone-sub" font-weight="700" fill="#7a7256">UPPER LEVEL (reached by escalator)</text>
+      <polygon points="660,258 653,268 667,268" fill="#F4A63D"/>
+      <rect x="540" y="315" width="280" height="45" rx="8" fill="#233658"/>
+      <text x="680" y="335" text-anchor="middle" class="zone-label" fill="#F4A63D" font-size="11">🛫 Gates B1–B6</text>
+      <text x="680" y="350" text-anchor="middle" class="zone-sub" fill="#B7C2DD">via the escalator, turn off the spine</text>
+
+      <rect x="20" y="390" width="800" height="250" rx="10" fill="#EAF3FA" stroke="#CFE3F1"/>
+      <text x="36" y="412" class="zone-sub" font-weight="700" fill="#2E6591">ARRIVALS — GROUND FLOOR</text>
+
+      <g fill="none" stroke="#D6E6F2" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M140,500 L780,500"/>
+        <path d="M360,500 L360,420"/>
+        <path d="M660,500 L660,580"/>
+      </g>
+      <g fill="none" stroke="#4A90C4" stroke-width="2" stroke-dasharray="5 5">
+        <path d="M140,500 L780,500"/>
+        <path d="M360,500 L360,420"/>
+        <path d="M660,500 L660,580"/>
+      </g>
+      <circle cx="360" cy="500" r="5" fill="#4A90C4"/>
+      <circle cx="660" cy="500" r="5" fill="#4A90C4"/>
+
+      <rect x="34" y="470" width="106" height="60" rx="8" fill="#16233F"/>
+      <text x="87" y="496" text-anchor="middle" class="zone-label" fill="#F4A63D" font-size="11">🛬 Arrival Gates</text>
+      <text x="87" y="512" text-anchor="middle" class="zone-sub" fill="#B7C2DD">start here</text>
+
+      <rect x="230" y="472" width="150" height="55" rx="8" fill="white" stroke="#CFE3F1"/>
+      <text x="305" y="495" text-anchor="middle" class="zone-label" font-size="11">🛂 Passport Control</text>
+      <text x="305" y="511" text-anchor="middle" class="zone-sub">straight ahead</text>
+
+      <rect x="298" y="382" width="124" height="42" rx="7" fill="#F1F7F5" stroke="#CFE6DE"/>
+      <text x="360" y="400" text-anchor="middle" class="zone-label" font-size="11">🚻 Toilets</text>
+      <text x="360" y="414" text-anchor="middle" class="zone-sub">1 turn off spine</text>
+      <text x="330" y="450" class="zone-sub" fill="#2E6591" font-weight="700">↰ turn</text>
+
+      <rect x="430" y="513" width="150" height="55" rx="8" fill="white" stroke="#CFE3F1"/>
+      <text x="505" y="536" text-anchor="middle" class="zone-label">🧳 Baggage Claim</text>
+      <text x="505" y="552" text-anchor="middle" class="zone-sub">straight ahead · carousels 1–4</text>
+
+      <rect x="600" y="585" width="140" height="40" rx="7" fill="white" stroke="#CFE3F1"/>
+      <text x="670" y="602" text-anchor="middle" class="zone-label" font-size="11">💱 Currency / ATM</text>
+      <text x="670" y="616" text-anchor="middle" class="zone-sub">1 turn off spine</text>
+      <text x="672" y="565" class="zone-sub" fill="#2E6591" font-weight="700">turn ↳</text>
+
+      <rect x="700" y="470" width="130" height="60" rx="8" fill="#E85D4C"/>
+      <text x="765" y="494" text-anchor="middle" class="zone-label" fill="white" font-size="11">🚕 Exit / Taxi Rank</text>
+      <text x="765" y="510" text-anchor="middle" class="zone-sub" fill="#FFE3DE">straight ahead, end of hall</text>
+
+    </svg>
+  </div>
+
+  <div class="legend">
+    <span><i style="background:#E85D4C"></i>Entrance / Exit</span>
+    <span><i style="background:#16233F"></i>Gates</span>
+    <span><i style="background:#EAF3FA;border:1px solid #CFE3F1"></i>Security &amp; Passport Control</span>
+    <span><i style="background:#F1F7F5;border:1px solid #CFE6DE"></i>Toilets</span>
+    <span>🔴 dot = a real turn (elbow in the corridor)</span>
+  </div>
+
+  <div class="tip">
+    <b>Direction tip:</b> "left" and "right" depend on which way <em>you're</em> facing — not on the map. The same corner in the corridor can be a left turn <em>or</em> a right turn, depending on your direction of travel. Compare:
+    <div class="example">
+      <div><strong>Walking TOWARDS the info desk</strong> (from the entrance, heading east) → you turn <b>left</b> off the spine.</div>
+      <div><strong>Walking AWAY from it</strong> (from security, heading back west) → the very same corner is now a turn to the <b>right</b>.</div>
+    </div>
+  </div>
+</section>
+
+<section id="phrases">
+  <div class="section-tag">Step 2 · Language bank</div>
+  <h2>Phrases You'll Need</h2>
+  <p class="lead">B2 level means going beyond "turn left." Use these more natural, fluent expressions.</p>
+
+  <div class="bank-grid">
+    <div class="bank-card ask">
+      <h3>🗣️ Asking for directions</h3>
+      <ul>
+        <li><em>Excuse me,</em> could you tell me how to get to the baggage claim?</li>
+        <li><em>Sorry to bother you,</em> where's the nearest toilet?</li>
+        <li>I'm trying to find Gate B4 — <em>am I going the right way?</em></li>
+        <li>Is it <em>far from here</em>, or can I walk?</li>
+        <li><em>Whereabouts</em> is the duty free shop?</li>
+      </ul>
+    </div>
+    <div class="bank-card give">
+      <h3>🧭 Giving directions</h3>
+      <ul>
+        <li>Go <em>straight ahead</em> until you reach...</li>
+        <li><em>Turn left/right</em> just past the...</li>
+        <li>Take the <em>escalator/lift</em> up to the upper level.</li>
+        <li>It's <em>just past</em> the café, on your right.</li>
+        <li><em>Bear left/right</em> at the junction, then keep going.</li>
+        <li>Double back / head back the way you came, then <em>turn...</em></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="practice">
+  <div class="section-tag">Step 3 · Boarding pass practice</div>
+  <h2>How Do I Get To...?</h2>
+  <p class="lead">For each "flight," say your directions out loud first — then tap <strong>Reveal</strong> to compare with a model answer. Cards marked <strong>TURN</strong> require at least one left/right turn; cards marked <strong>STRAIGHT</strong> don't — notice the difference in language.</p>
+
+  <div class="pass-grid" id="passGrid"></div>
+</section>
+
+<section id="roleplay">
+  <div class="section-tag">Step 4 · Speak</div>
+  <h2>Pair Roleplay</h2>
+  <div class="roleplay">
+    <h3>🎭 Lost at the Airport</h3>
+    <p>Work with a partner. Choose ONE scenario card above that you haven't used yet, and act it out as a real conversation — don't just read the model answer aloud. Add small talk, a "thank you," and at least one follow-up question.</p>
+    <div class="role-cols">
+      <div class="role-col">
+        <h4>Traveller</h4>
+        <ol>
+          <li>Stop a "staff member" politely.</li>
+          <li>Explain where you are and where you need to go.</li>
+          <li>Ask at least one follow-up question (e.g. "How long does that take?" / "Is there a lift?").</li>
+          <li>Thank them and repeat the directions back to check you understood — including any turns.</li>
+        </ol>
+      </div>
+      <div class="role-col">
+        <h4>Airport Staff</h4>
+        <ol>
+          <li>Greet the traveller and ask how you can help.</li>
+          <li>Give clear, step-by-step directions using the language bank.</li>
+          <li>Be precise about left vs right — check it matches the direction they're walking!</li>
+          <li>Ask if they have any other questions before they go.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>Ani's Speaking Club · How Do I Get To...? · B2</footer>
+
+<script>
+const scenarios = [
+  {
+    from: "Main Entrance", fromSub: "you are here",
+    to: "Gate A3", gate: "A3", turn: false,
+    task: "You've just walked in through the main doors. A traveller stops you and asks: <strong>“Excuse me, how do I get to Gate A3?”</strong>",
+    model: "Go straight ahead the whole way — past check-in, through security, then past duty free. Gate A3 is right at the end of the hall. <b>No turns at all</b> — you can't miss it."
+  },
+  {
+    from: "Check-in Desks", fromSub: "just dropped off bags",
+    to: "Toilets (Departures)", gate: "WC", turn: true,
+    task: "You've just finished at check-in. Someone asks: <strong>“Is there a toilet nearby?”</strong>",
+    model: "Go straight ahead through security and past duty free. Just after duty free, <b>turn left</b> off the main corridor. Keep going straight — you'll pass the café, and the toilets are right after it."
+  },
+  {
+    from: "Gate A6", fromSub: "boarding soon",
+    to: "Gates B1–B6", gate: "B-", turn: true,
+    task: "A passenger at Gate A6 is actually booked on a flight from Gate B4. <strong>“Sorry — how do I get to Gate B4? Am I in the wrong place?”</strong>",
+    model: "Don't worry, it's close. Head back the way you came, towards duty free. Just before you reach it, <b>turn left</b> for the escalator — since you're walking back this time, that corner is on your left, not your right. Go up, and Gates B1 to B6 are on the upper level."
+  },
+  {
+    from: "Arrival Gate", fromSub: "just landed",
+    to: "Baggage Claim", gate: "BAG", turn: false,
+    task: "You've just got off the plane. A fellow passenger asks: <strong>“Excuse me, where's baggage claim?”</strong>",
+    model: "Straight ahead the whole way — follow the signs through passport control, and baggage claim is right after it, still on the same corridor. <b>No turns needed.</b> Look for carousels 1 to 4."
+  },
+  {
+    from: "Passport Control", fromSub: "just cleared",
+    to: "Toilets (Arrivals)", gate: "WC", turn: true,
+    task: "Someone stops you right after passport control: <strong>“Is there a toilet around here?”</strong>",
+    model: "Yes — go straight ahead a short way, and just before you reach baggage claim, <b>turn left</b>. The toilets are right there, a few steps up that corridor."
+  },
+  {
+    from: "Baggage Claim", fromSub: "found your suitcase",
+    to: "Taxi Rank / Exit", gate: "EXIT", turn: false,
+    task: "You've got your bags. Now: <strong>“How do I get to the taxi rank from here?”</strong>",
+    model: "Keep going <b>straight ahead</b> — no turns. You'll pass the currency exchange on your right without needing to turn, and the exit doors are right in front of you, with the taxi rank just outside."
+  },
+  {
+    from: "Duty Free Shop", fromSub: "browsing",
+    to: "Café & Lounge", gate: "CAFE", turn: true,
+    task: "You bump into someone in duty free. They ask: <strong>“Do you know if there's somewhere to grab a coffee?”</strong>",
+    model: "Sure — carry on straight ahead a little further, and <b>turn left</b> where the corridor branches off. The café is right there, just after the turn."
+  },
+  {
+    from: "Security Check", fromSub: "bags scanned",
+    to: "Info Desk", gate: "INFO", turn: true,
+    task: "Right after security, a traveller asks: <strong>“Sorry, I actually need the information desk — did I already pass it?”</strong>",
+    model: "Yes, you did — head back the way you came, past check-in. Just before you reach the entrance, <b>turn right</b> into a small alcove. Since you're walking back this time, it's a right turn, not a left."
+  }
+];
+
+const grid = document.getElementById('passGrid');
+scenarios.forEach((s, i) => {
+  const card = document.createElement('div');
+  card.className = 'pass ' + (s.turn ? 'has-turn' : 'no-turn');
+  card.innerHTML = `
+    <div class="turn-flag">${s.turn ? '↰ TURN' : '→ STRAIGHT'}</div>
+    <div class="pass-top">
+      <div class="pass-route">
+        <div class="from">${s.from}<small>${s.fromSub}</small></div>
+      </div>
+      <div class="pass-arrow">→</div>
+      <div class="pass-route" style="text-align:right">
+        <div class="to">${s.to}<small>destination</small></div>
+      </div>
+      <div class="pass-gate">${s.gate}</div>
+    </div>
+    <div class="perforation"></div>
+    <div class="pass-bottom">
+      <p class="task">${s.task}</p>
+      <button class="reveal-btn" type="button">Reveal model answer</button>
+      <div class="model-answer">${s.model}</div>
+    </div>
+  `;
+  const btn = card.querySelector('.reveal-btn');
+  const ans = card.querySelector('.model-answer');
+  btn.addEventListener('click', () => {
+    const showing = ans.classList.toggle('show');
+    btn.textContent = showing ? 'Hide model answer' : 'Reveal model answer';
+  });
+  grid.appendChild(card);
+});
+</script>
+
+</body>
+</html>
