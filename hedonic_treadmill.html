@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE HEDONIC TREADMILL — Track List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Permanent+Marker&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0c0c0c;
+    --concrete:#1a1a1a;
+    --concrete2:#232323;
+    --line:#333;
+    --gold:#ffc400;
+    --red:#ff3b30;
+    --purple:#9b5cff;
+    --cream:#f3ecdc;
+    --cream-dim:#c9c2b2;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse at 15% 0%, rgba(155,92,255,.10), transparent 45%),
+      radial-gradient(ellipse at 85% 15%, rgba(255,196,0,.08), transparent 40%),
+      var(--black);
+    color:var(--cream);
+    font-family:'Barlow', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .noise{
+    position:fixed; inset:0; pointer-events:none; z-index:2; opacity:.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  h1,h2,h3{font-family:'Anton', sans-serif; font-weight:400; letter-spacing:.01em; margin:0;}
+  .tag{font-family:'Permanent Marker', cursive; color:var(--gold);}
+
+  /* ---------- layout shell ---------- */
+  .wrap{max-width:900px; margin:0 auto; padding:0 20px 120px;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding:70px 20px 60px;
+    text-align:center;
+    border-bottom:6px solid var(--gold);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(115deg, transparent 0 40px, rgba(255,255,255,.02) 40px 41px);
+  }
+  .spray{
+    position:absolute; border-radius:50%; filter:blur(40px); opacity:.55; z-index:0;
+  }
+  .spray.g{width:340px;height:340px; background:var(--gold); top:-120px; left:-100px;}
+  .spray.r{width:260px;height:260px; background:var(--red); bottom:-100px; right:-60px; opacity:.35;}
+  .spray.p{width:220px;height:220px; background:var(--purple); top:20%; right:10%; opacity:.3;}
+
+  .eyebrow-tape{
+    display:inline-block; font-family:'Permanent Marker',cursive; color:var(--black);
+    background:var(--gold); padding:5px 16px; transform:rotate(-2deg);
+    font-size:.8rem; letter-spacing:.08em; margin-bottom:22px; position:relative; z-index:2;
+  }
+  .hero h1{
+    position:relative; z-index:2;
+    font-size:clamp(2.6rem, 9vw, 5.6rem);
+    line-height:.95;
+    color:var(--cream);
+    text-shadow:
+      3px 3px 0 var(--red),
+      6px 6px 0 var(--purple);
+  }
+  .hero .sub{
+    position:relative; z-index:2;
+    max-width:560px; margin:26px auto 0;
+    font-size:1.05rem; color:var(--cream-dim); line-height:1.6;
+  }
+
+  /* vinyl signature */
+  .vinyl-box{position:relative; width:220px; height:220px; margin:44px auto 10px; z-index:2;}
+  .vinyl{
+    width:220px; height:220px; border-radius:50%;
+    background:
+      repeating-radial-gradient(circle at center, #111 0 3px, #060606 3px 6px);
+    border:2px solid #000;
+    box-shadow:0 0 0 2px #444, 0 20px 50px rgba(0,0,0,.6);
+    animation:spin 6s linear infinite;
+    position:relative;
+  }
+  .vinyl::before{
+    content:"";
+    position:absolute; inset:0; border-radius:50%;
+    background:conic-gradient(from 0deg, rgba(255,196,0,.12), transparent 25%, transparent 75%, rgba(255,196,0,.12));
+  }
+  .vinyl-label{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:78px; height:78px; border-radius:50%;
+    background:var(--gold);
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    font-family:'Permanent Marker',cursive; color:var(--black); font-size:.6rem; line-height:1.15;
+    padding:6px; border:3px solid var(--black);
+  }
+  .vinyl-hole{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:8px; height:8px; border-radius:50%; background:var(--black); z-index:3;
+  }
+  .needle-arm{
+    position:absolute; top:-6px; right:6px; width:90px; height:6px;
+    transform-origin:right center; transform:rotate(-32deg);
+    z-index:4;
+  }
+  .needle-arm .body{
+    width:100%; height:6px; background:linear-gradient(90deg,#888,#eee);
+    border-radius:3px; box-shadow:0 2px 6px rgba(0,0,0,.5);
+  }
+  .needle-arm .tip{
+    position:absolute; left:-4px; top:-2px; width:10px; height:10px; border-radius:50%;
+    background:var(--red); box-shadow:0 0 8px var(--red);
+  }
+  .groove-loop{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:220px; height:220px; z-index:2; pointer-events:none;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .loop-caption{
+    font-family:'Permanent Marker',cursive; color:var(--red); font-size:.85rem;
+    letter-spacing:.05em; margin-top:6px; position:relative; z-index:2;
+  }
+
+  /* ---------- TRACK sections ---------- */
+  .track{
+    padding:56px 0 8px;
+    border-bottom:1px dashed var(--line);
+    position:relative;
+  }
+  .track:last-of-type{border-bottom:none;}
+  .track-num{
+    font-family:'Permanent Marker',cursive; color:var(--purple); font-size:.85rem;
+    letter-spacing:.15em; display:flex; align-items:center; gap:10px; margin-bottom:8px;
+  }
+  .track-num::before{content:"●"; color:var(--gold); font-size:.6rem;}
+  .track h2{
+    font-size:clamp(1.6rem, 4.5vw, 2.3rem);
+    color:var(--gold);
+    margin-bottom:6px;
+    text-shadow:2px 2px 0 rgba(255,59,48,.5);
+  }
+  .track .instructions{color:var(--cream-dim); font-size:.95rem; margin-bottom:26px; font-style:italic;}
+
+  .card{
+    background:var(--concrete);
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:22px 24px;
+    position:relative;
+  }
+  .card::before{ /* torn tape corner */
+    content:"";
+    position:absolute; top:-8px; left:22px; width:50px; height:16px;
+    background:rgba(255,196,0,.75); transform:rotate(-3deg);
+  }
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr;}}
+
+  .q-card{
+    background:var(--concrete2); border:1px solid var(--line); border-left:4px solid var(--red);
+    padding:18px 20px; font-weight:600; font-size:1rem; line-height:1.4;
+  }
+
+  /* WARM UP ranking */
+  .rank-row{
+    display:flex; align-items:center; gap:14px; padding:10px 0; border-bottom:1px solid var(--line);
+  }
+  .rank-row:last-child{border-bottom:none;}
+  .rank-row select{
+    width:56px; background:var(--black); color:var(--gold); border:2px solid var(--gold);
+    font-family:'Anton',sans-serif; font-size:1rem; padding:4px; border-radius:4px;
+  }
+  .rank-row label{flex:1; font-size:.98rem;}
+
+  /* BEFORE YOU READ choice cards */
+  .choice{
+    display:block; background:var(--concrete2); border:2px solid var(--line);
+    padding:16px 18px; margin-bottom:10px; cursor:pointer; border-radius:3px;
+    transition:.15s; font-size:.98rem;
+  }
+  .choice:hover{border-color:var(--gold);}
+  .choice.selected{
+    border-color:var(--gold); background:rgba(255,196,0,.08);
+    box-shadow:inset 0 0 0 1px var(--gold);
+  }
+  .choice.selected::before{content:"✓ "; color:var(--gold); font-weight:800;}
+  textarea, input[type=text]{
+    width:100%; background:var(--black); border:1px solid var(--line); color:var(--cream);
+    font-family:'Barlow',sans-serif; font-size:.95rem; padding:10px 12px; border-radius:3px;
+    margin-top:10px; resize:vertical;
+  }
+  textarea:focus, input[type=text]:focus, select:focus{outline:2px solid var(--gold); outline-offset:1px;}
+
+  /* ARTICLE */
+  .article{
+    background:linear-gradient(180deg,#141414,#0f0f0f);
+    border:1px solid var(--line); padding:30px 28px; line-height:1.75; font-size:1rem;
+  }
+  .article h3{
+    font-size:1.4rem; color:var(--cream); margin:26px 0 10px;
+    border-left:4px solid var(--gold); padding-left:12px;
+  }
+  .article h3:first-child{margin-top:0;}
+  .article p{margin:0 0 16px; color:#ddd6c8;}
+  .article p:first-of-type::first-letter{
+    font-family:'Anton',sans-serif; font-size:3.4rem; color:var(--gold); float:left;
+    line-height:.8; margin:6px 8px 0 0;
+  }
+  .drip-title{
+    font-family:'Anton',sans-serif; font-size:clamp(1.5rem,4vw,2.1rem); color:var(--red);
+    margin-bottom:4px; text-shadow:2px 2px 0 rgba(255,196,0,.4);
+  }
+  .drip-sub{color:var(--cream-dim); font-style:italic; margin-bottom:18px; font-size:.95rem;}
+
+  /* EVIDENCE */
+  .ev-item{margin-bottom:16px;}
+  .ev-item p{font-weight:600; margin-bottom:6px;}
+
+  /* VOCAB MATCH */
+  .match-wrap{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
+  @media(max-width:640px){.match-wrap{grid-template-columns:1fr;}}
+  .chip{
+    display:block; width:100%; text-align:left; background:var(--concrete2);
+    border:2px solid var(--line); color:var(--cream); padding:12px 14px; margin-bottom:10px;
+    border-radius:3px; cursor:pointer; font-family:'Barlow',sans-serif; font-size:.92rem;
+    transition:.12s;
+  }
+  .chip:hover{border-color:var(--purple);}
+  .chip.picked{border-color:var(--gold); background:rgba(255,196,0,.1);}
+  .chip.correct{border-color:#4caf50 !important; background:rgba(76,175,80,.15) !important;}
+  .chip.wrong{border-color:var(--red) !important; background:rgba(255,59,48,.15) !important; animation:shake .3s;}
+  .chip.locked{opacity:.55; cursor:default; pointer-events:none;}
+  @keyframes shake{ 25%{transform:translateX(-4px);} 75%{transform:translateX(4px);} }
+  .match-score{font-family:'Permanent Marker',cursive; color:var(--gold); margin-top:6px;}
+
+  /* FILL GAPS */
+  .gap-item{margin-bottom:14px; font-size:.98rem; line-height:1.6;}
+  .gap-item input{display:inline-block; width:220px; margin:0 4px; padding:5px 8px; vertical-align:middle;}
+  .gap-item.correct input{border-color:#4caf50; color:#8be08b;}
+  .gap-item.wrong input{border-color:var(--red);}
+  .btn{
+    font-family:'Anton',sans-serif; letter-spacing:.04em; background:var(--gold); color:var(--black);
+    border:none; padding:12px 26px; font-size:1rem; border-radius:3px; cursor:pointer;
+    box-shadow:3px 3px 0 var(--red); transition:.1s;
+  }
+  .btn:hover{transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--red);}
+  .btn:active{transform:translate(0,0); box-shadow:1px 1px 0 var(--red);}
+  .btn-row{margin-top:18px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
+  .feedback{font-family:'Permanent Marker',cursive; color:var(--gold);}
+
+  /* SPEAK chips */
+  .chip-select{
+    display:inline-block; background:var(--concrete2); border:2px solid var(--line); color:var(--cream);
+    padding:10px 16px; margin:5px; border-radius:30px; cursor:pointer; font-size:.92rem; transition:.12s;
+  }
+  .chip-select:hover{border-color:var(--gold);}
+  .chip-select.on{background:var(--gold); color:var(--black); border-color:var(--gold); font-weight:700;}
+  .counter{font-family:'Permanent Marker',cursive; color:var(--purple); margin-top:14px;}
+
+  /* FUTURE YOU */
+  .future-box{
+    background:linear-gradient(135deg, rgba(155,92,255,.12), rgba(255,196,0,.06));
+    border:2px solid var(--purple); padding:26px;
+  }
+
+  footer{
+    text-align:center; padding:50px 20px 30px; color:var(--cream-dim); font-size:.85rem;
+  }
+  footer .tag{font-size:1.1rem; display:block; margin-bottom:6px;}
+
+  ::selection{background:var(--gold); color:var(--black);}
+</style>
+</head>
+<body>
+<div class="noise"></div>
+
+<header class="hero">
+  <div class="spray g"></div>
+  <div class="spray r"></div>
+  <div class="spray p"></div>
+  <div class="eyebrow-tape">2EASY SPEAKING CLUB — MIXTAPE B2/C1</div>
+  <h1>THE HEDONIC<br>TREADMILL</h1>
+  <p class="sub">Why do we always want more — even after landing the job, the phone, the vacation? Press play, read the track, and figure out why happiness keeps skipping the record.</p>
+
+  <div class="vinyl-box">
+    <div class="vinyl">
+      <div class="vinyl-hole"></div>
+      <div class="vinyl-label">MORE<br>MORE<br>MORE</div>
+    </div>
+    <div class="needle-arm">
+      <div class="body"></div>
+      <div class="tip"></div>
+    </div>
+  </div>
+  <div class="loop-caption">◀ STUCK ON REPEAT ▶</div>
+</header>
+
+<div class="wrap">
+
+  <!-- LEAD-IN -->
+  <section class="track" id="leadin">
+    <div class="track-num">TRACK 01</div>
+    <h2>LEAD-IN</h2>
+    <p class="instructions">Let's discuss the following questions.</p>
+    <div class="grid2">
+      <div class="q-card">Have you ever wanted something for a long time, but after getting it, the excitement disappeared?</div>
+      <div class="q-card">Why do new things stop making us happy?</div>
+    </div>
+  </section>
+
+  <!-- WARM UP -->
+  <section class="track" id="warmup">
+    <div class="track-num">TRACK 02</div>
+    <h2>WARM-UP</h2>
+    <p class="instructions">Which one do you think gives people the biggest happiness boost? Rank them from 1 (biggest) to 8 (smallest), then explain your choices.</p>
+    <div class="card" id="rankCard"></div>
+  </section>
+
+  <!-- BEFORE YOU READ -->
+  <section class="track" id="before">
+    <div class="track-num">TRACK 03</div>
+    <h2>BEFORE YOU READ</h2>
+    <p class="instructions">Which statement do you agree with the most? Choose one and explain your answer.</p>
+    <div id="choiceCard"></div>
+    <textarea rows="2" placeholder="Explain your answer..."></textarea>
+
+    <div style="height:30px"></div>
+    <p class="instructions" style="margin-bottom:14px;">Answer the questions below.</p>
+    <div class="grid2">
+      <div class="q-card">Do you think people are naturally satisfied, or do they always want more?</div>
+      <div class="q-card">What do you think the expression "hedonic treadmill" might mean?</div>
+    </div>
+  </section>
+
+  <!-- ARTICLE -->
+  <section class="track" id="read">
+    <div class="track-num">TRACK 04</div>
+    <h2>LET'S READ!</h2>
+    <p class="instructions">Read the article. Answer the questions below.</p>
+    <div class="article">
+      <div class="drip-title">What is the hedonic treadmill?</div>
+      <div class="drip-sub">Why do the things we want stop making us happy so quickly?</div>
+
+      <p>Whether it's a dream holiday, a career milestone, or a personal goal, we often convince ourselves that reaching a specific destination will permanently alter our sense of wellbeing. While achieving these goals brings an initial rush of excitement, the feeling rarely lasts. Before long, we find ourselves searching for the next source of gratification.</p>
+      <p>This mechanism lies at the heart of hedonism — the philosophical idea that pleasure is the ultimate pursuit of human life. However, this desire is inherently insatiable. Psychologists refer to this phenomenon as the "hedonic treadmill": our tendency to rapidly adapt to life's highs and lows, eventually returning to a relatively stable baseline of happiness.</p>
+
+      <h3>The happiness reset</h3>
+      <p>A landmark 1978 study published in the Journal of Personality and Social Psychology highlighted this effect by tracking lottery winners, accident victims with paralysis, and a control group. The findings revealed that lottery winners experienced an immediate surge in happiness, which reverted to baseline levels within a year. Conversely, while accident victims suffered intense initial distress, their happiness levels largely stabilised over time, ending up only slightly lower than those of the lottery winners.</p>
+      <p>According to hedonic adaptation theory, major life events — whether positive or negative — have short-lived effects on our overall happiness. However, subsequent research indicates that adaptation is not universal: chronic stressors such as grief, poverty, or prolonged social isolation can exert longer-lasting damage on wellbeing.</p>
+
+      <h3>Beyond the next big thing</h3>
+      <p>While the idea of hedonic adaptation may seem demotivating, integrative psychotherapist Dr Victoria Froome emphasizes that it can actually be empowering. Understanding that external milestones offer temporary satisfaction shifts the focus inward, highlighting that genuine contentment is an internal endeavor.</p>
+      <p>"The events that yield lasting benefits are those that reinforce your core identity, relationships, resilience, values, and strengths," explains Dr Froome. Chasing external targets endlessly often leads to burnout. By defining personal values and aligning life choices with them, individuals build a grounded sense of self that does not rely on constant external validation.</p>
+
+      <h3>Less chasing, more living</h3>
+      <p>Stepping off the treadmill requires re-evaluating how we define happiness. Therapeutic modalities — such as Person-Centred Therapy, Acceptance and Commitment Therapy (ACT), and Cognitive Behavioural Therapy (CBT) — can help individuals strengthen self-worth and reshape unhelpful thinking patterns, provided they are applied with self-compassion and proper pacing.</p>
+      <p>Additionally, mindfulness allows us to observe emotions without immediate reaction, fostering six essential foundations of long-term wellbeing: values, strengths, relationships, resilience, skills, and identity. Unlike fleeting external achievements, these internal structures remain stable as happiness fluctuates, serving as the true key to sustainable fulfilment.</p>
+    </div>
+  </section>
+
+  <!-- EVIDENCE -->
+  <section class="track" id="evidence">
+    <div class="track-num">TRACK 05</div>
+    <h2>FIND EVIDENCE IN THE TEXT</h2>
+    <p class="instructions">Find a sentence or idea in the article that supports each statement.</p>
+    <div class="card">
+      <div class="ev-item"><p>Achieving success doesn't guarantee lasting happiness.</p><textarea rows="1" placeholder="Your evidence..."></textarea></div>
+      <div class="ev-item"><p>People naturally adapt to both positive and negative experiences.</p><textarea rows="1" placeholder="Your evidence..."></textarea></div>
+      <div class="ev-item"><p>Some life circumstances have a much stronger long-term impact than others.</p><textarea rows="1" placeholder="Your evidence..."></textarea></div>
+      <div class="ev-item"><p>External achievements are less important than internal growth.</p><textarea rows="1" placeholder="Your evidence..."></textarea></div>
+      <div class="ev-item" style="margin-bottom:0;"><p>Long-term wellbeing depends on more than simply feeling happy.</p><textarea rows="1" placeholder="Your evidence..."></textarea></div>
+    </div>
+
+    <div style="height:30px"></div>
+    <p class="instructions" style="margin-bottom:14px;">Let's discuss the following questions.</p>
+    <div class="grid2">
+      <div class="q-card">Why do people often believe that achieving a major goal will make them permanently happier?</div>
+      <div class="q-card">What does the article suggest is the key to long-term happiness?</div>
+    </div>
+  </section>
+
+  <!-- VOCAB -->
+  <section class="track" id="vocab">
+    <div class="track-num">TRACK 06</div>
+    <h2>NEW VOCAB!</h2>
+    <p class="instructions">Look at the words below and try to guess their meanings. Click a word, then click its matching definition.</p>
+    <div class="card">
+      <div class="match-wrap">
+        <div id="wordCol"></div>
+        <div id="defCol"></div>
+      </div>
+      <div class="match-score" id="matchScore">0 / 7 matched</div>
+    </div>
+  </section>
+
+  <!-- PRACTICE -->
+  <section class="track" id="practice">
+    <div class="track-num">TRACK 07</div>
+    <h2>LET'S PRACTICE!</h2>
+    <p class="instructions">Fill in the gaps with the correct words from the word bank.</p>
+    <div class="card">
+      <div style="margin-bottom:18px; font-size:.85rem; color:var(--cream-dim);">
+        <span class="tag" style="font-size:.85rem;">WORD BANK:</span>
+        external validation · surge in happiness · align · insatiable · endeavor · baseline of happiness · source of gratification · fleeting external achievements
+      </div>
+      <div id="gapList"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="checkGaps()">CHECK ANSWERS</button>
+        <span class="feedback" id="gapFeedback"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARAPHRASE -->
+  <section class="track" id="paraphrase">
+    <div class="track-num">TRACK 08</div>
+    <h2>PARAPHRASE</h2>
+    <p class="instructions">Replace the sentences using today's vocabulary.</p>
+    <div class="card">
+      <div class="ev-item"><p>Social media approval has become very important to many people.</p><textarea rows="1" placeholder="Rewrite it..."></textarea></div>
+      <div class="ev-item"><p>Winning the competition gave her a sudden feeling of happiness.</p><textarea rows="1" placeholder="Rewrite it..."></textarea></div>
+      <div class="ev-item"><p>For many people, success is something that gives them satisfaction.</p><textarea rows="1" placeholder="Rewrite it..."></textarea></div>
+      <div class="ev-item" style="margin-bottom:0;"><p>No matter how much he achieved, his desire for more was impossible to satisfy.</p><textarea rows="1" placeholder="Rewrite it..."></textarea></div>
+    </div>
+  </section>
+
+  <!-- SPEAK -->
+  <section class="track" id="speak">
+    <div class="track-num">TRACK 09</div>
+    <h2>LET'S SPEAK!</h2>
+    <p class="instructions">Design your own happiness formula. The article suggests external achievements don't bring lasting happiness — create your own formula for a happier life. Choose exactly five things that matter most to you.</p>
+    <div class="card">
+      <div id="speakChips"></div>
+      <div class="counter" id="speakCounter">0 / 5 selected</div>
+      <textarea rows="2" placeholder="Explain why you chose these five..." style="margin-top:16px;"></textarea>
+    </div>
+  </section>
+
+  <!-- FUTURE YOU -->
+  <section class="track" id="future">
+    <div class="track-num">TRACK 10 — BONUS</div>
+    <h2>FUTURE YOU</h2>
+    <p class="instructions">Imagine you are 80 years old, looking back on your life.</p>
+    <div class="future-box">
+      <div class="ev-item"><p>What achievements will still matter?</p><textarea rows="2" placeholder="Your thoughts..."></textarea></div>
+      <div class="ev-item"><p>What won't matter anymore?</p><textarea rows="2" placeholder="Your thoughts..."></textarea></div>
+      <div class="ev-item" style="margin-bottom:0;"><p>What advice would you give your younger self?</p><textarea rows="2" placeholder="Your thoughts..."></textarea></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <span class="tag">— END OF SIDE A —</span>
+  2EASY Interactive · The Hedonic Treadmill · flip the record, keep the conversation going
+</footer>
+
+<script>
+  // ---- WARM UP ranking ----
+  const rankItems = [
+    "Getting your dream job",
+    "Buying a new phone",
+    "Falling in love",
+    "Going on your dream vacation",
+    "Getting a salary raise",
+    "Learning a new skill",
+    "Buying a house",
+    "Receiving lots of likes on social media"
+  ];
+  const rankCard = document.getElementById('rankCard');
+  rankItems.forEach((item,i)=>{
+    const row = document.createElement('div');
+    row.className='rank-row';
+    row.innerHTML = `<select><option value="">–</option>${[1,2,3,4,5,6,7,8].map(n=>`<option value="${n}">${n}</option>`).join('')}</select><label>${item}</label>`;
+    rankCard.appendChild(row);
+  });
+
+  // ---- BEFORE YOU READ choices ----
+  const choices = [
+    "The more successful you become, the happier you are.",
+    "People always want what they don't have.",
+    "True happiness comes from within.",
+    "Life is about always chasing the next goal."
+  ];
+  const choiceCard = document.getElementById('choiceCard');
+  choices.forEach(c=>{
+    const div = document.createElement('div');
+    div.className='choice';
+    div.textContent=c;
+    div.onclick=()=>{
+      document.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));
+      div.classList.add('selected');
+    };
+    choiceCard.appendChild(div);
+  });
+
+  // ---- VOCAB MATCH ----
+  const pairs = [
+    {word:"surge in happiness", def:"a sudden increase in positive emotions"},
+    {word:"align", def:"to make your decisions reflect your values"},
+    {word:"external validation", def:"approval from other people"},
+    {word:"endeavor", def:"a serious effort to achieve something"},
+    {word:"insatiable", def:"impossible to satisfy"},
+    {word:"source of gratification", def:"something that gives you pleasure or satisfaction"},
+    {word:"fleeting external achievements", def:"successes that bring only temporary happiness"}
+  ];
+  function shuffle(arr){return arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]);}
+  const wordCol = document.getElementById('wordCol');
+  const defCol = document.getElementById('defCol');
+  let selectedWord = null, selectedDef = null, matchedCount = 0;
+
+  shuffle(pairs.map(p=>p.word)).forEach(w=>{
+    const chip = document.createElement('button');
+    chip.className='chip'; chip.textContent=w; chip.dataset.word=w;
+    chip.onclick=()=>{
+      if(chip.classList.contains('locked')) return;
+      document.querySelectorAll('#wordCol .chip').forEach(c=>c.classList.remove('picked'));
+      chip.classList.add('picked');
+      selectedWord = chip;
+      tryMatch();
+    };
+    wordCol.appendChild(chip);
+  });
+  shuffle(pairs.map(p=>p.def)).forEach(d=>{
+    const chip = document.createElement('button');
+    chip.className='chip'; chip.textContent=d; chip.dataset.def=d;
+    chip.onclick=()=>{
+      if(chip.classList.contains('locked')) return;
+      document.querySelectorAll('#defCol .chip').forEach(c=>c.classList.remove('picked'));
+      chip.classList.add('picked');
+      selectedDef = chip;
+      tryMatch();
+    };
+    defCol.appendChild(chip);
+  });
+
+  function tryMatch(){
+    if(!selectedWord || !selectedDef) return;
+    const correctPair = pairs.find(p=>p.word===selectedWord.dataset.word);
+    if(correctPair.def === selectedDef.dataset.def){
+      selectedWord.classList.add('correct','locked');
+      selectedDef.classList.add('correct','locked');
+      matchedCount++;
+      document.getElementById('matchScore').textContent = matchedCount+" / 7 matched";
+    } else {
+      [selectedWord, selectedDef].forEach(c=>{
+        c.classList.add('wrong');
+        setTimeout(()=>{c.classList.remove('wrong','picked');},450);
+      });
+    }
+    selectedWord = null; selectedDef = null;
+  }
+
+  // ---- FILL GAPS ----
+  const gaps = [
+    {text:"Many people look for ___ on social media instead of building self-confidence.", ans:"external validation"},
+    {text:"Buying something new often brings a ___, but the feeling doesn't last.", ans:"surge in happiness"},
+    {text:"If your goals don't ___ your personal values, success may feel empty.", ans:"align"},
+    {text:"Fame can become an ___ desire — no matter how much attention people receive, they always want more.", ans:"insatiable"},
+    {text:"Learning a new skill can become a long-term ___ rather than a quick success.", ans:"endeavor"},
+    {text:"According to psychologists, most people eventually return to their ___ after major life events.", ans:"baseline of happiness"},
+    {text:"Money can be a ___, but it isn't the only thing that makes people happy.", ans:"source of gratification"},
+    {text:"The article suggests that ___ rarely lead to lasting fulfilment.", ans:"fleeting external achievements"}
+  ];
+  const gapList = document.getElementById('gapList');
+  gaps.forEach((g,i)=>{
+    const parts = g.text.split('___');
+    const div = document.createElement('div');
+    div.className='gap-item';
+    div.id='gap'+i;
+    div.innerHTML = `${i+1}. ${parts[0]}<input type="text" data-ans="${g.ans}">${parts[1]}`;
+    gapList.appendChild(div);
+  });
+  function checkGaps(){
+    let correct=0;
+    gaps.forEach((g,i)=>{
+      const div = document.getElementById('gap'+i);
+      const input = div.querySelector('input');
+      const val = input.value.trim().toLowerCase();
+      div.classList.remove('correct','wrong');
+      if(val === g.ans.toLowerCase()){
+        div.classList.add('correct'); correct++;
+      } else {
+        div.classList.add('wrong');
+      }
+    });
+    document.getElementById('gapFeedback').textContent = correct+" / 8 correct — keep spinning!";
+  }
+
+  // ---- SPEAK chips ----
+  const speakOptions = ["meaningful work","close relationships","financial security","personal growth","health","travel","creativity","helping others","free time","adventure"];
+  const speakChips = document.getElementById('speakChips');
+  let selectedSpeak = 0;
+  speakOptions.forEach(opt=>{
+    const chip = document.createElement('span');
+    chip.className='chip-select';
+    chip.textContent=opt;
+    chip.onclick=()=>{
+      if(chip.classList.contains('on')){
+        chip.classList.remove('on'); selectedSpeak--;
+      } else {
+        if(selectedSpeak>=5) return;
+        chip.classList.add('on'); selectedSpeak++;
+      }
+      document.getElementById('speakCounter').textContent = selectedSpeak+" / 5 selected";
+    };
+    speakChips.appendChild(chip);
+  });
+</script>
+</body>
+</html>
