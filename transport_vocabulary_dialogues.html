@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transport Vocabulary — Complete the Conversations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink-deep:#e8558d;
+    --pink-mid:#ff7fa8;
+    --pink-light:#ffe3ee;
+    --pink-pale:#fff5f9;
+    --cream:#fffaf7;
+    --ink:#3a2a35;
+    --ok:#3fb27f;
+    --ok-bg:#e6f8ef;
+    --bad:#e8558d;
+    --bad-bg:#ffe6ee;
+    --shadow: 0 8px 24px rgba(232,85,141,0.14);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background: linear-gradient(180deg,#fff0f6 0%, #fff9fb 40%, #fdf6ff 100%);
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    padding:24px 12px 60px;
+  }
+  .wrap{max-width:820px;margin:0 auto;}
+  header{
+    text-align:center;
+    margin-bottom:28px;
+  }
+  header h1{
+    font-family:'Fredoka',sans-serif;
+    font-weight:700;
+    font-size:clamp(24px,4vw,34px);
+    color:var(--pink-deep);
+    margin:0 0 6px;
+  }
+  header p{
+    margin:0;
+    color:#9a7186;
+    font-size:15px;
+  }
+
+  .exercise-card{
+    background:var(--cream);
+    border-radius:22px;
+    box-shadow:var(--shadow);
+    padding:24px 22px 26px;
+    margin-bottom:26px;
+    border:1px solid #ffe0ec;
+    position:relative;
+  }
+  .ex-number{
+    position:absolute;
+    top:-16px;
+    left:22px;
+    background:var(--pink-deep);
+    color:#fff;
+    font-family:'Fredoka',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:6px 16px;
+    border-radius:20px;
+    box-shadow:0 4px 10px rgba(232,85,141,0.35);
+  }
+
+  .word-bank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    background:var(--pink-light);
+    border:2px dashed var(--pink-mid);
+    border-radius:16px;
+    padding:14px 16px;
+    margin:18px 0 20px;
+  }
+  .word-chip{
+    background:#fff;
+    border:2px solid var(--pink-mid);
+    color:var(--pink-deep);
+    font-family:'Fredoka',sans-serif;
+    font-weight:500;
+    font-size:14px;
+    padding:7px 14px;
+    border-radius:999px;
+    cursor:pointer;
+    transition: all .15s ease;
+    user-select:none;
+  }
+  .word-chip:hover{
+    background:var(--pink-mid);
+    color:#fff;
+    transform:translateY(-2px);
+  }
+  .word-chip.used{
+    opacity:0.35;
+    cursor:not-allowed;
+    background:#f2f2f2;
+    border-color:#ddd;
+    color:#aaa;
+    transform:none;
+  }
+
+  .dialogue{
+    line-height:2.1;
+    font-size:16px;
+  }
+  .speaker{
+    font-family:'Fredoka',sans-serif;
+    font-weight:600;
+    color:var(--pink-deep);
+  }
+  .line{margin-bottom:6px;}
+
+  .gap{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:110px;
+    padding:2px 10px;
+    margin:0 2px;
+    border:none;
+    border-bottom:3px solid var(--pink-mid);
+    background:var(--pink-pale);
+    border-radius:8px 8px 0 0;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:15px;
+    color:var(--ink);
+    cursor:pointer;
+    text-align:center;
+    transition: all .15s ease;
+    position:relative;
+    top:2px;
+  }
+  .gap:hover{background:#ffe9f1;}
+  .gap.filled{
+    background:#fff;
+    border-bottom-color:var(--pink-deep);
+  }
+  .gap.empty::after{
+    content:"?";
+    color:#d69ab4;
+    font-weight:700;
+  }
+  .gap.correct{
+    background:var(--ok-bg);
+    border-bottom-color:var(--ok);
+    color:#1f6e4a;
+  }
+  .gap.incorrect{
+    background:var(--bad-bg);
+    border-bottom-color:var(--bad);
+    color:#a1275a;
+  }
+
+  .controls{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    margin:34px 0 10px;
+    flex-wrap:wrap;
+  }
+  button.action{
+    font-family:'Fredoka',sans-serif;
+    font-weight:600;
+    font-size:15px;
+    padding:12px 26px;
+    border-radius:999px;
+    border:none;
+    cursor:pointer;
+    transition: all .15s ease;
+    box-shadow:0 6px 16px rgba(232,85,141,0.25);
+  }
+  .btn-check{
+    background:var(--pink-deep);
+    color:#fff;
+  }
+  .btn-check:hover{background:#d43e77; transform:translateY(-2px);}
+  .btn-reset{
+    background:#fff;
+    color:var(--pink-deep);
+    border:2px solid var(--pink-mid);
+    box-shadow:none;
+  }
+  .btn-reset:hover{background:var(--pink-light);}
+
+  .score-banner{
+    text-align:center;
+    font-family:'Fredoka',sans-serif;
+    font-weight:600;
+    font-size:16px;
+    margin-top:14px;
+    padding:12px;
+    border-radius:14px;
+    display:none;
+  }
+  .score-banner.show{display:block;}
+  .score-banner.good{background:var(--ok-bg); color:#1f6e4a;}
+  .score-banner.mid{background:#fff3d6; color:#8a6a12;}
+  .score-banner.low{background:var(--bad-bg); color:#a1275a;}
+
+  @media (max-width:520px){
+    .gap{min-width:90px; font-size:14px;}
+    .dialogue{line-height:2.4;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🚗 Complete the Conversations</h1>
+    <p>Tap a word from the box, then tap a gap to fill it in.</p>
+  </header>
+
+  <!-- EXERCISE 1 -->
+  <div class="exercise-card" data-ex="1">
+    <div class="ex-number">1</div>
+    <div class="word-bank" data-bank="1">
+      <div class="word-chip" data-word="motorway">motorway</div>
+      <div class="word-chip" data-word="service station">service station</div>
+      <div class="word-chip" data-word="huge load">huge load</div>
+      <div class="word-chip" data-word="train">train</div>
+      <div class="word-chip" data-word="coach">coach</div>
+      <div class="word-chip" data-word="truck">truck</div>
+      <div class="word-chip" data-word="passengers">passengers</div>
+      <div class="word-chip" data-word="long line of cars">long line of cars</div>
+    </div>
+    <div class="dialogue">
+      <div class="line"><span class="speaker">A:</span> A <span class="gap empty" data-answer="truck"></span> carrying a <span class="gap empty" data-answer="huge load"></span> crashed at junction 12, and was blocking two lanes. So we were stuck on the <span class="gap empty" data-answer="motorway"></span> for ages. You should have seen the <span class="gap empty" data-answer="long line of cars"></span> stretching for miles in front of us. The <span class="gap empty" data-answer="coach"></span> driver decided to stop in this <span class="gap empty" data-answer="service station"></span> to give all the <span class="gap empty" data-answer="passengers"></span> a break. So, don't expect me any time soon.</div>
+      <div class="line"><span class="speaker">B:</span> You see! I told you to take the <span class="gap empty" data-answer="train"></span>!</div>
+    </div>
+  </div>
+
+  <!-- EXERCISE 2 -->
+  <div class="exercise-card" data-ex="2">
+    <div class="ex-number">2</div>
+    <div class="word-bank" data-bank="2">
+      <div class="word-chip" data-word="ride">ride</div>
+      <div class="word-chip" data-word="test">test</div>
+      <div class="word-chip" data-word="motorbike">motorbike</div>
+      <div class="word-chip" data-word="licence">licence</div>
+    </div>
+    <div class="dialogue">
+      <div class="line"><span class="speaker">S:</span> Jim! I've got my <span class="gap empty" data-answer="licence"></span>! The <span class="gap empty" data-answer="test"></span> was easy!</div>
+      <div class="line"><span class="speaker">J:</span> Congratulations, Sally! When are you taking me for a <span class="gap empty" data-answer="ride"></span>, then?</div>
+      <div class="line"><span class="speaker">S:</span> Ah, you'll have to wait a while, as I crashed my <span class="gap empty" data-answer="motorbike"></span> on the way home from the test centre.</div>
+    </div>
+  </div>
+
+  <!-- EXERCISE 3 -->
+  <div class="exercise-card" data-ex="3">
+    <div class="ex-number">3</div>
+    <div class="word-bank" data-bank="3">
+      <div class="word-chip" data-word="tip">tip</div>
+      <div class="word-chip" data-word="travel card">travel card</div>
+      <div class="word-chip" data-word="underground">underground</div>
+      <div class="word-chip" data-word="taxi">taxi</div>
+      <div class="word-chip" data-word="lines">lines</div>
+      <div class="word-chip" data-word="charge">charge</div>
+    </div>
+    <div class="dialogue">
+      <div class="line"><span class="speaker">D:</span> Shall we take a <span class="gap empty" data-answer="taxi"></span>?</div>
+      <div class="line"><span class="speaker">G:</span> No way! They <span class="gap empty" data-answer="charge"></span> a fortune to take you a couple of miles, and then they expect a <span class="gap empty" data-answer="tip"></span>. The <span class="gap empty" data-answer="underground"></span>'s much cheaper. We can get a one-day <span class="gap empty" data-answer="travel card"></span> that lets you go on all the <span class="gap empty" data-answer="lines"></span> in the city centre.</div>
+      <div class="line"><span class="speaker">D:</span> But we won't see much that way.</div>
+    </div>
+  </div>
+
+  <!-- EXERCISE 4 -->
+  <div class="exercise-card" data-ex="4">
+    <div class="ex-number">4</div>
+    <div class="word-bank" data-bank="4">
+      <div class="word-chip" data-word="van">van</div>
+      <div class="word-chip" data-word="bikes">bikes</div>
+      <div class="word-chip" data-word="drive">drive</div>
+      <div class="word-chip" data-word="on strike">on strike</div>
+      <div class="word-chip" data-word="cycle lanes">cycle lanes</div>
+      <div class="word-chip" data-word="rail service">rail service</div>
+      <div class="word-chip" data-word="park">park</div>
+      <div class="word-chip" data-word="cancelled">cancelled</div>
+      <div class="word-chip" data-word="hire a vehicle">hire a vehicle</div>
+    </div>
+    <div class="dialogue">
+      <div class="line"><span class="speaker">K:</span> The <span class="gap empty" data-answer="rail service"></span> to Edinburgh was <span class="gap empty" data-answer="cancelled"></span>, because the rail workers were <span class="gap empty" data-answer="on strike"></span>, so we decided to <span class="gap empty" data-answer="drive"></span> and <span class="gap empty" data-answer="hire a vehicle"></span> there.</div>
+      <div class="line"><span class="speaker">E:</span> Wow, Kevin! It's a long way! What kind of car did you get?</div>
+      <div class="line"><span class="speaker">K:</span> We had a lot of stuff, so we hired a <span class="gap empty" data-answer="van"></span>. The journey was actually fine, but when we arrived, we couldn't find anywhere to <span class="gap empty" data-answer="park"></span>, because of the Festival.</div>
+      <div class="line"><span class="speaker">E:</span> So, what did you do?</div>
+      <div class="line"><span class="speaker">K:</span> Went to Colin's, and borrowed some <span class="gap empty" data-answer="bikes"></span>. Fortunately, there's a great system of <span class="gap empty" data-answer="cycle lanes"></span> from his place into the centre.</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="action btn-check" onclick="checkAnswers()">Check answers</button>
+    <button class="action btn-reset" onclick="resetAll()">Reset</button>
+  </div>
+  <div class="score-banner" id="scoreBanner"></div>
+</div>
+
+<script>
+let selectedChip = null;
+
+document.querySelectorAll('.word-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    if (chip.classList.contains('used')) return;
+    if (selectedChip) selectedChip.classList.remove('selected-chip');
+    selectedChip = chip;
+    chip.style.outline = '3px solid #e8558d';
+    document.querySelectorAll('.word-chip').forEach(c => { if(c!==chip) c.style.outline=''; });
+  });
+});
+
+document.querySelectorAll('.gap').forEach(gap => {
+  gap.addEventListener('click', () => {
+    const exCard = gap.closest('.exercise-card');
+    const exNum = exCard.getAttribute('data-ex');
+
+    // If gap already filled, release the word back to the bank
+    if (gap.classList.contains('filled')) {
+      const oldWord = gap.textContent;
+      gap.textContent = '';
+      gap.classList.remove('filled','correct','incorrect');
+      gap.classList.add('empty');
+      const bank = exCard.querySelector('.word-bank');
+      const chip = [...bank.querySelectorAll('.word-chip')].find(c => c.dataset.word === oldWord);
+      if (chip) chip.classList.remove('used');
+      return;
+    }
+
+    if (!selectedChip) return;
+    const bank = exCard.querySelector('.word-bank');
+    if (!bank.contains(selectedChip)) return; // word must come from same exercise's bank
+
+    gap.textContent = selectedChip.dataset.word;
+    gap.classList.remove('empty','correct','incorrect');
+    gap.classList.add('filled');
+    selectedChip.classList.add('used');
+    selectedChip.style.outline = '';
+    selectedChip = null;
+  });
+});
+
+function checkAnswers(){
+  let total = 0, correct = 0;
+  document.querySelectorAll('.gap').forEach(gap => {
+    total++;
+    const answer = gap.dataset.answer.trim().toLowerCase();
+    const given = gap.textContent.trim().toLowerCase();
+    gap.classList.remove('correct','incorrect');
+    if (given === answer) {
+      gap.classList.add('correct');
+      correct++;
+    } else if (given !== '') {
+      gap.classList.add('incorrect');
+    }
+  });
+  const banner = document.getElementById('scoreBanner');
+  banner.className = 'score-banner show';
+  const pct = Math.round((correct/total)*100);
+  if (pct === 100) {
+    banner.classList.add('good');
+    banner.textContent = `🎉 Perfect! ${correct}/${total} correct.`;
+  } else if (pct >= 60) {
+    banner.classList.add('mid');
+    banner.textContent = `👍 ${correct}/${total} correct (${pct}%). Fix the red gaps and try again!`;
+  } else {
+    banner.classList.add('low');
+    banner.textContent = `Keep going — ${correct}/${total} correct (${pct}%).`;
+  }
+}
+
+function resetAll(){
+  document.querySelectorAll('.gap').forEach(gap => {
+    gap.textContent = '';
+    gap.classList.remove('filled','correct','incorrect');
+    gap.classList.add('empty');
+  });
+  document.querySelectorAll('.word-chip').forEach(chip => {
+    chip.classList.remove('used');
+    chip.style.outline = '';
+  });
+  selectedChip = null;
+  const banner = document.getElementById('scoreBanner');
+  banner.className = 'score-banner';
+  banner.textContent = '';
+}
+</script>
+</body>
+</html>
