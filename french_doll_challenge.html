@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bratz French Challenge — Expressions essentielles</title>
+<style>
+  :root{
+    --pink:#ff4fa3;
+    --hot:#ff2f91;
+    --purple:#8b4cf6;
+    --lilac:#d8b8ff;
+    --cream:#fff8ef;
+    --mint:#dcf7e7;
+    --green:#4c9b5c;
+    --ink:#2c2340;
+    --card:#ffffff;
+    --gold:#ffd45b;
+    --danger:#ff6b6b;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: "Trebuchet MS", "Arial Rounded MT Bold", Arial, sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 10% 10%, rgba(255,255,255,.8) 0 2px, transparent 3px) 0 0/26px 26px,
+      linear-gradient(135deg,#fff4fb,#f6efff 45%,#fff7e9);
+    min-height:100vh;
+  }
+  .shell{max-width:1200px;margin:0 auto;padding:22px}
+  .hero{
+    position:relative; overflow:hidden;
+    border:3px solid #1f1534;
+    border-radius:30px;
+    background:linear-gradient(135deg,#ff78bc,#bb83ff);
+    padding:26px 26px 22px;
+    box-shadow:0 12px 0 #1f1534;
+  }
+  .hero:before,.hero:after{
+    content:"✦"; position:absolute; color:#fff9; font-size:72px; transform:rotate(15deg)
+  }
+  .hero:before{right:28px;top:8px}
+  .hero:after{right:140px;bottom:-24px;font-size:120px}
+  h1{
+    margin:0;
+    font-size:clamp(34px,6vw,76px);
+    line-height:.9;
+    text-transform:uppercase;
+    letter-spacing:-2px;
+    color:white;
+    text-shadow:4px 4px 0 #351f53;
+  }
+  .subtitle{
+    margin:12px 0 0;
+    display:inline-block;
+    background:#fff;
+    border:2px solid #2c2340;
+    border-radius:999px;
+    padding:8px 14px;
+    font-weight:900;
+  }
+  .doll-row{
+    display:flex; gap:8px; margin-top:18px; flex-wrap:wrap
+  }
+  .mini{
+    width:50px;height:50px;border-radius:50%;
+    border:3px solid #2c2340;background:#fff;
+    display:grid;place-items:center;font-size:28px;
+  }
+  .topbar{
+    display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+    margin:24px 0 16px;
+  }
+  .pill{
+    background:white;border:2px solid #2c2340;border-radius:999px;
+    padding:10px 14px;font-weight:900;box-shadow:0 4px 0 #2c2340;
+  }
+  .pill strong{color:var(--hot)}
+  .panel{
+    background:rgba(255,255,255,.93);
+    border:3px solid #2c2340;
+    border-radius:26px;
+    padding:20px;
+    box-shadow:0 8px 0 #2c2340;
+    margin-bottom:22px;
+  }
+  .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+  .tab{
+    border:2px solid #2c2340;border-radius:16px;background:#fff;
+    padding:11px 16px;font-weight:900;cursor:pointer;
+    box-shadow:0 4px 0 #2c2340;
+  }
+  .tab.active{background:var(--gold); transform:translateY(2px); box-shadow:0 2px 0 #2c2340}
+  .scene{
+    background:linear-gradient(135deg,#fff,#fff3fb);
+    border:2px solid #e5c7ff;border-radius:24px;
+    padding:22px;position:relative;overflow:hidden;
+  }
+  .scene h2{margin:0 0 8px;font-size:28px}
+  .story{
+    font-size:18px;line-height:1.5;
+    background:#fff;border-left:6px solid var(--pink);
+    padding:14px;border-radius:14px;margin:12px 0 18px;
+  }
+  .choice-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;
+  }
+  .choice,.drag-item{
+    border:2px solid var(--green);background:var(--mint);
+    color:#2f6e39;border-radius:16px;padding:14px;
+    font-weight:900;font-size:18px;cursor:pointer;
+    transition:.15s; user-select:none;
+  }
+  .choice:hover,.drag-item:hover{transform:translateY(-2px);box-shadow:0 5px 0 #9fd1ab}
+  .choice.correct{background:#dff6c8;border-color:#5eaa44}
+  .choice.wrong{background:#ffe0e0;border-color:#d65050;color:#8b2a2a}
+  .feedback{
+    min-height:30px;margin-top:14px;font-weight:900;font-size:18px;
+  }
+  .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  button{
+    border:2px solid #2c2340;border-radius:16px;padding:12px 16px;
+    background:#fff;font-weight:900;font-size:16px;cursor:pointer;
+    box-shadow:0 4px 0 #2c2340;
+  }
+  button.primary{background:var(--pink);color:#fff}
+  button:active{transform:translateY(3px);box-shadow:0 1px 0 #2c2340}
+  .progress{
+    height:18px;background:#eee;border:2px solid #2c2340;border-radius:99px;overflow:hidden;flex:1;min-width:180px
+  }
+  .progress > div{height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--purple));transition:.3s}
+  .drag-zone{
+    display:grid;grid-template-columns:1fr 1fr;gap:16px
+  }
+  .bank,.dropbox{
+    min-height:260px;border:2px dashed #8b73b7;border-radius:20px;padding:14px;background:#fff;
+  }
+  .bank h3,.dropbox h3{margin-top:0}
+  .drag-item{margin:8px 0}
+  .targets{display:grid;gap:10px}
+  .target{
+    min-height:56px;border:2px dashed var(--pink);border-radius:14px;
+    background:#fff5fb;padding:10px;font-weight:900
+  }
+  .target.over{background:#ffe5f3}
+  .target.filled{border-style:solid;background:#f8edff}
+  .write-area{display:flex;gap:10px;flex-wrap:wrap}
+  input[type=text]{
+    flex:1;min-width:250px;border:2px solid #2c2340;border-radius:14px;
+    padding:13px 14px;font-size:18px;font-weight:700;outline:none
+  }
+  .chaos{
+    background:linear-gradient(135deg,#26183d,#5d2a8a);
+    color:white;border-radius:24px;padding:20px;border:3px solid #2c2340;
+  }
+  .chaos .choice{background:#fff;color:#3a2759;border-color:#fff}
+  .timer{
+    font-size:42px;font-weight:1000;color:var(--gold);
+  }
+  .hidden{display:none !important}
+  .footer{
+    text-align:center;padding:16px;font-weight:800;color:#5f5270
+  }
+  .tiny{font-size:13px;opacity:.75}
+  @media (max-width:760px){
+    .drag-zone{grid-template-columns:1fr}
+    .hero{padding:20px}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <section class="hero">
+    <h1>French Doll<br>Challenge</h1>
+    <div class="subtitle">Expressions avec AVOIR • ÊTRE • ALLER • PRENDRE • FAIRE</div>
+    <div class="doll-row" aria-label="doll-inspired decorative icons">
+      <div class="mini">💄</div><div class="mini">🕶️</div><div class="mini">👠</div><div class="mini">💿</div><div class="mini">✨</div>
+    </div>
+  </section>
+
+  <div class="topbar">
+    <div class="pill">⭐ Score: <strong id="score">0</strong></div>
+    <div class="pill">🔥 Série: <strong id="streak">0</strong></div>
+    <div class="progress"><div id="progressBar"></div></div>
+  </div>
+
+  <section class="panel">
+    <div class="tabs">
+      <button class="tab active" data-level="1">Niveau 1 — Choisir</button>
+      <button class="tab" data-level="2">Niveau 2 — Glisser-déposer</button>
+      <button class="tab" data-level="3">Niveau 3 — Écrire</button>
+      <button class="tab" data-level="4">⚡ Mode Chaos</button>
+    </div>
+
+    <div id="level1">
+      <div class="scene">
+        <div class="pill" id="l1count">1 / 10</div>
+        <h2 id="l1title"></h2>
+        <div class="story" id="l1story"></div>
+        <div class="choice-grid" id="l1choices"></div>
+        <div class="feedback" id="l1feedback"></div>
+        <div class="btns">
+          <button class="primary" id="next1">Suivant ✦</button>
+          <button id="restart1">Recommencer</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="level2" class="hidden">
+      <div class="scene">
+        <h2>💅 Associe l’expression au bon verbe</h2>
+        <div class="story">Fais glisser chaque carte vers le bon verbe. Quand tout est placé, clique sur <b>Vérifier</b>.</div>
+        <div class="drag-zone">
+          <div class="bank">
+            <h3>Cartes</h3>
+            <div id="dragBank"></div>
+          </div>
+          <div class="dropbox">
+            <h3>Verbes</h3>
+            <div class="targets">
+              <div class="target" data-verb="avoir"><b>AVOIR</b></div>
+              <div class="target" data-verb="etre"><b>ÊTRE</b></div>
+              <div class="target" data-verb="aller"><b>ALLER</b></div>
+              <div class="target" data-verb="prendre"><b>PRENDRE</b></div>
+              <div class="target" data-verb="faire"><b>FAIRE</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="feedback" id="dragFeedback"></div>
+        <div class="btns">
+          <button class="primary" id="checkDrag">Vérifier</button>
+          <button id="resetDrag">Mélanger</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="level3" class="hidden">
+      <div class="scene">
+        <div class="pill" id="l3count">1 / 8</div>
+        <h2 id="l3title"></h2>
+        <div class="story" id="l3story"></div>
+        <div class="write-area">
+          <input id="writeInput" type="text" autocomplete="off" placeholder="Écris l’expression complète…" />
+          <button class="primary" id="checkWrite">Vérifier</button>
+        </div>
+        <div class="feedback" id="writeFeedback"></div>
+        <div class="btns">
+          <button id="hintWrite">Indice</button>
+          <button id="nextWrite">Suivant ✦</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="level4" class="hidden">
+      <div class="chaos">
+        <div class="timer" id="timer">30</div>
+        <h2>⚡ 30 secondes pour sauver Chloé !</h2>
+        <p id="chaosStory">Clique sur « Commencer » : une situation apparaît, puis choisis l’expression correcte le plus vite possible.</p>
+        <div class="choice-grid" id="chaosChoices"></div>
+        <div class="feedback" id="chaosFeedback"></div>
+        <div class="btns">
+          <button class="primary" id="startChaos">Commencer</button>
+          <button id="stopChaos">Arrêter</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">Made for French class ✦ Y2K doll-inspired style <div class="tiny">Aucune image officielle de marque n’est utilisée.</div></div>
+</div>
+
+<script>
+const vocab = {
+  avoir:["tort","faim","raison","mal à","soif","peur","besoin de","envie de","chaud","froid"],
+  etre:["d'accord","en forme","malade","en retard","en vacances","à l'heure","content(e)","fatigué(e)","en train de"],
+  aller:["au travail","bien / mal","chercher","à pied","dormir","en voiture","ça va","voir","au marché"],
+  prendre:["l'air","le temps","des photos","une douche","un café","rendez-vous","soin de","une décision","le bus / le train"],
+  faire:["la cuisine","la fête","les courses","un voyage","de son mieux","ses devoirs","beau / mauvais","du sport","attention"]
+};
+
+let score = 0, streak = 0;
+function addScore(n=1){ score += n; streak++; updateHUD(); }
+function miss(){ streak=0; updateHUD(); }
+function updateHUD(){
+  document.getElementById("score").textContent=score;
+  document.getElementById("streak").textContent=streak;
+}
+function norm(s){
+  return s.toLowerCase().trim()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[’']/g,"'").replace(/\s+/g," ");
+}
+function shuffle(a){ return [...a].sort(()=>Math.random()-.5); }
+
+// LEVEL 1
+const l1 = [
+ {title:"07:30 — Catastrophe ! ⏰",story:"Le réveil n’a pas sonné. Le cours commence dans 20 minutes.",answer:"être en retard",choices:["être en retard","avoir faim","faire la fête"]},
+ {title:"08:00 — Petit-déj oublié 🥐",story:"Chloé n’a rien mangé depuis hier soir.",answer:"avoir faim",choices:["avoir faim","prendre l'air","être d'accord"]},
+ {title:"08:15 — Direction l’école 🚌",story:"Chloé monte dans le bus pour aller en cours.",answer:"prendre le bus",choices:["prendre le bus","faire du sport","avoir peur"]},
+ {title:"10:30 — Exercice difficile 📚",story:"Elle ne comprend pas tout, mais elle continue et essaie vraiment.",answer:"faire de son mieux",choices:["faire de son mieux","aller dormir","prendre rendez-vous"]},
+ {title:"12:30 — Pause glam ☕",story:"Elle commande une boisson chaude avec ses amies.",answer:"prendre un café",choices:["prendre un café","avoir froid","être malade"]},
+ {title:"15:00 — Shopping time 🛍️",story:"Chloé doit acheter de la nourriture pour ce soir.",answer:"faire les courses",choices:["faire les courses","prendre des photos","être en vacances"]},
+ {title:"17:30 — Golden hour 📸",story:"La lumière est parfaite devant la Tour Eiffel.",answer:"prendre des photos",choices:["prendre des photos","avoir tort","aller dormir"]},
+ {title:"19:00 — Énergie ! 🏃‍♀️",story:"Après les cours, elle va à la salle de fitness.",answer:"faire du sport",choices:["faire du sport","prendre une décision","avoir soif"]},
+ {title:"21:00 — Study mode ✏️",story:"Demain, Chloé a un contrôle. Elle ouvre son cahier.",answer:"faire ses devoirs",choices:["faire ses devoirs","aller au marché","être en forme"]},
+ {title:"23:30 — Fin de journée 🌙",story:"Chloé est épuisée. Son lit l’appelle.",answer:"aller dormir",choices:["aller dormir","avoir raison","prendre soin de"]}
+];
+let l1i=0,l1answered=false;
+function renderL1(){
+  const q=l1[l1i];
+  l1answered=false;
+  document.getElementById("l1count").textContent=`${l1i+1} / ${l1.length}`;
+  document.getElementById("l1title").textContent=q.title;
+  document.getElementById("l1story").textContent=q.story;
+  document.getElementById("l1feedback").textContent="";
+  const box=document.getElementById("l1choices"); box.innerHTML="";
+  shuffle(q.choices).forEach(c=>{
+    const b=document.createElement("button"); b.className="choice"; b.textContent=c;
+    b.onclick=()=>{
+      if(l1answered)return;
+      if(norm(c)===norm(q.answer)){
+        b.classList.add("correct"); document.getElementById("l1feedback").textContent="✅ Parfait !";
+        l1answered=true; addScore(streak>=2?2:1);
+      } else {
+        b.classList.add("wrong"); document.getElementById("l1feedback").textContent="❌ Essaie encore.";
+        miss();
+      }
+    }; box.appendChild(b);
+  });
+  document.getElementById("progressBar").style.width=`${(l1i/l1.length)*100}%`;
+}
+document.getElementById("next1").onclick=()=>{
+  if(!l1answered){document.getElementById("l1feedback").textContent="Choisis d’abord une réponse.";return;}
+  l1i=(l1i+1)%l1.length; renderL1();
+};
+document.getElementById("restart1").onclick=()=>{l1i=0;renderL1();};
+
+// LEVEL 2
+let dragged=null;
+const dragSet=[
+ ["avoir","froid"],["avoir","envie de"],["etre","à l'heure"],["etre","fatigué(e)"],
+ ["aller","à pied"],["aller","au marché"],["prendre","une douche"],["prendre","soin de"],
+ ["faire","la cuisine"],["faire","attention"]
+];
+function renderDrag(){
+  const bank=document.getElementById("dragBank"); bank.innerHTML="";
+  document.querySelectorAll(".target").forEach(t=>{
+    const b=t.querySelector("b").outerHTML; t.innerHTML=b; t.classList.remove("filled");
+  });
+  shuffle(dragSet).forEach(([verb,txt],i)=>{
+    const el=document.createElement("div"); el.className="drag-item"; el.draggable=true;
+    el.textContent=txt; el.dataset.verb=verb; el.id="drag-"+i;
+    el.addEventListener("dragstart",()=>dragged=el);
+    bank.appendChild(el);
+  });
+  document.getElementById("dragFeedback").textContent="";
+}
+document.querySelectorAll(".target").forEach(t=>{
+  t.addEventListener("dragover",e=>{e.preventDefault();t.classList.add("over")});
+  t.addEventListener("dragleave",()=>t.classList.remove("over"));
+  t.addEventListener("drop",e=>{
+    e.preventDefault();t.classList.remove("over");
+    if(dragged){t.appendChild(dragged);t.classList.add("filled");}
+  });
+});
+document.getElementById("checkDrag").onclick=()=>{
+  let ok=0,total=0;
+  document.querySelectorAll(".target .drag-item").forEach(el=>{
+    total++;
+    const good=el.dataset.verb===el.parentElement.dataset.verb;
+    el.style.background=good?"#dff6c8":"#ffe0e0";
+    if(good)ok++;
+  });
+  const fb=document.getElementById("dragFeedback");
+  if(total<dragSet.length){fb.textContent="Il reste des cartes à placer.";return;}
+  if(ok===dragSet.length){fb.textContent="✅ 10/10 — Iconique !";addScore(5)}
+  else {fb.textContent=`${ok}/10 correct. Replace les cartes roses et réessaie.`;miss()}
+};
+document.getElementById("resetDrag").onclick=renderDrag;
+
+// LEVEL 3
+const l3=[
+ {title:"🥶 Dans la rue",story:"Il fait -5°C et Chloé a oublié son manteau.",answers:["avoir froid","elle a froid"],hint:"AVOIR + …"},
+ {title:"🤒 Pas très bien",story:"Chloé a de la fièvre aujourd’hui.",answers:["être malade","elle est malade"],hint:"ÊTRE + …"},
+ {title:"📸 Souvenir",story:"Chloé voit un magnifique coucher de soleil et sort son téléphone.",answers:["prendre des photos","elle prend des photos"],hint:"PRENDRE + …"},
+ {title:"🛒 Frigo vide",story:"Il n’y a plus rien à manger à la maison.",answers:["faire les courses","elle fait les courses"],hint:"FAIRE + …"},
+ {title:"🚶‍♀️ Pas de voiture",story:"L’école est proche et Chloé décide d’y aller sans transport.",answers:["aller à pied","elle va à pied"],hint:"ALLER + …"},
+ {title:"☕ Pause",story:"Chloé entre dans un café et commande un cappuccino.",answers:["prendre un café","elle prend un café"],hint:"PRENDRE + …"},
+ {title:"😴 Épuisée",story:"Après une journée très longue, Chloé n’a plus d’énergie.",answers:["être fatiguée","être fatigué","elle est fatiguée","elle est fatigué"],hint:"ÊTRE + …"},
+ {title:"💪 Même si c’est difficile",story:"Elle continue, elle essaie au maximum.",answers:["faire de son mieux","elle fait de son mieux"],hint:"FAIRE + …"}
+];
+let l3i=0,l3done=false;
+function renderL3(){
+  const q=l3[l3i]; l3done=false;
+  document.getElementById("l3count").textContent=`${l3i+1} / ${l3.length}`;
+  document.getElementById("l3title").textContent=q.title;
+  document.getElementById("l3story").textContent=q.story;
+  document.getElementById("writeInput").value="";
+  document.getElementById("writeFeedback").textContent="";
+}
+document.getElementById("checkWrite").onclick=()=>{
+  const q=l3[l3i], val=norm(document.getElementById("writeInput").value);
+  if(q.answers.some(a=>norm(a)===val)){
+    document.getElementById("writeFeedback").textContent="✅ Exact !";
+    if(!l3done)addScore(2); l3done=true;
+  }else{
+    document.getElementById("writeFeedback").textContent="❌ Pas encore. Vérifie le verbe et l’expression.";
+    miss();
+  }
+};
+document.getElementById("hintWrite").onclick=()=>document.getElementById("writeFeedback").textContent="💡 "+l3[l3i].hint;
+document.getElementById("nextWrite").onclick=()=>{l3i=(l3i+1)%l3.length;renderL3();};
+
+// CHAOS
+const chaosQs=[
+ ["Il pleut et il fait 8°C. Chloé tremble.","avoir froid",["avoir froid","faire la fête","être en forme"]],
+ ["Chloé veut acheter des légumes frais.","aller au marché",["aller au marché","prendre soin de","être en retard"]],
+ ["Elle doit appeler le médecin pour fixer une heure.","prendre rendez-vous",["prendre rendez-vous","avoir tort","faire la cuisine"]],
+ ["Elle ouvre la fenêtre et sort cinq minutes dehors.","prendre l'air",["prendre l'air","faire ses devoirs","aller dormir"]],
+ ["Son amie dit : « 2 + 2 = 5 ». Chloé répond que c’est faux.","avoir raison",["avoir raison","avoir faim","être en vacances"]],
+ ["Chloé protège sa petite sœur quand elle est malade.","prendre soin de",["prendre soin de","aller chercher","faire beau"]],
+ ["Demain, elle part à Paris pour une semaine.","faire un voyage",["faire un voyage","avoir soif","être d'accord"]],
+ ["Le soleil brille et le ciel est bleu.","faire beau",["faire beau","être malade","prendre une douche"]]
+];
+let chaosTimer=null,seconds=30,chaosRunning=false,chaosIndex=0;
+function nextChaos(){
+  if(!chaosRunning)return;
+  const q=chaosQs[chaosIndex%chaosQs.length]; chaosIndex++;
+  document.getElementById("chaosStory").textContent=q[0];
+  const box=document.getElementById("chaosChoices");box.innerHTML="";
+  shuffle(q[2]).forEach(c=>{
+    const b=document.createElement("button");b.className="choice";b.textContent=c;
+    b.onclick=()=>{
+      if(!chaosRunning)return;
+      if(norm(c)===norm(q[1])){document.getElementById("chaosFeedback").textContent="✅ +1";addScore(1);nextChaos()}
+      else{document.getElementById("chaosFeedback").textContent="❌";miss()}
+    };
+    box.appendChild(b);
+  });
+}
+function stopChaos(){
+  chaosRunning=false;clearInterval(chaosTimer);chaosTimer=null;
+  document.getElementById("chaosFeedback").textContent="⏰ Terminé ! Score total : "+score;
+}
+document.getElementById("startChaos").onclick=()=>{
+  clearInterval(chaosTimer);seconds=30;chaosRunning=true;chaosIndex=0;
+  document.getElementById("timer").textContent=seconds;
+  document.getElementById("chaosFeedback").textContent="";
+  nextChaos();
+  chaosTimer=setInterval(()=>{
+    seconds--;document.getElementById("timer").textContent=seconds;
+    if(seconds<=0)stopChaos();
+  },1000);
+};
+document.getElementById("stopChaos").onclick=stopChaos;
+
+// Tabs
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.onclick=()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    tab.classList.add("active");
+    ["level1","level2","level3","level4"].forEach(id=>document.getElementById(id).classList.add("hidden"));
+    document.getElementById("level"+tab.dataset.level).classList.remove("hidden");
+  }
+});
+
+renderL1(); renderDrag(); renderL3(); updateHUD();
+</script>
+</body>
+</html>
