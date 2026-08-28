@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quantifier Lab — Countable & Uncountable</title>
+<style>
+  :root{
+    --ink:#24233a;
+    --muted:#77758d;
+    --paper:#fff9fc;
+    --card:rgba(255,255,255,.82);
+    --line:rgba(55,42,74,.12);
+    --accent:#d77aa8;
+    --accent2:#8b7fe8;
+    --juice:#ffb23f;
+    --juice2:#ff8c42;
+    --good:#36a878;
+    --bad:#df5b6b;
+    --shadow:0 18px 45px rgba(66,39,78,.12);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter, ui-rounded, "SF Pro Rounded", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 10% 0%, rgba(235,174,208,.28), transparent 28%),
+      radial-gradient(circle at 94% 14%, rgba(143,128,233,.18), transparent 30%),
+      linear-gradient(180deg,#fffafd,#fff7fb 55%,#faf8ff);
+    min-height:100vh;
+  }
+  button,input{font:inherit}
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 18px 70px}
+  .hero{text-align:center;margin-bottom:22px}
+  .eyebrow{font-size:13px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2)}
+  h1{font-size:clamp(34px,6vw,68px);line-height:.95;margin:10px 0 12px;letter-spacing:-.045em}
+  .lead{max-width:790px;margin:0 auto;color:var(--muted);font-size:17px;line-height:1.55}
+  .main-grid{display:grid;grid-template-columns:1fr 1.28fr;gap:18px;align-items:stretch}
+  .panel{
+    background:var(--card);
+    border:1px solid rgba(255,255,255,.9);
+    box-shadow:var(--shadow);
+    border-radius:28px;
+    backdrop-filter: blur(10px);
+    padding:22px;
+  }
+  .panel h2{margin:0 0 8px;font-size:22px}
+  .tiny{color:var(--muted);font-size:13px;line-height:1.45}
+  .word-groups{display:grid;gap:12px;margin-top:16px}
+  .group{
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:12px;
+    background:rgba(255,255,255,.66)
+  }
+  .group-title{font-size:11px;color:var(--muted);font-weight:900;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .qbtn{
+    border:1px solid rgba(60,45,82,.12);
+    background:#fff;
+    border-radius:999px;
+    padding:9px 13px;
+    color:var(--ink);
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 4px 12px rgba(51,37,70,.06);
+    transition:.2s transform,.2s border,.2s background;
+  }
+  .qbtn:hover{transform:translateY(-2px)}
+  .qbtn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .viz{
+    min-height:485px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .display-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+  .selected{
+    font-size:clamp(30px,5vw,58px);
+    line-height:.95;font-weight:950;letter-spacing:-.045em;margin-top:4px
+  }
+  .meaning{margin-top:8px;color:var(--muted);font-weight:700}
+  .badge{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-height:34px;padding:7px 11px;border-radius:999px;background:#f2efff;color:#5e52c7;
+    font-weight:900;font-size:12px;text-align:center
+  }
+  .objects{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-items:end;
+    gap:28px;
+    margin:20px 4px 10px;
+  }
+  .object-card{text-align:center}
+  .object-label{margin-top:11px;font-weight:900}
+  .object-label span{display:block;font-weight:600;color:var(--muted);font-size:12px;margin-top:2px}
+  .glass-wrap{height:260px;display:flex;align-items:flex-end;justify-content:center}
+  .glass{
+    position:relative;width:150px;height:230px;
+    border:6px solid rgba(108,119,135,.36);
+    border-top-width:4px;
+    border-radius:12px 12px 32px 32px;
+    overflow:hidden;
+    background:linear-gradient(90deg,rgba(255,255,255,.72),rgba(235,247,255,.25),rgba(255,255,255,.72));
+    box-shadow:inset 10px 0 18px rgba(255,255,255,.55),0 16px 30px rgba(69,78,91,.11);
+  }
+  .glass::after{
+    content:"";position:absolute;left:15px;top:12px;width:14px;height:175px;
+    background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.06));
+    border-radius:99px;z-index:4;pointer-events:none
+  }
+  .juice{
+    position:absolute;left:0;right:0;bottom:0;height:0%;
+    background:linear-gradient(180deg,var(--juice),var(--juice2));
+    transition:height .8s cubic-bezier(.2,.8,.2,1);
+  }
+  .juice::before{
+    content:"";position:absolute;left:0;right:0;top:-4px;height:8px;border-radius:50%;
+    background:rgba(255,196,79,.92)
+  }
+  .bag-wrap{height:260px;display:flex;align-items:flex-end;justify-content:center}
+  .bag{
+    width:210px;height:238px;position:relative;overflow:hidden;
+    border:4px solid rgba(104,113,128,.28);
+    border-radius:18px 18px 34px 34px;
+    background:linear-gradient(135deg,rgba(255,255,255,.55),rgba(230,242,250,.16));
+    box-shadow:inset 10px 0 22px rgba(255,255,255,.55),0 16px 30px rgba(69,78,91,.10);
+  }
+  .bag::before{
+    content:"";position:absolute;z-index:6;left:18px;right:18px;top:16px;height:5px;
+    background:repeating-linear-gradient(90deg,rgba(98,106,118,.35) 0 8px,transparent 8px 13px);
+    border-radius:10px
+  }
+  .apples{position:absolute;inset:0;z-index:2}
+  .apple{
+    --s:38px;
+    position:absolute;width:var(--s);height:var(--s);
+    border-radius:48% 52% 52% 48% / 58% 58% 42% 42%;
+    background:linear-gradient(135deg,#ff6b63,#cf334f);
+    box-shadow:inset -6px -5px 10px rgba(125,0,22,.14),0 6px 10px rgba(60,30,40,.10);
+    transform:scale(.2) translateY(40px);
+    opacity:0;
+    transition:.55s cubic-bezier(.2,.75,.2,1);
+  }
+  .apple.show{transform:scale(1) translateY(0);opacity:1}
+  .apple::before{content:"";position:absolute;width:5px;height:13px;background:#76513c;left:53%;top:-7px;border-radius:8px;transform:rotate(7deg)}
+  .apple::after{content:"";position:absolute;width:16px;height:9px;background:#61a958;border-radius:100% 0 100% 0;left:55%;top:-5px;transform:rotate(-25deg)}
+  .disabled-object{filter:grayscale(.5);opacity:.27}
+  .example{
+    background:linear-gradient(135deg,#2c2943,#40395e);
+    color:#fff;border-radius:18px;padding:14px 16px;margin-top:12px;line-height:1.4
+  }
+  .example strong{color:#ffd6e7}
+  .legend{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:10px}
+  .scale{font-size:11px;padding:6px 8px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--muted)}
+  .section-title{font-size:30px;margin:42px 0 7px;letter-spacing:-.03em}
+  .activity-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .activity{position:relative;overflow:hidden}
+  .num{
+    width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    background:#f1edff;color:#6254ca;font-weight:950;margin-bottom:14px
+  }
+  .activity h3{margin:0 0 7px;font-size:21px}
+  .activity p{color:var(--muted);font-size:14px;line-height:1.45;min-height:58px}
+  .mini-game{margin-top:16px}
+  .prompt{
+    padding:14px;border:1px solid var(--line);background:#fff;border-radius:16px;
+    min-height:78px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:850;
+  }
+  .choices{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .small-btn{
+    border:0;background:#f1eff7;color:var(--ink);padding:9px 11px;border-radius:12px;
+    cursor:pointer;font-weight:850
+  }
+  .small-btn:hover{background:#e8e3f4}
+  .result{margin-top:10px;min-height:22px;font-size:13px;font-weight:850}
+  .good{color:var(--good)} .bad{color:var(--bad)}
+  .speech-card{
+    min-height:160px;
+    padding:18px;border-radius:20px;background:linear-gradient(135deg,#fff1f7,#f1efff);
+    display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center
+  }
+  .speech-card .emoji{font-size:38px}
+  .speech-card .scene{font-weight:950;font-size:18px;margin:8px 0 5px}
+  .speech-card .must{font-size:13px;color:var(--muted);line-height:1.45}
+  .timer{font-size:36px;font-weight:950;letter-spacing:-.04em;margin-top:7px}
+  .footer-note{margin-top:28px;text-align:center;color:var(--muted);font-size:12px}
+  @media(max-width:850px){
+    .main-grid,.activity-grid{grid-template-columns:1fr}
+    .viz{min-height:auto}
+    .activity p{min-height:auto}
+  }
+  @media(max-width:520px){
+    .objects{gap:10px}
+    .glass{width:118px;height:205px}
+    .bag{width:165px;height:213px}
+    .glass-wrap,.bag-wrap{height:225px}
+    .panel{padding:16px;border-radius:22px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Interactive Grammar Lab</div>
+    <h1>How much? How many?</h1>
+    <p class="lead">Tap a quantifier and watch the meaning become visible. The juice shows <b>uncountable nouns</b>; the apples show <b>countable nouns</b>.</p>
+  </header>
+
+  <section class="main-grid">
+    <div class="panel">
+      <h2>Choose a quantifier</h2>
+      <div class="tiny">Words that work with both types will animate both containers. Words limited to one noun type will highlight only the correct container.</div>
+      <div class="word-groups">
+        <div class="group">
+          <div class="group-title">A large quantity</div>
+          <div class="chips">
+            <button class="qbtn" data-q="a lot of">a lot of</button>
+            <button class="qbtn" data-q="plenty of">plenty of</button>
+            <button class="qbtn" data-q="loads of">loads of</button>
+            <button class="qbtn" data-q="many">many</button>
+            <button class="qbtn" data-q="much">much</button>
+          </div>
+        </div>
+        <div class="group">
+          <div class="group-title">A small quantity</div>
+          <div class="chips">
+            <button class="qbtn" data-q="a few">a few</button>
+            <button class="qbtn" data-q="few">few</button>
+            <button class="qbtn" data-q="a little">a little</button>
+            <button class="qbtn" data-q="little">little</button>
+          </div>
+        </div>
+        <div class="group">
+          <div class="group-title">An indefinite quantity</div>
+          <div class="chips">
+            <button class="qbtn" data-q="some">some</button>
+            <button class="qbtn" data-q="any">any</button>
+          </div>
+        </div>
+        <div class="group">
+          <div class="group-title">Zero</div>
+          <div class="chips">
+            <button class="qbtn" data-q="no">no</button>
+            <button class="qbtn" data-q="not any">not any</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel viz">
+      <div class="display-head">
+        <div>
+          <div class="tiny">MEANING</div>
+          <div class="selected" id="selected">tap a word</div>
+          <div class="meaning" id="meaning">See how much / how many it suggests.</div>
+        </div>
+        <div class="badge" id="typeBadge">COUNTABLE + UNCOUNTABLE</div>
+      </div>
+
+      <div class="objects">
+        <div class="object-card" id="juiceCard">
+          <div class="glass-wrap">
+            <div class="glass">
+              <div class="juice" id="juice"></div>
+            </div>
+          </div>
+          <div class="object-label">JUICE<span>uncountable</span></div>
+        </div>
+        <div class="object-card" id="appleCard">
+          <div class="bag-wrap">
+            <div class="bag"><div class="apples" id="apples"></div></div>
+          </div>
+          <div class="object-label">APPLES<span>countable</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="example" id="example">Choose a word to see an example sentence.</div>
+        <div class="legend">
+          <span class="scale">0 = none</span>
+          <span class="scale">small ≈ 10–30%</span>
+          <span class="scale">some ≈ 45%</span>
+          <span class="scale">a lot ≈ 80%+</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <h2 class="section-title">3 more interactive tasks</h2>
+  <p class="lead" style="margin:0 0 18px;text-align:left">Same quantifiers, but now students have to choose, react and speak.</p>
+
+  <section class="activity-grid">
+    <article class="panel activity">
+      <div class="num">1</div>
+      <h3>Quantifier Detective</h3>
+      <p>Choose the best quantifier for the sentence. The task changes automatically after every answer.</p>
+      <div class="mini-game">
+        <div class="prompt" id="detectivePrompt"></div>
+        <div class="choices" id="detectiveChoices"></div>
+        <div class="result" id="detectiveResult"></div>
+      </div>
+    </article>
+
+    <article class="panel activity">
+      <div class="num">2</div>
+      <h3>Meaning Match</h3>
+      <p>Read the situation and choose the quantifier that communicates the intended amount and attitude.</p>
+      <div class="mini-game">
+        <div class="prompt" id="matchPrompt"></div>
+        <div class="choices" id="matchChoices"></div>
+        <div class="result" id="matchResult"></div>
+      </div>
+    </article>
+
+    <article class="panel activity">
+      <div class="num">3</div>
+      <h3>60-Second Speaking</h3>
+      <p>Oral practice: get a random situation and use every quantifier shown on the card while speaking.</p>
+      <div class="speech-card">
+        <div class="emoji" id="speechEmoji">🛒</div>
+        <div class="scene" id="speechScene">Describe your weekly shopping.</div>
+        <div class="must" id="speechMust">Use: <b>plenty of · a few · little · any</b></div>
+        <div class="timer" id="timer">60</div>
+      </div>
+      <div class="choices">
+        <button class="small-btn" id="newSpeaking">🎲 New card</button>
+        <button class="small-btn" id="startTimer">▶ Start 60 sec</button>
+      </div>
+      <div class="result" id="speechResult">Aim for 4+ complete sentences.</div>
+    </article>
+  </section>
+
+  <div class="footer-note">Tip: “few / little” often sound more negative (= not enough), while “a few / a little” sound more positive (= some, enough to be useful).</div>
+</div>
+
+<script>
+const quantifiers = {
+  "a lot of": {level:82, type:"both", meaning:"a large quantity", ex:"There are <strong>a lot of apples</strong>. / There is <strong>a lot of juice</strong>."},
+  "plenty of": {level:90, type:"both", meaning:"more than enough", ex:"We have <strong>plenty of apples</strong>. / We have <strong>plenty of juice</strong>."},
+  "loads of": {level:96, type:"both", meaning:"a very large quantity · informal", ex:"There are <strong>loads of apples</strong>. / There is <strong>loads of juice</strong>."},
+  "many": {level:82, type:"count", meaning:"a large number", ex:"There are <strong>many apples</strong> in the bag."},
+  "much": {level:82, type:"uncount", meaning:"a large amount", ex:"We don’t have <strong>much juice</strong> left."},
+  "a few": {level:30, type:"count", meaning:"a small number · some", ex:"There are <strong>a few apples</strong> — enough for a snack."},
+  "few": {level:12, type:"count", meaning:"a very small number · not enough", ex:"There are <strong>few apples</strong> left — we should buy more."},
+  "some": {level:46, type:"both", meaning:"an unspecified quantity", ex:"There are <strong>some apples</strong>. / There is <strong>some juice</strong>."},
+  "any": {level:46, type:"both", meaning:"an unspecified quantity · common in questions/negatives", ex:"Are there <strong>any apples</strong>? / Is there <strong>any juice</strong>?"},
+  "little": {level:12, type:"uncount", meaning:"a very small amount · not enough", ex:"There is <strong>little juice</strong> left — almost none."},
+  "a little": {level:30, type:"uncount", meaning:"a small amount · some", ex:"There is <strong>a little juice</strong> left — enough for one glass."},
+  "no": {level:0, type:"both", meaning:"zero", ex:"There are <strong>no apples</strong>. / There is <strong>no juice</strong>."},
+  "not any": {level:0, type:"both", meaning:"zero · negative form", ex:"There aren’t <strong>any apples</strong>. / There isn’t <strong>any juice</strong>."}
+};
+
+const applePositions = [
+  [16,174],[62,175],[108,174],[151,174],
+  [35,135],[82,135],[130,134],
+  [18,96],[64,96],[111,94],[150,95],
+  [40,56],[88,55],[132,54]
+];
+const applesEl = document.getElementById('apples');
+applePositions.forEach((p,i)=>{
+  const a=document.createElement('div');
+  a.className='apple';
+  a.style.left=p[0]+'px'; a.style.top=p[1]+'px';
+  a.style.transitionDelay=(i*22)+'ms';
+  applesEl.appendChild(a);
+});
+function resizeApplePositions(){
+  const bag = applesEl.parentElement;
+  const scale = bag.clientWidth / 210;
+  [...applesEl.children].forEach((a,i)=>{
+    a.style.left=(applePositions[i][0]*scale)+'px';
+    a.style.top=(applePositions[i][1]*(bag.clientHeight/238))+'px';
+    a.style.setProperty('--s',(38*scale)+'px');
+  });
+}
+window.addEventListener('resize', resizeApplePositions);
+resizeApplePositions();
+
+function showQuantifier(q){
+  const d=quantifiers[q];
+  document.querySelectorAll('.qbtn').forEach(b=>b.classList.toggle('active',b.dataset.q===q));
+  document.getElementById('selected').textContent=q;
+  document.getElementById('meaning').textContent=d.meaning;
+  document.getElementById('example').innerHTML=d.ex;
+
+  const juiceCard=document.getElementById('juiceCard');
+  const appleCard=document.getElementById('appleCard');
+  juiceCard.classList.toggle('disabled-object', d.type==='count');
+  appleCard.classList.toggle('disabled-object', d.type==='uncount');
+
+  document.getElementById('juice').style.height = (d.type==='count' ? 0 : d.level) + '%';
+  const appleCount = d.type==='uncount' ? 0 : Math.round((d.level/100)*applePositions.length);
+  [...applesEl.children].forEach((a,i)=>a.classList.toggle('show',i<appleCount));
+
+  const label = d.type==='both' ? 'COUNTABLE + UNCOUNTABLE' : d.type==='count' ? 'COUNTABLE ONLY' : 'UNCOUNTABLE ONLY';
+  document.getElementById('typeBadge').textContent=label;
+}
+document.querySelectorAll('.qbtn').forEach(b=>b.addEventListener('click',()=>showQuantifier(b.dataset.q)));
+
+const detective = [
+  {s:"There are ___ students in the corridor — maybe thirty.", opts:["many","much","little"], a:"many"},
+  {s:"I’ve got ___ time before class — only five minutes.", opts:["a little","a few","many"], a:"a little"},
+  {s:"We have ___ chairs. Everyone can sit down, and there are extras.", opts:["plenty of","few","little"], a:"plenty of"},
+  {s:"There isn’t ___ milk in the fridge.", opts:["many","much","a few"], a:"much"},
+  {s:"I bought ___ notebooks — three, actually.", opts:["a few","a little","much"], a:"a few"},
+  {s:"Do you have ___ questions?", opts:["any","much","little"], a:"any"}
+];
+let di=0;
+function renderDetective(){
+  const x=detective[di%detective.length];
+  detectivePrompt.textContent=x.s;
+  detectiveChoices.innerHTML='';
+  detectiveResult.textContent='';
+  x.opts.forEach(o=>{
+    let b=document.createElement('button'); b.className='small-btn'; b.textContent=o;
+    b.onclick=()=>{
+      if(o===x.a){detectiveResult.className='result good'; detectiveResult.textContent='✓ Correct!'; setTimeout(()=>{di++;renderDetective()},650)}
+      else{detectiveResult.className='result bad'; detectiveResult.textContent='Try again — check countable vs uncountable.'}
+    };
+    detectiveChoices.appendChild(b);
+  });
+}
+renderDetective();
+
+const matches=[
+  {s:"You want to sound positive: there are 3 cookies left, and that is enough.",opts:["few","a few","little"],a:"a few"},
+  {s:"You are disappointed: almost no people came to the event.",opts:["few","a few","many"],a:"few"},
+  {s:"You have more water than the whole group needs.",opts:["plenty of","little","any"],a:"plenty of"},
+  {s:"You are disappointed: there is almost no information in the article.",opts:["little","a little","many"],a:"little"},
+  {s:"You offer an unspecified amount of cake.",opts:["some","many","few"],a:"some"}
+];
+let mi=0;
+function renderMatch(){
+  const x=matches[mi%matches.length];
+  matchPrompt.textContent=x.s; matchChoices.innerHTML=''; matchResult.textContent='';
+  x.opts.forEach(o=>{
+    let b=document.createElement('button'); b.className='small-btn'; b.textContent=o;
+    b.onclick=()=>{
+      if(o===x.a){matchResult.className='result good'; matchResult.textContent='✓ Exactly.'; setTimeout(()=>{mi++;renderMatch()},650)}
+      else{matchResult.className='result bad'; matchResult.textContent='Not quite — think about meaning + attitude.'}
+    };
+    matchChoices.appendChild(b);
+  });
+}
+renderMatch();
+
+const speaking=[
+  ["🛒","Describe your weekly shopping.","plenty of · a few · little · any"],
+  ["🎒","Describe what is inside your school / work bag.","some · many · a little · no"],
+  ["🍳","Imagine you are making breakfast for six people.","a lot of · a few · much · any"],
+  ["🏠","Describe your home after a big party.","loads of · few · little · some"],
+  ["✈️","Pack for a 3-day city break.","many · a few · plenty of · not any"],
+  ["🎉","Plan a birthday party on a small budget.","a lot of · a little · few · some"]
+];
+let si=0, timerId=null, timeLeft=60;
+function newSpeaking(){
+  si=(si+1)%speaking.length;
+  speechEmoji.textContent=speaking[si][0];
+  speechScene.textContent=speaking[si][1];
+  speechMust.innerHTML='Use: <b>'+speaking[si][2]+'</b>';
+  clearInterval(timerId); timeLeft=60; timer.textContent='60'; startTimer.textContent='▶ Start 60 sec';
+  speechResult.textContent='Aim for 4+ complete sentences.';
+}
+newSpeaking.addEventListener('click',newSpeaking);
+startTimer.addEventListener('click',()=>{
+  if(timerId){clearInterval(timerId);timerId=null;startTimer.textContent='▶ Continue';return}
+  if(timeLeft<=0){timeLeft=60;timer.textContent='60'}
+  startTimer.textContent='⏸ Pause';
+  timerId=setInterval(()=>{
+    timeLeft--; timer.textContent=timeLeft;
+    if(timeLeft<=0){
+      clearInterval(timerId);timerId=null;startTimer.textContent='↻ Again';
+      speechResult.textContent='Time! Did you use all 4 quantifiers?';
+    }
+  },1000);
+});
+
+showQuantifier("a lot of");
+</script>
+</body>
+</html>
