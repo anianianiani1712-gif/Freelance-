@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Editable Message Mockup</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    background: #f7f7f9;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #111;
+  }
+
+  .phone {
+    width: min(390px, 94vw);
+    aspect-ratio: 390 / 844;
+    background: #000;
+    border-radius: 48px;
+    padding: 10px;
+    box-shadow: 0 24px 55px rgba(0,0,0,.22);
+  }
+
+  .screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 39px;
+    overflow: hidden;
+    background:
+      linear-gradient(rgba(240,183,215,.9), rgba(240,183,215,.9)),
+      radial-gradient(circle at 15% 18%, rgba(255,255,255,.35) 0 2px, transparent 3px),
+      radial-gradient(circle at 72% 28%, rgba(255,255,255,.28) 0 2px, transparent 3px),
+      radial-gradient(circle at 35% 62%, rgba(255,255,255,.28) 0 2px, transparent 3px);
+    position: relative;
+  }
+
+  .status {
+    height: 48px;
+    background: rgba(255,255,255,.96);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .notch {
+    width: 112px;
+    height: 30px;
+    border-radius: 20px;
+    background: #000;
+    position: absolute;
+    top: 9px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .header {
+    height: 72px;
+    background: rgba(255,255,255,.96);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 14px;
+    border-bottom: 1px solid rgba(0,0,0,.08);
+  }
+
+  .back { font-size: 30px; color: #2678ff; line-height: 1; }
+  .avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6d72ff, #9a7cf5);
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 20px;
+  }
+
+  .name-wrap { flex: 1; min-width: 0; }
+  .name { font-weight: 700; font-size: 18px; }
+  .online { font-size: 13px; color: #7a7f89; }
+  .icons { display: flex; gap: 12px; color: #2678ff; font-size: 22px; }
+
+  .chat {
+    height: calc(100% - 120px);
+    padding: 84px 14px 18px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bubble {
+    position: relative;
+    align-self: flex-start;
+    width: 100%;
+    max-width: 340px;
+    background: #fff;
+    border-radius: 24px 24px 24px 8px;
+    padding: 20px 20px 34px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  }
+
+  .bubble::before {
+    content: "";
+    position: absolute;
+    left: -7px;
+    bottom: 0;
+    width: 16px;
+    height: 18px;
+    background: #fff;
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  }
+
+  #message {
+    font-size: clamp(21px, 5.5vw, 31px);
+    line-height: 1.33;
+    outline: none;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    min-height: 220px;
+  }
+
+  #message:focus {
+    box-shadow: inset 0 0 0 2px #2f80ff;
+    border-radius: 12px;
+  }
+
+  .time {
+    position: absolute;
+    right: 16px;
+    bottom: 10px;
+    color: #737984;
+    font-size: 15px;
+  }
+
+  .controls {
+    margin-top: 18px;
+    display: flex;
+    gap: 10px;
+  }
+
+  button {
+    border: 0;
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .edit { background: #fff; color: #2678ff; }
+  .save { background: #2678ff; color: #fff; }
+
+  .hint {
+    margin-top: 10px;
+    color: rgba(58, 35, 54, .75);
+    font-size: 13px;
+  }
+
+  @media (max-width: 420px) {
+    body { background: #000; }
+    .phone {
+      width: 100vw;
+      height: 100vh;
+      aspect-ratio: auto;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+    }
+    .screen { border-radius: 0; }
+  }
+</style>
+</head>
+<body>
+  <div class="phone">
+    <div class="screen">
+      <div class="notch"></div>
+
+      <div class="status">
+        <span>09:41</span>
+        <span>▮▮▮  Wi‑Fi  ▰</span>
+      </div>
+
+      <div class="header">
+        <div class="back">‹</div>
+        <div class="avatar">A</div>
+        <div class="name-wrap">
+          <div class="name">Karina</div>
+          <div class="online">online</div>
+        </div>
+        <div class="icons">◻︎ ☎︎</div>
+      </div>
+
+      <div class="chat">
+        <div class="bubble">
+          <div id="message" contenteditable="true" spellcheck="false">Hello, Ani! I went write you about  Reschedule
+class , because I’m absolutely forgot about
+daughter Theatre 😭 Maybe you can on Friday
+morning, 10 o’clock for example?</div>
+          <div class="time">19:12</div>
+        </div>
+
+        <div class="controls">
+          <button class="edit" onclick="editMessage()">Edit message</button>
+          <button class="save" onclick="saveMessage()">Save</button>
+        </div>
+        <div class="hint">Нажми на текст сообщения и редактируй его прямо в пузыре.</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const message = document.getElementById('message');
+
+  function editMessage() {
+    message.focus();
+    const range = document.createRange();
+    range.selectNodeContents(message);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  function saveMessage() {
+    localStorage.setItem('editableMessage', message.innerText);
+    message.blur();
+  }
+
+  const saved = localStorage.getItem('editableMessage');
+  if (saved) message.innerText = saved;
+</script>
+</body>
+</html>
