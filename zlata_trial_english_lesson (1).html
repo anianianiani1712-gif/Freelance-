@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zlata's English Quest</title>
+<style>
+  :root{
+    --bg:#fff6fb;
+    --card:#ffffff;
+    --ink:#2b2340;
+    --muted:#786d8d;
+    --pink:#ff4fa3;
+    --pink2:#ff8fc6;
+    --purple:#8f5bff;
+    --violet:#6e54ff;
+    --blue:#51b9ff;
+    --mint:#4fd8b4;
+    --yellow:#ffd95a;
+    --coral:#ff7b70;
+    --line:#eadcf0;
+    --shadow:0 12px 30px rgba(111,66,143,.13);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter, ui-rounded, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background:
+      radial-gradient(circle at 10% 10%, #ffe1f0 0 9%, transparent 10%),
+      radial-gradient(circle at 90% 20%, #e7dcff 0 10%, transparent 11%),
+      linear-gradient(180deg,#fff9fc,#f9f6ff);
+    color:var(--ink);
+    min-height:100vh;
+  }
+  .app{max-width:1100px;margin:auto;padding:24px}
+  .topbar{
+    display:flex;gap:14px;align-items:center;justify-content:space-between;
+    position:sticky;top:0;z-index:30;
+    background:rgba(255,255,255,.86);backdrop-filter:blur(14px);
+    border:1px solid var(--line);border-radius:20px;padding:12px 14px;
+    box-shadow:var(--shadow);
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:900}
+  .logo{
+    width:42px;height:42px;border-radius:14px;
+    display:grid;place-items:center;color:white;font-size:22px;
+    background:linear-gradient(135deg,var(--pink),var(--purple));
+  }
+  .progress-wrap{flex:1;max-width:580px}
+  .progress{height:12px;background:#efe8f4;border-radius:999px;overflow:hidden}
+  .progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--purple),var(--blue));transition:.3s}
+  .small{font-size:12px;color:var(--muted)}
+  button{
+    border:none;border-radius:14px;padding:11px 16px;font-weight:800;cursor:pointer;
+    transition:.2s transform,.2s box-shadow,.2s opacity;
+  }
+  button:hover{transform:translateY(-1px)}
+  .btn{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;box-shadow:0 8px 20px rgba(143,91,255,.25)}
+  .btn.secondary{background:#f1ebff;color:#6146c7;box-shadow:none}
+  .btn.green{background:#e2fff5;color:#168a6b;box-shadow:none}
+  .btn.yellow{background:#fff6c8;color:#8c6a00;box-shadow:none}
+  .ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}
+  .stage{display:none;animation:fade .25s ease}
+  .stage.active{display:block}
+  @keyframes fade{from{opacity:.2;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .hero{
+    margin-top:22px;border-radius:34px;padding:34px;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,#ffeff7 0%,#f3edff 46%,#eaf8ff 100%);
+    border:1px solid var(--line);box-shadow:var(--shadow)
+  }
+  .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center}
+  .badge{
+    display:inline-flex;gap:7px;align-items:center;padding:8px 12px;border-radius:999px;
+    background:#fff;border:1px solid var(--line);font-weight:800;font-size:13px
+  }
+  h1{font-size:clamp(38px,6vw,72px);line-height:.95;margin:14px 0 12px;letter-spacing:-2px}
+  h2{font-size:34px;line-height:1.05;margin:0 0 10px;letter-spacing:-1px}
+  h3{margin:0 0 10px}
+  .lead{font-size:18px;color:var(--muted);max-width:640px;line-height:1.5}
+  .illustration{
+    min-height:300px;border-radius:28px;background:#fff;display:grid;place-items:center;border:1px solid var(--line);
+    box-shadow:var(--shadow);padding:20px;position:relative;overflow:hidden
+  }
+  .emoji-art{font-size:120px;filter:drop-shadow(0 12px 16px rgba(61,44,90,.15))}
+  .section{margin-top:22px}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow)
+  }
+  .choice{
+    padding:16px;border:2px solid transparent;border-radius:18px;background:#faf7ff;
+    cursor:pointer;font-weight:800;min-height:78px;display:flex;align-items:center;justify-content:center;text-align:center;
+  }
+  .choice:hover{border-color:#d6c5ff}
+  .choice.selected{border-color:var(--purple);background:#f1ebff}
+  .choice.correct{border-color:#36c59c;background:#eafff7}
+  .choice.wrong{border-color:#ff7f92;background:#fff0f3}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .prompt{
+    padding:18px;border-radius:18px;background:linear-gradient(135deg,#fff4ca,#ffe9f5);
+    border:1px solid #f3dfae;font-weight:800;font-size:18px
+  }
+  .chat{background:#f6f3fb;border-radius:24px;padding:16px;min-height:320px}
+  .bubble{
+    max-width:74%;padding:11px 14px;border-radius:18px;margin:9px 0;line-height:1.4;
+    box-shadow:0 6px 12px rgba(53,39,80,.06)
+  }
+  .left{background:#fff;border:1px solid #e9e0f2;border-bottom-left-radius:6px}
+  .right{background:#e8dcff;margin-left:auto;border-bottom-right-radius:6px}
+  .phone{
+    width:min(100%,420px);margin:auto;background:#221d2e;border-radius:34px;padding:12px;box-shadow:0 18px 35px rgba(31,22,52,.24)
+  }
+  .screen{background:#fff;border-radius:26px;padding:16px;min-height:440px}
+  .tag{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900;margin:3px;background:#f2ecff;color:#684bc6}
+  .words{display:flex;flex-wrap:wrap;gap:10px}
+  .word{
+    padding:10px 12px;background:#fff;border:1px solid var(--line);border-radius:12px;font-weight:800;cursor:pointer
+  }
+  .drop{
+    min-height:52px;border:2px dashed #d9c9ee;border-radius:14px;padding:10px;background:#fcfaff
+  }
+  .level{
+    padding:18px;border-radius:22px;border:1px solid var(--line);background:#fff;margin:12px 0;
+    position:relative;overflow:hidden
+  }
+  .level::before{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;background:linear-gradient(var(--pink),var(--purple))}
+  .stars{font-size:22px;letter-spacing:3px}
+  .teacher{
+    display:none;position:fixed;right:18px;bottom:18px;z-index:40;width:min(92vw,390px);
+    background:#211a31;color:white;border-radius:24px;padding:18px;box-shadow:0 20px 50px rgba(0,0,0,.3)
+  }
+  .teacher.open{display:block}
+  .teacher label{display:block;margin:10px 0 5px;font-size:13px;color:#d8d0e8}
+  .teacher select,.teacher textarea{
+    width:100%;border:none;border-radius:12px;padding:10px;background:#332944;color:#fff
+  }
+  .teacher textarea{min-height:90px;resize:vertical}
+  .scorechips{display:flex;flex-wrap:wrap;gap:8px}
+  .scorechip{padding:7px 10px;border-radius:999px;background:#392e4d;font-size:12px}
+  .notice{font-size:13px;color:var(--muted);margin-top:8px}
+  .speaker{
+    width:84px;height:84px;border-radius:50%;font-size:34px;display:grid;place-items:center;margin:16px auto;
+    background:linear-gradient(135deg,var(--blue),var(--purple));color:white;
+    box-shadow:0 12px 30px rgba(81,185,255,.25)
+  }
+  .timer{font-size:44px;font-weight:900;text-align:center;margin:14px}
+  .feedback{margin-top:10px;padding:12px 14px;border-radius:14px;display:none}
+  .feedback.show{display:block}
+  .ok{background:#eafff7;color:#16785f}
+  .no{background:#fff0f3;color:#a33b4b}
+  .nav{display:flex;justify-content:space-between;gap:12px;margin:20px 0}
+  .mini-title{font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:#8d7aa1;font-weight:900}
+  .center{text-align:center}
+  .result-bar{display:grid;grid-template-columns:130px 1fr 50px;gap:8px;align-items:center;margin:10px 0}
+  .bar{height:11px;background:#eee7f4;border-radius:999px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--pink),var(--purple));width:60%}
+  .confetti{font-size:52px}
+  @media(max-width:760px){
+    .hero-grid,.grid,.grid3,.pair{grid-template-columns:1fr}
+    .topbar{align-items:flex-start;flex-wrap:wrap}
+    .progress-wrap{order:3;width:100%;max-width:none}
+    .app{padding:12px}.hero{padding:22px}
+    h1{font-size:48px}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand"><div class="logo">Z</div><div>Zlata's English Quest<div class="small">45-minute trial lesson</div></div></div>
+    <div class="progress-wrap">
+      <div class="small" id="progressText">Stage 1 of 8</div>
+      <div class="progress"><div id="progressFill"></div></div>
+    </div>
+    <button class="ghost" onclick="toggleTeacher()">👩‍🏫 Teacher panel</button>
+  </div>
+
+  <!-- 1 -->
+  <section class="stage active" data-title="Warm-up">
+    <div class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="badge">✨ START HERE</span>
+          <h1>Hi, Zlata!</h1>
+          <p class="lead">Today is not a test. It’s a mini English quest: quick challenges, mystery messages, listening, speaking and a final level-up.</p>
+          <button class="btn" onclick="nextStage()">Let’s go →</button>
+        </div>
+        <div class="illustration">
+          <div class="emoji-art">🎧💬📱</div>
+        </div>
+      </div>
+    </div>
+    <div class="section card">
+      <div class="mini-title">Warm-up • 5 min</div>
+      <h2>Choose your side</h2>
+      <p class="lead">Pick one and explain <b>why</b> in 1–2 sentences.</p>
+      <div class="grid">
+        <div class="choice" onclick="pick(this)">🎬 Netflix</div>
+        <div class="choice" onclick="pick(this)">▶️ YouTube</div>
+        <div class="choice" onclick="pick(this)">🏙️ Big city</div>
+        <div class="choice" onclick="pick(this)">🌊 Seaside</div>
+        <div class="choice" onclick="pick(this)">🌙 Stay up late</div>
+        <div class="choice" onclick="pick(this)">🌅 Wake up early</div>
+      </div>
+      <div class="prompt" style="margin-top:14px">Teacher follow-up: “Why?”, “How often?”, “Tell me more.”</div>
+    </div>
+  </section>
+
+  <!-- 2 vocab -->
+  <section class="stage" data-title="Vocabulary">
+    <div class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="badge">💬 VOCABULARY</span>
+          <h2>Word Power Challenge</h2>
+          <p class="lead">Three mini-rounds: recognise, choose, explain.</p>
+        </div>
+        <div class="illustration"><div class="emoji-art">🧠⚡️🗯️</div></div>
+      </div>
+    </div>
+
+    <div class="section grid">
+      <div class="card">
+        <div class="mini-title">Round 1 • Odd one out</div>
+        <h3>Which word does not belong?</h3>
+        <div class="grid3">
+          <div class="choice" onclick="vocabOdd(this,false)">crowded</div>
+          <div class="choice" onclick="vocabOdd(this,false)">noisy</div>
+          <div class="choice" onclick="vocabOdd(this,true)">borrow</div>
+        </div>
+        <div id="v1" class="feedback ok">Nice. “Borrow” is an action; the other two describe places.</div>
+      </div>
+      <div class="card">
+        <div class="mini-title">Round 2 • Best fit</div>
+        <h3>“I felt ___ because everyone was looking at me.”</h3>
+        <div class="grid">
+          <div class="choice" onclick="quizPick(this,false,'v2')">expensive</div>
+          <div class="choice" onclick="quizPick(this,true,'v2')">embarrassed</div>
+          <div class="choice" onclick="quizPick(this,false,'v2')">crowded</div>
+          <div class="choice" onclick="quizPick(this,false,'v2')">useful</div>
+        </div>
+        <div id="v2" class="feedback ok">Exactly: “embarrassed” = feeling uncomfortable or shy because of attention.</div>
+      </div>
+    </div>
+    <div class="section card">
+      <div class="mini-title">Round 3 • Say it another way</div>
+      <h3>Explain these words in English without translating them.</h3>
+      <div class="words">
+        <span class="word">invite</span><span class="word">improve</span><span class="word">avoid</span><span class="word">disappointed</span><span class="word">suggest</span>
+      </div>
+      <p class="notice">Teacher: note which words are active, passive, or unknown.</p>
+    </div>
+  </section>
+
+  <!-- grammar -->
+  <section class="stage" data-title="Grammar">
+    <div class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="badge">🕵️ GRAMMAR</span>
+          <h2>Grammar Detective</h2>
+          <p class="lead">Find the sentence that sounds wrong — then fix it out loud.</p>
+        </div>
+        <div class="illustration"><div class="emoji-art">🔎📱✍️</div></div>
+      </div>
+    </div>
+    <div class="section card">
+      <div class="grid">
+        <div class="choice" onclick="grammarPick(this,false,'g1')">I usually go to school by bus.</div>
+        <div class="choice" onclick="grammarPick(this,true,'g1')">I didn’t went to school yesterday.</div>
+        <div class="choice" onclick="grammarPick(this,false,'g1')">She is doing her homework now.</div>
+        <div class="choice" onclick="grammarPick(this,false,'g1')">We were tired after the trip.</div>
+      </div>
+      <div id="g1" class="feedback ok">Fix it aloud: “I didn’t go to school yesterday.”</div>
+    </div>
+    <div class="section grid">
+      <div class="card">
+        <h3>Which one needs fixing?</h3>
+        <div class="choice" onclick="grammarPick(this,true,'g2')">She has seen him last week.</div>
+        <div class="choice" onclick="grammarPick(this,false,'g2')">She saw him last week.</div>
+        <div id="g2" class="feedback ok">Good catch. With “last week”, Past Simple is the natural choice.</div>
+      </div>
+      <div class="card">
+        <h3>Which one needs fixing?</h3>
+        <div class="choice" onclick="grammarPick(this,true,'g3')">If I will have time, I’ll call you.</div>
+        <div class="choice" onclick="grammarPick(this,false,'g3')">If I have time, I’ll call you.</div>
+        <div id="g3" class="feedback ok">Correct correction: “If I have time, I’ll call you.”</div>
+      </div>
+    </div>
+    <div class="section card">
+      <div class="mini-title">Quick production</div>
+      <h3>Finish aloud:</h3>
+      <div class="grid3">
+        <div class="prompt">Yesterday I…</div>
+        <div class="prompt">Right now I’m…</div>
+        <div class="prompt">If I have free time this weekend, I’ll…</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- reading -->
+  <section class="stage" data-title="Reading">
+    <div class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="badge">📖 READING</span>
+          <h2>Mystery Chat</h2>
+          <p class="lead">Read the messages. What is really happening?</p>
+        </div>
+        <div class="illustration"><div class="emoji-art">📱👀💜</div></div>
+      </div>
+    </div>
+    <div class="section grid">
+      <div class="phone">
+        <div class="screen">
+          <div class="center"><b>Mia & Chloe</b><div class="small">online</div></div>
+          <div class="chat">
+            <div class="bubble left"><b>Mia:</b> Are we still going to the cinema at 6?</div>
+            <div class="bubble right"><b>Chloe:</b> I’m really sorry, but I can’t come tonight 😬</div>
+            <div class="bubble left"><b>Mia:</b> Again? We planned this three days ago.</div>
+            <div class="bubble right"><b>Chloe:</b> I know. My cousin has just arrived from another city and my parents want me to stay home.</div>
+            <div class="bubble left"><b>Mia:</b> You could have told me earlier.</div>
+            <div class="bubble right"><b>Chloe:</b> I only found out 20 minutes ago. Please don’t be angry.</div>
+            <div class="bubble left"><b>Mia:</b> I’m not angry. Just disappointed.</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Quick questions</h3>
+        <div class="choice" onclick="quizPick(this,true,'r1')">Chloe has to change the plan because her cousin arrived.</div>
+        <div class="choice" onclick="quizPick(this,false,'r1')">Chloe forgot about the cinema.</div>
+        <div id="r1" class="feedback ok">Yes — that is the main reason.</div>
+        <div class="prompt" style="margin-top:14px">Why is Mia disappointed?</div>
+        <div class="prompt" style="margin-top:10px">Do you think Mia is really “not angry”?</div>
+        <div class="prompt" style="margin-top:10px">What do you think will happen next?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- listening -->
+  <section class="stage" data-title="Listening">
+    <div class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="badge">🎧 LISTENING</span>
+          <h2>Listening Detective</h2>
+          <p class="lead">Listen once for the main idea. Listen again for details.</p>
+        </div>
+        <div class="illustration"><div class="emoji-art">🎧🔊🕵️</div></div>
+      </div>
+    </div>
+    <div class="section card center">
+      <button class="speaker" onclick="playAudio()">▶</button>
+      <div class="small">Click to play the voice message</div>
+      <div class="notice">The transcript stays hidden during the lesson.</div>
+    </div>
+    <div class="section grid">
+      <div class="card">
+        <h3>1. What is the message mainly about?</h3>
+        <div class="choice" onclick="quizPick(this,false,'l1')">A school project</div>
+        <div class="choice" onclick="quizPick(this,true,'l1')">A change of plans</div>
+        <div class="choice" onclick="quizPick(this,false,'l1')">A lost phone</div>
+        <div id="l1" class="feedback ok">Exactly — the speaker explains why the plan changed.</div>
+      </div>
+      <div class="card">
+        <h3>2. Details</h3>
+        <div class="prompt">What time was the original plan?</div>
+        <div class="prompt" style="margin-top:9px">Why can’t she come?</div>
+        <div class="prompt" style="margin-top:9px">What does she suggest instead?</div>
+      </div>
+    </div>
+    <details class="section card">
+      <summary><b>Teacher only: show transcript</b></summary>
+      <p>“Hey! I’m really sorry, but I can’t meet you at five anymore. My mum has asked me to help her with something at home, and it’s going to take about an hour. Could we meet at six thirty instead? I still really want to go for bubble tea, so please don’t cancel!”</p>
+    </details>
+  </section>
+
+  <!-- speaking -->
+  <section class="stage" data-title="Speaking">
+    <div class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="badge">🎤 SPEAKING</span>
+          <h2>What Would You Do?</h2>
+          <p class="lead">Choose a card. Speak for 30–60 seconds. There are no perfect answers.</p>
+        </div>
+        <div class="illustration"><div class="emoji-art">🎤💭🔥</div></div>
+      </div>
+    </div>
+    <div class="section grid3">
+      <div class="card"><div class="confetti">📩</div><h3>Wrong chat!</h3><p>You accidentally send a private message to the wrong person. What do you do?</p></div>
+      <div class="card"><div class="confetti">✈️</div><h3>Tomorrow anywhere</h3><p>You can travel anywhere tomorrow. Where do you go and why?</p></div>
+      <div class="card"><div class="confetti">📵</div><h3>No social media</h3><p>Could teenagers be happier without social media? Why / why not?</p></div>
+    </div>
+    <div class="section card center">
+      <div class="mini-title">Speaking timer</div>
+      <div id="timer" class="timer">00:45</div>
+      <button class="btn" onclick="startTimer(45)">Start 45 sec</button>
+      <button class="btn secondary" onclick="startTimer(60)">Start 60 sec</button>
+    </div>
+  </section>
+
+  <!-- level up -->
+  <section class="stage" data-title="Level-Up">
+    <div class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="badge">🚀 LEVEL-UP</span>
+          <h2>How far can you go?</h2>
+          <p class="lead">The goal is not to finish every level. Stop when it becomes challenging.</p>
+        </div>
+        <div class="illustration"><div class="emoji-art">🚀⭐️🪜</div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="level"><b>LEVEL 1</b><h3>Describe your perfect weekend.</h3><span class="tag">because</span><span class="tag">usually</span></div>
+      <div class="level"><b>LEVEL 2</b><h3>Compare it with a normal school weekend.</h3><span class="tag">more…than</span><span class="tag">but</span></div>
+      <div class="level"><b>LEVEL 3</b><h3>Would teenagers be happier with less social media?</h3><span class="tag">in my opinion</span><span class="tag">although</span></div>
+      <div class="level"><b>LEVEL 4</b><h3>Tell me about a time when something didn’t go according to plan.</h3><span class="tag">at first</span><span class="tag">then</span><span class="tag">finally</span></div>
+    </div>
+    <div class="section card">
+      <div class="mini-title">Make it stronger</div>
+      <h3>Upgrade this sentence:</h3>
+      <div class="prompt">“My weekend was good.”</div>
+      <p>Use at least 2: <span class="tag">really</span><span class="tag">because</span><span class="tag">although</span><span class="tag">a stronger adjective</span></p>
+    </div>
+  </section>
+
+  <!-- result -->
+  <section class="stage" data-title="Profile">
+    <div class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="badge">⭐ YOUR ENGLISH TODAY</span>
+          <h2>Great job, Zlata!</h2>
+          <p class="lead">This is your mini English profile. Your teacher will fill it in after the lesson.</p>
+        </div>
+        <div class="illustration"><div class="emoji-art">🏆✨💖</div></div>
+      </div>
+    </div>
+    <div class="section card">
+      <div class="result-bar"><b>Speaking</b><div class="bar"><i></i></div><span>__/5</span></div>
+      <div class="result-bar"><b>Listening</b><div class="bar"><i></i></div><span>__/5</span></div>
+      <div class="result-bar"><b>Reading</b><div class="bar"><i></i></div><span>__/5</span></div>
+      <div class="result-bar"><b>Grammar</b><div class="bar"><i></i></div><span>__/5</span></div>
+      <div class="result-bar"><b>Vocabulary</b><div class="bar"><i></i></div><span>__/5</span></div>
+    </div>
+    <div class="section card">
+      <div class="mini-title">Mini wow-effect</div>
+      <h3>Take one sentence Zlata said today and upgrade it together.</h3>
+      <div class="pair">
+        <div class="prompt">Before: ____________________</div>
+        <div class="prompt">Upgrade: ____________________</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="nav">
+    <button class="btn secondary" onclick="prevStage()">← Back</button>
+    <button class="btn" onclick="nextStage()">Next →</button>
+  </div>
+</div>
+
+<div id="teacher" class="teacher">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h3 style="margin:0">👩‍🏫 Teacher panel</h3><button class="ghost" onclick="toggleTeacher()">✕</button>
+  </div>
+  <div class="scorechips">
+    <span class="scorechip">A1</span><span class="scorechip">A2</span><span class="scorechip">A2+</span><span class="scorechip">B1</span><span class="scorechip">B1+</span>
+  </div>
+  <label>Speaking</label><select id="sSpeaking"><option>—</option><option>A1</option><option>A2</option><option>A2+</option><option>B1</option><option>B1+</option></select>
+  <label>Listening</label><select id="sListening"><option>—</option><option>A1</option><option>A2</option><option>A2+</option><option>B1</option><option>B1+</option></select>
+  <label>Reading</label><select id="sReading"><option>—</option><option>A1</option><option>A2</option><option>A2+</option><option>B1</option><option>B1+</option></select>
+  <label>Grammar</label><select id="sGrammar"><option>—</option><option>A1</option><option>A2</option><option>A2+</option><option>B1</option><option>B1+</option></select>
+  <label>Vocabulary</label><select id="sVocabulary"><option>—</option><option>A1</option><option>A2</option><option>A2+</option><option>B1</option><option>B1+</option></select>
+  <label>Notes</label><textarea placeholder="Errors, strong points, confidence, useful phrases..."></textarea>
+</div>
+
+<script>
+let current=0;
+const stages=[...document.querySelectorAll('.stage')];
+
+function renderStage(){
+  stages.forEach((s,i)=>s.classList.toggle('active',i===current));
+  document.getElementById('progressFill').style.width=((current+1)/stages.length*100)+'%';
+  document.getElementById('progressText').textContent=`Stage ${current+1} of ${stages.length} • ${stages[current].dataset.title}`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function nextStage(){ if(current<stages.length-1){current++;renderStage();} }
+function prevStage(){ if(current>0){current--;renderStage();} }
+function toggleTeacher(){document.getElementById('teacher').classList.toggle('open')}
+function pick(el){
+  [...el.parentElement.children].forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function vocabOdd(el,correct){quizPick(el,correct,'v1')}
+function quizPick(el,correct,id){
+  const siblings=[...el.parentElement.children].filter(x=>x.classList.contains('choice'));
+  siblings.forEach(x=>x.classList.remove('correct','wrong'));
+  el.classList.add(correct?'correct':'wrong');
+  const f=document.getElementById(id); if(f) f.classList.add('show');
+}
+function grammarPick(el,correct,id){quizPick(el,correct,id)}
+
+function playAudio(){
+  if(!('speechSynthesis' in window)){
+    alert("Speech playback isn't supported in this browser.");
+    return;
+  }
+  speechSynthesis.cancel();
+  const text="Hey! I’m really sorry, but I can’t meet you at five anymore. My mum has asked me to help her with something at home, and it’s going to take about an hour. Could we meet at six thirty instead? I still really want to go for bubble tea, so please don’t cancel!";
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=.9; u.pitch=1.05;
+  speechSynthesis.speak(u);
+}
+
+let timerInt;
+function startTimer(sec){
+  clearInterval(timerInt);
+  let t=sec;
+  const out=document.getElementById('timer');
+  const paint=()=>{out.textContent=`00:${String(t).padStart(2,'0')}`};
+  paint();
+  timerInt=setInterval(()=>{
+    t--; paint();
+    if(t<=0){clearInterval(timerInt); out.textContent='TIME! ✨';}
+  },1000);
+}
+renderStage();
+</script>
+</body>
+</html>
