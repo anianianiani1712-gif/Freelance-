@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantifier Quest — 5 Interactive Tasks</title>
+<style>
+:root{--ink:#27243a;--muted:#7a768f;--bg:#fff8fc;--card:#ffffffdf;--accent:#d875a7;--accent2:#8275e6;--good:#2fa36f;--bad:#db5969;--line:rgba(58,44,80,.13);--shadow:0 18px 45px rgba(58,38,72,.11)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,ui-rounded,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 0%,rgba(235,174,208,.28),transparent 28%),radial-gradient(circle at 95% 10%,rgba(130,117,230,.17),transparent 30%),linear-gradient(180deg,#fffafd,#fff7fb 55%,#faf8ff)}
+.wrap{max-width:1180px;margin:0 auto;padding:30px 18px 70px}.hero{text-align:center;margin-bottom:24px}.eyebrow{font-size:12px;font-weight:950;letter-spacing:.15em;text-transform:uppercase;color:var(--accent2)}
+h1{font-size:clamp(34px,6vw,68px);line-height:.95;letter-spacing:-.045em;margin:10px 0}.lead{max-width:790px;margin:0 auto;color:var(--muted);font-size:16px;line-height:1.55}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:24px}.card{background:var(--card);border:1px solid rgba(255,255,255,.9);box-shadow:var(--shadow);border-radius:26px;padding:20px;backdrop-filter:blur(8px)}.wide{grid-column:1/-1}
+.num{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#f1edff;color:#6254ca;font-weight:950;margin-bottom:12px}h2{margin:0 0 7px;font-size:23px}.desc{color:var(--muted);font-size:13px;line-height:1.45;margin-bottom:14px}
+.prompt{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px;font-weight:850;line-height:1.45}.choices{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+button{border:0;cursor:pointer;font:inherit;font-weight:850;border-radius:12px;padding:10px 12px;background:#f0edf7;color:var(--ink);transition:.18s}button:hover{transform:translateY(-1px);background:#e7e2f2}.primary{background:var(--ink);color:#fff}
+.result{min-height:22px;margin-top:10px;font-size:13px;font-weight:850}.goodtxt{color:var(--good)}.badtxt{color:var(--bad)}
+.scorebar{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:12px;color:var(--muted);font-size:12px}.progress{height:8px;border-radius:99px;background:#eee9f4;overflow:hidden;flex:1}.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.3s}
+.drag-zone{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.bucket{min-height:160px;border:2px dashed rgba(98,84,202,.25);border-radius:18px;padding:12px;background:#fbfaff}.bucket h3{margin:0 0 9px;font-size:15px}.bank{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;min-height:46px}.draggable{padding:9px 11px;border-radius:999px;background:#fff;border:1px solid var(--line);box-shadow:0 4px 10px rgba(45,36,62,.06);cursor:grab;font-weight:850}.dragging{opacity:.45}
+.sentence{font-size:18px;line-height:1.5;font-weight:750}.error-word{background:#fff0f3;border-radius:7px;padding:1px 5px}
+.scale-line{height:12px;border-radius:99px;background:linear-gradient(90deg,#f3edf4,#eadcf0 28%,#d4c4f1 55%,#b09ce9 78%,#8775e4)}.scale-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:6px}.scale-options{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.timerbig{font-size:46px;font-weight:950;letter-spacing:-.04em;text-align:center;margin:4px 0}.challenge-box{text-align:center;padding:18px;border-radius:20px;background:linear-gradient(135deg,#fff0f6,#f1efff)}.challenge-q{font-size:20px;font-weight:900;min-height:60px;display:flex;align-items:center;justify-content:center}.stats{display:flex;justify-content:center;gap:18px;color:var(--muted);font-size:12px;margin-top:8px}.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:25px}
+
+.container-game{display:grid;grid-template-columns:1.25fr .85fr;gap:18px;margin-top:14px}
+.container-column,.product-column{background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px}
+.column-title{font-size:11px;font-weight:950;letter-spacing:.13em;color:var(--muted);margin:2px 0 10px}
+.container-row{display:grid;grid-template-columns:72px 1fr;align-items:center;gap:12px;min-height:82px;padding:8px 10px;border:2px dashed transparent;border-radius:16px;transition:.2s;background:#fcfbff;margin-bottom:7px}
+.container-row.dragover{border-color:var(--accent2);background:#f5f2ff}
+.container-row.matched{border-color:#86d8b5;background:#effbf5}
+.container-row b{display:block;font-size:16px}.container-row span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.container-pic{height:62px;width:62px;position:relative;margin:auto}
+.bottle-cap{position:absolute;width:18px;height:8px;background:#7c76a8;border-radius:3px;left:22px;top:2px}.bottle-body{position:absolute;width:34px;height:49px;left:14px;top:10px;border:3px solid #9fb6c3;border-radius:8px 8px 13px 13px;background:linear-gradient(to top,#bde6f5 58%,rgba(255,255,255,.55) 58%)}
+.carton-top{position:absolute;left:13px;top:2px;border-left:18px solid transparent;border-right:18px solid transparent;border-bottom:15px solid #d9d3f5}.carton-body{position:absolute;left:13px;top:16px;width:36px;height:43px;background:#eeeafd;border:2px solid #bcb4df;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:#7166bb}
+.jar-lid{position:absolute;left:11px;top:5px;width:42px;height:9px;background:#b78899;border-radius:4px}.jar-body{position:absolute;left:13px;top:14px;width:38px;height:44px;border:3px solid #b7c4cc;border-radius:5px 5px 13px 13px;background:linear-gradient(to top,#d74c65 63%,rgba(255,255,255,.45) 63%)}
+.can-top{position:absolute;left:14px;top:5px;width:36px;height:7px;border-radius:50%;background:#b9c0ca}.can-body{position:absolute;left:14px;top:8px;width:36px;height:49px;border:2px solid #aab1bb;border-radius:5px;background:linear-gradient(90deg,#e4e7eb,#bfc5cc,#eef0f2)}
+.bag-body{position:absolute;left:8px;top:5px;width:49px;height:53px;clip-path:polygon(7% 0,93% 0,100% 100%,0 100%);background:#f2d6e4;border:2px solid #d7a8c0;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:900;color:#a45d81}
+.box-body{position:absolute;left:10px;top:4px;width:45px;height:55px;background:#f1dfaa;border:2px solid #d5bd79;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:900;color:#90762f}
+.product-bank{display:flex;flex-direction:column;gap:9px}.product-chip{text-align:left;background:#f4f0f8;border:1px solid var(--line);font-size:16px;padding:12px 14px;cursor:grab}.product-chip.used{display:none}.match-hint{color:var(--muted);font-size:12px;line-height:1.4;margin-top:13px}
+@media(max-width:700px){.container-game{grid-template-columns:1fr}.product-bank{display:grid;grid-template-columns:1fr 1fr}}
+
+@media(max-width:820px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.drag-zone{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="hero"><div class="eyebrow">Quantifier Quest</div><h1>5 more interactive tasks</h1><p class="lead">a lot of · plenty of · loads of · many · much · a few · few · some · any · little · a little · no · not any</p></div>
+<div class="grid">
+
+<section class="card">
+<div class="num">1</div><h2>Context Switch</h2><div class="desc">Choose the best quantifier: meaning + countable / uncountable.</div>
+<div class="prompt" id="q1Prompt"></div><div class="choices" id="q1Choices"></div><div class="result" id="q1Result"></div>
+<div class="scorebar"><span id="q1Count"></span><div class="progress"><div id="q1Prog"></div></div></div>
+</section>
+
+<section class="card">
+<div class="num">2</div><h2>Drag & Drop Sort</h2><div class="desc">Sort quantifiers into countable-only and uncountable-only.</div>
+<div class="drag-zone">
+<div class="bucket" data-type="count"><h3>🍎 Countable only</h3><div class="droparea"></div></div>
+<div class="bucket" data-type="uncount"><h3>🥤 Uncountable only</h3><div class="droparea"></div></div>
+</div>
+<div class="bank" id="dragBank"></div>
+<div class="choices"><button id="checkDrag" class="primary">Check</button><button id="resetDrag">Reset</button></div><div class="result" id="dragResult"></div>
+</section>
+
+<section class="card">
+<div class="num">3</div><h2>Error Doctor</h2><div class="desc">Replace the wrong quantifier with the correct one.</div>
+<div class="prompt sentence" id="errSentence"></div><div class="choices" id="errChoices"></div><div class="result" id="errResult"></div>
+</section>
+
+<section class="card">
+<div class="num">4</div><h2>Quantity Scale</h2><div class="desc">Choose the word that best matches the amount and tone.</div>
+<div class="scale-line"></div><div class="scale-labels"><span>none</span><span>small</span><span>some</span><span>a lot</span><span>loads</span></div>
+<div class="prompt" id="scalePrompt" style="margin-top:12px"></div><div class="scale-options" id="scaleChoices"></div><div class="result" id="scaleResult"></div>
+</section>
+
+<section class="card wide">
+<div class="num">5</div>
+<h2>Container Match 🛒</h2>
+<div class="desc">Match each product with the container it normally comes in. This is a preview of our next topic: <b>containers</b>.</div>
+
+<div class="container-game">
+  <div class="container-column">
+    <div class="column-title">CONTAINERS</div>
+
+    <div class="container-row" data-container="bottle">
+      <div class="container-pic bottle-pic" aria-label="bottle"><div class="bottle-cap"></div><div class="bottle-body"></div></div>
+      <div><b>a bottle of</b><span>бутылка</span></div>
+    </div>
+
+    <div class="container-row" data-container="carton">
+      <div class="container-pic carton-pic" aria-label="carton"><div class="carton-top"></div><div class="carton-body">MILK</div></div>
+      <div><b>a carton of</b><span>картонная упаковка</span></div>
+    </div>
+
+    <div class="container-row" data-container="jar">
+      <div class="container-pic jar-pic" aria-label="jar"><div class="jar-lid"></div><div class="jar-body"></div></div>
+      <div><b>a jar of</b><span>банка</span></div>
+    </div>
+
+    <div class="container-row" data-container="can">
+      <div class="container-pic can-pic" aria-label="can"><div class="can-top"></div><div class="can-body"></div></div>
+      <div><b>a can of</b><span>жестяная банка</span></div>
+    </div>
+
+    <div class="container-row" data-container="bag">
+      <div class="container-pic bag-pic" aria-label="bag"><div class="bag-body">SNACK</div></div>
+      <div><b>a bag of</b><span>пакет</span></div>
+    </div>
+
+    <div class="container-row" data-container="box">
+      <div class="container-pic box-pic" aria-label="box"><div class="box-body">CEREAL</div></div>
+      <div><b>a box of</b><span>коробка</span></div>
+    </div>
+  </div>
+
+  <div class="product-column">
+    <div class="column-title">PRODUCTS</div>
+    <div class="product-bank" id="productBank">
+      <button class="product-chip" draggable="true" data-answer="jar">🍯 jam</button>
+      <button class="product-chip" draggable="true" data-answer="bottle">💧 water</button>
+      <button class="product-chip" draggable="true" data-answer="box">🥣 cereal</button>
+      <button class="product-chip" draggable="true" data-answer="bag">🥔 crisps</button>
+      <button class="product-chip" draggable="true" data-answer="carton">🥛 milk</button>
+      <button class="product-chip" draggable="true" data-answer="can">🥤 cola</button>
+    </div>
+    <div class="match-hint">Drag a product onto the correct container.</div>
+    <button id="resetContainers" style="margin-top:12px">↻ Reset</button>
+    <div class="result" id="containerResult"></div>
+  </div>
+</div>
+</section>
+
+</div><div class="footer">few / little = almost none or not enough · a few / a little = some and enough to be useful</div>
+</div>
+
+<script>
+const byId=id=>document.getElementById(id);
+
+const q1=[
+{s:"We have ___ bread left — enough for two sandwiches.",o:["a little","a few","many"],a:"a little"},
+{s:"There are ___ people in the café today. It is almost empty.",o:["few","a few","much"],a:"few"},
+{s:"Do you have ___ homework tonight?",o:["many","much","few"],a:"much"},
+{s:"I bought ___ apples for the pie — six in total.",o:["a few","a little","much"],a:"a few"},
+{s:"We have ___ time. No need to hurry.",o:["plenty of","little","few"],a:"plenty of"},
+{s:"There isn't ___ information on this page.",o:["many","much","a few"],a:"much"}
+];
+let q1i=0;
+function renderQ1(){
+ const x=q1[q1i];
+ byId("q1Prompt").textContent=x.s; byId("q1Choices").innerHTML=""; byId("q1Result").textContent="";
+ byId("q1Count").textContent=(q1i+1)+"/"+q1.length; byId("q1Prog").style.width=((q1i)/q1.length*100)+"%";
+ x.o.forEach(v=>{const b=document.createElement("button");b.textContent=v;b.onclick=()=>{if(v===x.a){byId("q1Result").className="result goodtxt";byId("q1Result").textContent="✓ Correct";setTimeout(()=>{q1i=(q1i+1)%q1.length;renderQ1()},500)}else{byId("q1Result").className="result badtxt";byId("q1Result").textContent="Try again."}};byId("q1Choices").appendChild(b)})
+}
+renderQ1();
+
+const dragWords=[{w:"many",t:"count"},{w:"a few",t:"count"},{w:"few",t:"count"},{w:"much",t:"uncount"},{w:"a little",t:"uncount"},{w:"little",t:"uncount"}];
+let dragged=null;
+function buildDrag(){
+ byId("dragBank").innerHTML="";document.querySelectorAll(".droparea").forEach(x=>x.innerHTML="");
+ dragWords.slice().sort(()=>Math.random()-.5).forEach(item=>{const d=document.createElement("div");d.className="draggable";d.draggable=true;d.textContent=item.w;d.dataset.type=item.t;d.addEventListener("dragstart",()=>{dragged=d;d.classList.add("dragging")});d.addEventListener("dragend",()=>d.classList.remove("dragging"));byId("dragBank").appendChild(d)});
+ byId("dragResult").textContent="";
+}
+document.querySelectorAll(".bucket,.bank").forEach(zone=>{
+ zone.addEventListener("dragover",e=>e.preventDefault());
+ zone.addEventListener("drop",e=>{e.preventDefault();if(!dragged)return;const target=zone.classList.contains("bucket")?zone.querySelector(".droparea"):zone;target.appendChild(dragged)})
+});
+byId("checkDrag").onclick=()=>{
+ let total=0,correct=0;
+ document.querySelectorAll(".bucket").forEach(bucket=>bucket.querySelectorAll(".draggable").forEach(d=>{total++;if(d.dataset.type===bucket.dataset.type)correct++}));
+ if(total<dragWords.length){byId("dragResult").className="result badtxt";byId("dragResult").textContent="Place all 6 words first."}
+ else if(correct===dragWords.length){byId("dragResult").className="result goodtxt";byId("dragResult").textContent="✓ Perfect sort!"}
+ else{byId("dragResult").className="result badtxt";byId("dragResult").textContent=correct+"/6 correct. Try again."}
+};
+byId("resetDrag").onclick=buildDrag;buildDrag();
+
+const errQs=[
+{s:"There are much students in the classroom today.",wrong:"much",o:["many","a little","much"],a:"many"},
+{s:"I have a few water left in my bottle.",wrong:"a few",o:["a little","few","many"],a:"a little"},
+{s:"We don't have many time before the train leaves.",wrong:"many",o:["much","a few","loads of"],a:"much"},
+{s:"There is few sugar in my coffee.",wrong:"few",o:["little","a few","many"],a:"little"},
+{s:"I bought a little books yesterday.",wrong:"a little",o:["a few","much","little"],a:"a few"}
+];
+let ei=0;
+function renderErr(){
+ const x=errQs[ei%errQs.length];
+ byId("errSentence").innerHTML=x.s.replace(x.wrong,'<span class="error-word">'+x.wrong+'</span>');byId("errChoices").innerHTML="";byId("errResult").textContent="";
+ x.o.forEach(v=>{const b=document.createElement("button");b.textContent=v;b.onclick=()=>{if(v===x.a){byId("errResult").className="result goodtxt";byId("errResult").textContent="✓ Correct replacement";setTimeout(()=>{ei++;renderErr()},550)}else{byId("errResult").className="result badtxt";byId("errResult").textContent="Not quite."}};byId("errChoices").appendChild(b)})
+}
+renderErr();
+
+const scaleQs=[
+{amount:"0% — There is ___ milk left.",o:["no","some","a lot of"],a:"no"},
+{amount:"15% — There is ___ milk left, almost none.",o:["little","a little","loads of"],a:"little"},
+{amount:"30% — There is ___ milk left, enough for one coffee.",o:["a little","little","no"],a:"a little"},
+{amount:"50% — There is ___ milk in the fridge.",o:["some","no","few"],a:"some"},
+{amount:"85% — There is ___ milk in the fridge.",o:["a lot of","little","a few"],a:"a lot of"},
+{amount:"98% — There is ___ milk — more than enough.",o:["plenty of","little","any"],a:"plenty of"}
+];
+let si=0;
+function renderScale(){
+ const x=scaleQs[si%scaleQs.length];byId("scalePrompt").textContent=x.amount;byId("scaleChoices").innerHTML="";byId("scaleResult").textContent="";
+ x.o.forEach(v=>{const b=document.createElement("button");b.textContent=v;b.onclick=()=>{if(v===x.a){byId("scaleResult").className="result goodtxt";byId("scaleResult").textContent="✓ Exactly";setTimeout(()=>{si++;renderScale()},500)}else{byId("scaleResult").className="result badtxt";byId("scaleResult").textContent="Think about quantity + meaning."}};byId("scaleChoices").appendChild(b)})
+}
+renderScale();
+
+
+let draggedProduct=null;
+const productChips=[...document.querySelectorAll(".product-chip")];
+const containerRows=[...document.querySelectorAll(".container-row")];
+
+productChips.forEach(chip=>{
+  chip.addEventListener("dragstart",()=>{draggedProduct=chip;});
+  chip.addEventListener("dragend",()=>{draggedProduct=null;});
+});
+
+containerRows.forEach(row=>{
+  row.addEventListener("dragover",e=>{e.preventDefault();row.classList.add("dragover")});
+  row.addEventListener("dragleave",()=>row.classList.remove("dragover"));
+  row.addEventListener("drop",e=>{
+    e.preventDefault();row.classList.remove("dragover");
+    if(!draggedProduct)return;
+    const result=byId("containerResult");
+    if(draggedProduct.dataset.answer===row.dataset.container){
+      row.classList.add("matched");
+      const label=document.createElement("div");
+      label.className="matched-product";
+      label.style.cssText="margin-top:5px;font-size:12px;font-weight:900;color:#2fa36f";
+      label.textContent="✓ "+draggedProduct.textContent.trim();
+      row.querySelector("div:last-child").appendChild(label);
+      draggedProduct.classList.add("used");
+      result.className="result goodtxt";
+      const left=document.querySelectorAll(".product-chip:not(.used)").length;
+      result.textContent=left===0?"🎉 Perfect! All products matched.":"✓ Correct! "+left+" left.";
+    }else{
+      result.className="result badtxt";
+      result.textContent="Not this container — try again.";
+    }
+  });
+});
+
+byId("resetContainers").onclick=()=>{
+  containerRows.forEach(r=>{r.classList.remove("matched","dragover");r.querySelectorAll(".matched-product").forEach(x=>x.remove())});
+  productChips.forEach(c=>c.classList.remove("used"));
+  byId("containerResult").textContent="";
+};
+</script>
+</body>
+</html>
