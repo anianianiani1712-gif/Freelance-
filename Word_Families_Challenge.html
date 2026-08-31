@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Word Families Challenge</title>
+<style>
+:root{
+  --bg:#fff7fb;--card:#ffffff;--ink:#2c2230;--muted:#756a79;
+  --pink:#f16ca6;--pink2:#ffd8e8;--violet:#8a6df1;--good:#2e8b67;--bad:#d75c74;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);
+  background:
+  radial-gradient(circle at 12% 10%,#ffe0ed 0 10%,transparent 11%),
+  radial-gradient(circle at 90% 12%,#e5ddff 0 10%,transparent 11%),
+  linear-gradient(135deg,#fff7fb,#fffdf9);
+}
+.wrap{max-width:980px;margin:auto;padding:28px 16px 60px}
+.hero{
+  background:#2c2230;color:#fff;border-radius:28px;padding:28px;
+  box-shadow:0 18px 48px #2c223020;margin-bottom:20px
+}
+.kicker{text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:900;color:#ff9fc5}
+h1{margin:7px 0 10px;font-size:clamp(36px,6vw,62px);line-height:.98}
+.hero p{max-width:700px;opacity:.88;font-size:17px;line-height:1.5}
+.stats{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.pill{padding:9px 12px;border-radius:999px;background:#ffffff18;border:1px solid #ffffff22;font-weight:800}
+.card{
+  background:var(--card);border:1px solid #eee3e9;border-radius:22px;padding:20px;
+  margin:13px 0;box-shadow:0 10px 30px #50394912
+}
+.chain{
+  display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;
+  align-items:center;gap:8px;margin-top:12px
+}
+.word{
+  min-height:52px;display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:11px;border-radius:15px;background:#fff3f8;border:1px solid #f2dce6;font-weight:900
+}
+.arrow{font-weight:1000;color:var(--violet);font-size:22px}
+input{
+  width:100%;min-height:52px;border:2px dashed #caa8ba;border-radius:15px;
+  text-align:center;padding:10px 8px;font-size:16px;font-weight:900;outline:none;background:#fff
+}
+input:focus{border-color:var(--pink)}
+input.ok{border-style:solid;border-color:var(--good);background:#eef9f4}
+input.bad{border-style:solid;border-color:var(--bad);background:#fff1f4}
+.pos{
+  display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;
+  gap:8px;color:var(--muted);font-size:11px;text-align:center;font-weight:900;
+  text-transform:uppercase;letter-spacing:.08em
+}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+button{
+  border:0;border-radius:15px;padding:12px 17px;font-weight:900;cursor:pointer;
+  background:#fff;border:1px solid #eadce4;box-shadow:0 5px 16px #50394912
+}
+button.primary{background:var(--pink);color:#fff;border-color:transparent}
+.feedback{margin-top:15px;font-weight:900;font-size:18px}
+.hint{font-size:13px;color:var(--muted);margin-top:6px}
+@media(max-width:720px){
+  .chain,.pos{grid-template-columns:1fr}
+  .arrow{transform:rotate(90deg);text-align:center}
+  .pos{display:none}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section class="hero">
+  <div class="kicker">Word Formation</div>
+  <h1>Word Families Challenge 🧬</h1>
+  <p>Complete each chain. One word is missing every time. Think carefully about the part of speech: NOUN → ADJECTIVE → ADVERB → VERB.</p>
+  <div class="stats">
+    <span class="pill">✓ Correct: <b id="correct">0</b>/<span id="total"></span></span>
+    <span class="pill">🔥 Streak: <b id="streak">0</b></span>
+  </div>
+</section>
+
+<div id="game"></div>
+
+<div class="btns">
+  <button class="primary" onclick="checkAll()">Check all</button>
+  <button onclick="showHints()">Show hints</button>
+  <button onclick="resetGame()">Reset</button>
+</div>
+<div id="feedback" class="feedback"></div>
+</main>
+
+<script>
+const families = [
+  {noun:"success", adjective:"successful", adverb:"successfully", verb:"succeed", missing:"verb"},
+  {noun:"confidence", adjective:"confident", adverb:"confidently", verb:"confide", missing:"noun"},
+  {noun:"difference", adjective:"different", adverb:"differently", verb:"differ", missing:"adverb"},
+  {noun:"creation", adjective:"creative", adverb:"creatively", verb:"create", missing:"adjective"},
+  {noun:"effect", adjective:"effective", adverb:"effectively", verb:"effect", missing:"adjective"},
+  {noun:"beauty", adjective:"beautiful", adverb:"beautifully", verb:"beautify", missing:"noun"},
+  {noun:"care", adjective:"careful", adverb:"carefully", verb:"care", missing:"adverb"},
+  {noun:"strength", adjective:"strong", adverb:"strongly", verb:"strengthen", missing:"verb"},
+  {noun:"choice", adjective:"choosy", adverb:"choosily", verb:"choose", missing:"noun"},
+  {noun:"decision", adjective:"decisive", adverb:"decisively", verb:"decide", missing:"verb"},
+  {noun:"comfort", adjective:"comfortable", adverb:"comfortably", verb:"comfort", missing:"adjective"},
+  {noun:"imagination", adjective:"imaginative", adverb:"imaginatively", verb:"imagine", missing:"adverb"}
+];
+
+const labels = {noun:"NOUN", adjective:"ADJECTIVE", adverb:"ADVERB", verb:"VERB"};
+const order = ["noun","adjective","adverb","verb"];
+
+function render(){
+  document.getElementById("total").textContent=families.length;
+  const game=document.getElementById("game");
+  game.innerHTML=families.map((f,i)=>{
+    const parts=order.map(pos=>{
+      if(pos===f.missing){
+        return `<input id="ans${i}" data-answer="${f[pos]}" data-pos="${pos}" placeholder="missing word">`;
+      }
+      return `<div class="word">${f[pos]}</div>`;
+    });
+    return `<section class="card">
+      <div class="pos"><div>NOUN</div><div></div><div>ADJECTIVE</div><div></div><div>ADVERB</div><div></div><div>VERB</div></div>
+      <div class="chain">
+        ${parts[0]}<div class="arrow">→</div>
+        ${parts[1]}<div class="arrow">→</div>
+        ${parts[2]}<div class="arrow">→</div>
+        ${parts[3]}
+      </div>
+      <div class="hint" id="hint${i}"></div>
+    </section>`;
+  }).join("");
+}
+render();
+
+function norm(s){return s.trim().toLowerCase()}
+
+function checkAll(){
+  let correct=0, streak=0, maxStreak=0;
+  families.forEach((f,i)=>{
+    const el=document.getElementById("ans"+i);
+    const ok=norm(el.value)===norm(el.dataset.answer);
+    el.classList.remove("ok","bad");
+    el.classList.add(ok?"ok":"bad");
+    if(ok){correct++;streak++;maxStreak=Math.max(maxStreak,streak)}
+    else streak=0;
+  });
+  document.getElementById("correct").textContent=correct;
+  document.getElementById("streak").textContent=maxStreak;
+  document.getElementById("feedback").innerHTML=
+    correct===families.length
+      ? "Perfect! All word families restored 🎉"
+      : `You restored <b>${correct}/${families.length}</b>. Check the highlighted gaps and try again.`;
+}
+
+function showHints(){
+  families.forEach((f,i)=>{
+    document.getElementById("hint"+i).textContent=
+      `Hint: the missing word must be a ${labels[f.missing].toLowerCase()}.`;
+  });
+}
+
+function resetGame(){
+  families.forEach((f,i)=>{
+    const el=document.getElementById("ans"+i);
+    el.value=""; el.classList.remove("ok","bad");
+    document.getElementById("hint"+i).textContent="";
+  });
+  document.getElementById("correct").textContent="0";
+  document.getElementById("streak").textContent="0";
+  document.getElementById("feedback").textContent="";
+}
+</script>
+</body>
+</html>
