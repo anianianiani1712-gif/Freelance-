@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Present Continuous Game Zone</title>
+<style>
+:root{
+  --blue:#20a8ff; --deep:#173b78; --yellow:#ffd735; --green:#43d16d;
+  --red:#ff5c67; --purple:#7b5cff; --ink:#17223b; --card:#fff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);
+  background:
+    radial-gradient(circle at 15% 10%,#fff 0 2%,transparent 2.2%),
+    linear-gradient(145deg,#c8f2ff,#f4fbff 38%,#d8e6ff);
+  min-height:100vh;
+}
+header{
+  padding:24px 18px 42px;text-align:center;color:white;
+  background:linear-gradient(125deg,#178df3,#4d63e8 58%,#763fe4);
+  position:relative;overflow:hidden;border-bottom:8px solid var(--yellow);
+}
+header:before,header:after{content:"";position:absolute;border-radius:50%;background:#ffffff20}
+header:before{width:180px;height:180px;left:-50px;top:-80px}
+header:after{width:260px;height:260px;right:-90px;bottom:-160px}
+h1{margin:0;font-size:clamp(28px,6vw,52px);text-shadow:0 4px 0 #163b8c}
+.subtitle{font-weight:800;margin-top:8px;font-size:18px}
+.hero-icons{font-size:44px;margin:14px 0 0;letter-spacing:8px}
+.wrap{max-width:1050px;margin:-25px auto 50px;padding:0 14px;position:relative}
+.scorebar{
+  position:sticky;top:8px;z-index:10;background:#fff;border:3px solid #17223b;border-radius:18px;
+  padding:10px 15px;display:flex;gap:12px;justify-content:space-between;align-items:center;
+  box-shadow:0 6px 0 #17223b22;font-weight:900
+}
+#score{color:#0b8f40}.progress{flex:1;height:14px;background:#e8eef8;border-radius:99px;overflow:hidden;max-width:430px}
+#progressFill{height:100%;width:0;background:linear-gradient(90deg,#42d16c,#ffd735);transition:.3s}
+.card{
+  margin:22px 0;background:var(--card);border:3px solid var(--ink);border-radius:25px;padding:22px;
+  box-shadow:0 9px 0 #17223b22;position:relative;overflow:hidden
+}
+.card h2{margin:0 0 5px;font-size:24px}
+.tag{display:inline-block;border-radius:99px;padding:5px 10px;color:#fff;font-weight:900;font-size:13px;margin-bottom:10px}
+.football{background:#18a957}.fifa{background:#1969d7}.roblox{background:#e83e4d}.mix{background:#7b5cff}
+.task{background:#f3f7ff;border:2px dashed #9db4e2;border-radius:16px;padding:14px;margin:12px 0}
+.scene{font-size:42px;text-align:center;padding:8px}
+button,.choice{
+  border:2px solid #1d2a46;background:#fff;border-radius:13px;padding:10px 14px;
+  margin:5px;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 3px 0 #1d2a46;
+}
+button:active,.choice:active{transform:translateY(2px);box-shadow:0 1px 0 #1d2a46}
+button.primary{background:var(--yellow)}
+button.reset{background:#e9effb}
+.choice.selected{background:#dce9ff}
+.good{background:#dff8e6!important;border-color:#28a94f!important}
+.bad{background:#ffe0e2!important;border-color:#e44752!important}
+.feedback{font-weight:900;min-height:22px;margin:8px 4px}
+input,select{
+  font-size:16px;border:2px solid #7f96bd;border-radius:10px;padding:9px;max-width:100%;
+}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.avatar{
+  width:78px;height:95px;margin:3px auto 8px;position:relative;
+  filter:drop-shadow(0 4px 1px #0002)
+}
+.avatar .head{width:38px;height:34px;background:#ffd735;border:3px solid #222;border-radius:8px;margin:auto;position:relative}
+.avatar .head:after{content:"• ᴗ •";font-size:13px;position:absolute;left:5px;top:7px}
+.avatar .body{width:52px;height:38px;background:#1f83e1;border:3px solid #222;margin:-1px auto 0;border-radius:5px}
+.avatar .legs{width:42px;height:22px;border-left:12px solid #333;border-right:12px solid #333;margin:auto}
+.sentence{font-size:18px;font-weight:700;line-height:1.6}
+.wordbank{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.word{background:#e9e2ff;border:2px solid #6e55c7;border-radius:10px;padding:8px;font-weight:900;cursor:pointer}
+.blank{display:inline-block;min-width:92px;border-bottom:3px solid #27395f;padding:2px 6px;color:#5a43bb}
+.timer{font-size:38px;font-weight:1000;color:#e94755}
+.speaking{background:linear-gradient(135deg,#fff5c9,#ffe4e7)}
+.small{font-size:13px;color:#5f6d88}
+.stars{font-size:28px}
+@media(max-width:600px){.card{padding:16px}.scorebar{font-size:13px}.progress{max-width:120px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>⚽ PRESENT CONTINUOUS GAME ZONE 🎮</h1>
+  <div class="subtitle">Football • FIFA-style challenges • Block Game Adventures</div>
+  <div class="hero-icons">🏆 ⚽ 🧱 🎮 🥅</div>
+</header>
+
+<div class="wrap">
+<div class="scorebar">
+  <span>⭐ SCORE: <b id="score">0</b>/25</span>
+  <div class="progress"><div id="progressFill"></div></div>
+  <span id="rank">ROOKIE</span>
+</div>
+
+<section class="card">
+<span class="tag football">LEVEL 1 • FOOTBALL</span>
+<h2>⚽ What is happening now?</h2>
+<p>Choose the correct sentence.</p>
+<div id="q1"></div>
+<button class="primary" onclick="checkMC()">CHECK ✓</button>
+<button class="reset" onclick="resetSection('q1')">TRY AGAIN ↻</button>
+<div class="feedback" id="f1"></div>
+</section>
+
+<section class="card">
+<span class="tag fifa">LEVEL 2 • MATCH COMMENTARY</span>
+<h2>🎙️ Build the commentator's sentence</h2>
+<p>Tap the words in the correct order.</p>
+<div id="orderTasks"></div>
+<button class="primary" onclick="checkOrder()">CHECK ✓</button>
+<button class="reset" onclick="renderOrder()">MIX AGAIN ↻</button>
+<div class="feedback" id="f2"></div>
+</section>
+
+<section class="card">
+<span class="tag roblox">LEVEL 3 • BLOCK WORLD</span>
+<h2>🧱 am / is / are?</h2>
+<div class="scene"><div class="avatar"><div class="head"></div><div class="body"></div><div class="legs"></div></div>🏃‍♂️💎 🧗‍♂️</div>
+<div id="beTasks" class="grid"></div>
+<button class="primary" onclick="checkBe()">CHECK ✓</button>
+<div class="feedback" id="f3"></div>
+</section>
+
+<section class="card">
+<span class="tag mix">LEVEL 4 • GRAMMAR POWER-UP</span>
+<h2>⚡ Add -ing</h2>
+<p>Type the correct <b>-ing</b> form.</p>
+<div id="ingTasks" class="grid"></div>
+<button class="primary" onclick="checkIng()">CHECK ✓</button>
+<div class="feedback" id="f4"></div>
+</section>
+
+<section class="card">
+<span class="tag fifa">LEVEL 5 • VAR CHECK</span>
+<h2>📺 Find and fix the mistake</h2>
+<p>Each sentence has ONE mistake. Type the full correct sentence.</p>
+<div id="fixTasks"></div>
+<button class="primary" onclick="checkFix()">CHECK ✓</button>
+<div class="feedback" id="f5"></div>
+</section>
+
+<section class="card speaking">
+<span class="tag football">BONUS • SPEAKING</span>
+<h2>🎤 60-Second Live Commentator</h2>
+<p>Press START. Speak for 60 seconds. Use <b>He/She/They + am/is/are + verb-ing</b>.</p>
+<div class="grid">
+  <div class="task"><div class="scene">⚽🏃‍♂️🥅</div><b>The player...</b><br><span class="small">kick • run • score</span></div>
+  <div class="task"><div class="scene">🎮🧱🏃</div><b>The avatar...</b><br><span class="small">run • jump • build</span></div>
+  <div class="task"><div class="scene">🏆🙌👥</div><b>The fans...</b><br><span class="small">shout • celebrate • watch</span></div>
+</div>
+<p>Challenge: make <b>at least 6 sentences</b>. Example: <i>The player is running to the goal.</i></p>
+<div class="timer" id="timer">60</div>
+<button class="primary" id="timerBtn" onclick="startTimer()">START 🎤</button>
+<button onclick="stopTimer()">STOP</button>
+<div id="speakCheck" style="margin-top:10px">
+  <label><input type="checkbox"> I used <b>is/are</b> correctly.</label><br>
+  <label><input type="checkbox"> I used <b>verb + ing</b>.</label><br>
+  <label><input type="checkbox"> I made 6+ sentences.</label>
+</div>
+</section>
+
+<section class="card" style="text-align:center">
+<h2>🏆 FINAL RESULT</h2>
+<div class="stars" id="stars">☆☆☆☆☆</div>
+<p id="finalText">Complete the levels to become a Present Continuous Champion!</p>
+<button class="primary" onclick="location.reload()">PLAY AGAIN ↻</button>
+</section>
+</div>
+
+<script>
+let totalScore=0, sectionScores={};
+function setScore(key,val){
+  if(sectionScores[key]!==undefined) totalScore-=sectionScores[key];
+  sectionScores[key]=val; totalScore+=val;
+  document.getElementById('score').textContent=totalScore;
+  document.getElementById('progressFill').style.width=(totalScore/25*100)+'%';
+  document.getElementById('rank').textContent=totalScore<8?'ROOKIE':totalScore<17?'PLAYER':totalScore<23?'PRO':'CHAMPION';
+  let n=Math.min(5,Math.floor(totalScore/5));
+  document.getElementById('stars').textContent='★'.repeat(n)+'☆'.repeat(5-n);
+  if(totalScore>=23) document.getElementById('finalText').textContent='Amazing! You are a Present Continuous Champion! 🏆';
+}
+const mc=[
+ ['⚽ The striker ___ the ball now.',['is kicking','kicks','are kicking'],0],
+ ['🥅 The goalkeeper ___ for the ball.',['jump','is jumping','are jumping'],1],
+ ['👥 The fans ___ the match.',['is watching','watch','are watching'],2],
+ ['🎮 I ___ a football game right now.',['am playing','is playing','play'],0],
+ ['🏃 The players ___ across the pitch.',['runs','are running','is running'],1]
+];
+function renderMC(){
+ q1.innerHTML=mc.map((x,i)=>`<div class="task"><div class="sentence">${x[0]}</div>${x[1].map((c,j)=>`<button class="choice" data-i="${i}" data-j="${j}" onclick="pick(this)">${c}</button>`).join('')}</div>`).join('');
+}
+function pick(b){document.querySelectorAll(`[data-i="${b.dataset.i}"]`).forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}
+function checkMC(){let s=0;mc.forEach((x,i)=>{let b=document.querySelector(`[data-i="${i}"].selected`);if(b){if(+b.dataset.j===x[2]){b.classList.add('good');s++}else b.classList.add('bad')}});f1.textContent=`${s}/5 correct ${s===5?'🏆 Perfect!':'— check the red answers and try again.'}`;setScore('mc',s)}
+function resetSection(){renderMC();f1.textContent='';setScore('mc',0)}
+
+const orders=[
+ ['The','striker','is','running','to','the','goal.'],
+ ['They','are','playing','football','now.'],
+ ['My','avatar','is','jumping','over','the','wall.']
+];
+let chosen=[[],[],[]];
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function renderOrder(){
+ chosen=[[],[],[]];
+ orderTasks.innerHTML=orders.map((arr,i)=>{
+   let mixed=shuffle(arr);
+   return `<div class="task"><div id="built${i}" class="sentence">👉 <span class="blank">...</span></div><div class="wordbank">${mixed.map(w=>`<span class="word" onclick="addWord(${i},this)">${w}</span>`).join('')}</div></div>`;
+ }).join(''); f2.textContent='';
+}
+function addWord(i,el){chosen[i].push(el.textContent);el.style.visibility='hidden';document.getElementById('built'+i).innerHTML='👉 '+chosen[i].join(' ')}
+function checkOrder(){let s=0;orders.forEach((a,i)=>{if(chosen[i].join(' ')===a.join(' '))s++});let pts=Math.round(s/3*5);f2.textContent=`${s}/3 sentences correct ${s===3?'🎯 Great commentary!':'— mix and try again.'}`;setScore('order',pts)}
+
+const bes=[
+ ['I ___ playing FIFA now.','am'],['The goalkeeper ___ catching the ball.','is'],
+ ['The players ___ running.','are'],['My avatar ___ building a house.','is'],['We ___ winning!','are']
+];
+function renderBe(){beTasks.innerHTML=bes.map((x,i)=>`<div class="task"><b>${x[0]}</b><br><select id="be${i}"><option>—</option><option>am</option><option>is</option><option>are</option></select></div>`).join('')}
+function checkBe(){let s=0;bes.forEach((x,i)=>{let e=document.getElementById('be'+i);e.className='';if(e.value===x[1]){e.classList.add('good');s++}else e.classList.add('bad')});f3.textContent=`${s}/5 correct ${s===5?'🧱 Block-world master!':''}`;setScore('be',s)}
+
+const ings=[['run','running'],['kick','kicking'],['make','making'],['sit','sitting'],['play','playing']];
+function renderIng(){ingTasks.innerHTML=ings.map((x,i)=>`<div class="task"><b>${x[0]} → </b><input id="ing${i}" placeholder="type here"></div>`).join('')}
+function checkIng(){let s=0;ings.forEach((x,i)=>{let e=document.getElementById('ing'+i);if(e.value.trim().toLowerCase()===x[1]){e.className='good';s++}else e.className='bad'});f4.textContent=`${s}/5 correct ${s===5?'⚡ Full power!':''}`;setScore('ing',s)}
+
+const fixes=[
+ ['He are scoring a goal.','he is scoring a goal.'],
+ ['They is playing a football match.','they are playing a football match.'],
+ ['My avatar is runing fast.','my avatar is running fast.'],
+ ['I am build a new house.','i am building a new house.'],
+ ['The goalkeeper catching the ball.','the goalkeeper is catching the ball.']
+];
+function renderFix(){fixTasks.innerHTML=fixes.map((x,i)=>`<div class="task"><b>❌ ${x[0]}</b><br><input id="fix${i}" style="width:100%;margin-top:8px" placeholder="Write the correct sentence"></div>`).join('')}
+function norm(s){return s.trim().toLowerCase().replace(/[.!?]+$/,'').replace(/\s+/g,' ')}
+function checkFix(){let s=0;fixes.forEach((x,i)=>{let e=document.getElementById('fix'+i);if(norm(e.value)===norm(x[1])){e.className='good';s++}else e.className='bad'});f5.textContent=`${s}/5 correct ${s===5?'📺 VAR says: PERFECT!':''}`;setScore('fix',s)}
+
+let timerInt=null,timeLeft=60;
+function startTimer(){clearInterval(timerInt);timeLeft=60;timer.textContent=timeLeft;timerBtn.disabled=true;timerInt=setInterval(()=>{timeLeft--;timer.textContent=timeLeft;if(timeLeft<=0){clearInterval(timerInt);timerBtn.disabled=false;timer.textContent='TIME! 🏁'}},1000)}
+function stopTimer(){clearInterval(timerInt);timerBtn.disabled=false}
+
+renderMC();renderOrder();renderBe();renderIng();renderFix();
+</script>
+</body>
+</html>
