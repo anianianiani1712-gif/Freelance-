@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>B1 Vocabulary Gap Fill</title>
+<style>
+  :root{
+    --bg:#f7c4df;
+    --card:#fff8fc;
+    --ink:#332a33;
+    --muted:#756775;
+    --accent:#a94f86;
+    --accent2:#6d3d68;
+    --good:#2f7d53;
+    --bad:#b64d5e;
+    --line:#e6a9cb;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(255,255,255,.55), transparent 28%),
+      linear-gradient(135deg, #f9d1e6 0%, var(--bg) 55%, #efb0d3 100%);
+    color:var(--ink);
+    min-height:100vh;
+  }
+  .wrap{
+    width:min(1100px, 94vw);
+    margin:0 auto;
+    padding:38px 0 70px;
+  }
+  .hero{
+    background:rgba(255,255,255,.58);
+    border:1px solid rgba(255,255,255,.75);
+    backdrop-filter: blur(8px);
+    border-radius:28px;
+    padding:30px;
+    box-shadow:0 18px 55px rgba(100,40,80,.12);
+    margin-bottom:24px;
+  }
+  h1{
+    margin:0 0 10px;
+    font-size:clamp(30px,5vw,54px);
+    line-height:1;
+  }
+  .subtitle{
+    margin:0;
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.6;
+  }
+  .progress-box{
+    display:flex;
+    gap:14px;
+    align-items:center;
+    margin-top:22px;
+    flex-wrap:wrap;
+  }
+  .score{
+    background:#fff;
+    padding:10px 16px;
+    border-radius:999px;
+    font-weight:800;
+    box-shadow:0 6px 18px rgba(100,40,80,.09);
+  }
+  .section{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:24px;
+    padding:24px;
+    margin:22px 0;
+    box-shadow:0 15px 40px rgba(100,40,80,.08);
+  }
+  .section h2{
+    margin:0 0 6px;
+    font-size:24px;
+  }
+  .hint{
+    margin:0 0 18px;
+    color:var(--muted);
+  }
+  .bank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:9px;
+    padding:15px;
+    border-radius:18px;
+    background:#f8e0ed;
+    border:1px dashed #c879a9;
+    margin:16px 0 22px;
+  }
+  .word{
+    background:white;
+    border:1px solid #e7bad4;
+    padding:8px 11px;
+    border-radius:999px;
+    font-weight:750;
+    font-size:14px;
+    box-shadow:0 3px 9px rgba(90,40,70,.05);
+  }
+  .q{
+    display:grid;
+    grid-template-columns: 42px 1fr;
+    gap:10px;
+    align-items:start;
+    padding:14px 0;
+    border-bottom:1px solid #efd6e4;
+  }
+  .q:last-child{border-bottom:none}
+  .num{
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:#f3d2e5;
+    font-weight:900;
+    color:var(--accent2);
+  }
+  .sentence{
+    line-height:1.7;
+    font-size:17px;
+  }
+  input{
+    width:180px;
+    max-width:100%;
+    border:none;
+    border-bottom:2px solid #b96f9e;
+    background:#fff;
+    border-radius:8px 8px 4px 4px;
+    padding:7px 9px;
+    font:inherit;
+    outline:none;
+    transition:.2s;
+  }
+  input:focus{
+    box-shadow:0 0 0 3px rgba(169,79,134,.12);
+    border-bottom-color:var(--accent2);
+  }
+  input.correct{
+    background:#e9f6ef;
+    border-bottom-color:var(--good);
+  }
+  input.wrong{
+    background:#fff0f2;
+    border-bottom-color:var(--bad);
+  }
+  .feedback{
+    font-size:13px;
+    margin-top:6px;
+    min-height:18px;
+    font-weight:700;
+  }
+  .feedback.good{color:var(--good)}
+  .feedback.bad{color:var(--bad)}
+  .actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:20px;
+  }
+  button{
+    border:none;
+    border-radius:14px;
+    padding:12px 18px;
+    font-weight:850;
+    cursor:pointer;
+    font-size:15px;
+    transition:.18s transform, .18s opacity;
+  }
+  button:hover{transform:translateY(-1px)}
+  .primary{background:var(--accent2); color:#fff}
+  .secondary{background:#efd2e4; color:var(--accent2)}
+  .ghost{background:#fff; color:var(--accent2); border:1px solid #e1aac9}
+  .final{
+    text-align:center;
+    padding:28px;
+    border-radius:22px;
+    background:#f7d9ea;
+    margin-top:28px;
+  }
+  .final strong{font-size:26px}
+  @media (max-width:650px){
+    .wrap{width:min(95vw,1100px); padding-top:18px}
+    .hero,.section{padding:18px; border-radius:20px}
+    .q{grid-template-columns:34px 1fr}
+    .sentence{font-size:16px}
+    input{width:150px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>Fill the gap ✨</h1>
+    <p class="subtitle">
+      Complete each B1-level sentence with <b>one word or phrase</b> from the word bank.
+      There are no answer options inside the sentences — use the 10 words above each set.
+      Each word is used once.
+    </p>
+    <div class="progress-box">
+      <div class="score">Score: <span id="score">0</span> / 50</div>
+      <div class="score">Completed: <span id="done">0</span> / 50</div>
+    </div>
+  </section>
+
+  <div id="app"></div>
+
+  <div class="final">
+    <strong>Ready for a real vocabulary check?</strong>
+    <p>Finish all five sets, then use “Check all answers”.</p>
+    <div class="actions" style="justify-content:center">
+      <button class="primary" onclick="checkAll()">Check all answers</button>
+      <button class="secondary" onclick="resetAll()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const sets = [
+  {
+    title: "Set 1 — Travel, city & everyday life",
+    words: ["hire","main square","driving licence","heavy traffic","promenade","borrow","public","seat","neighbourhood","on foot"],
+    items: [
+      ["We decided to explore the old town ______ because most of the streets were too narrow for cars.", "on foot"],
+      ["You need a valid ______ if you want to rent a car abroad.", "driving licence"],
+      ["There was such ______ in the city centre that we arrived twenty minutes late.", "heavy traffic"],
+      ["Our hotel is in a quiet ______ just outside the city centre.", "neighbourhood"],
+      ["The guide told us to meet in the ______ next to the fountain.", "main square"],
+      ["We walked along the ______ and watched the boats in the evening.", "promenade"],
+      ["Can I ______ your charger for a few minutes? My phone is almost dead.", "borrow"],
+      ["We decided to ______ a small car for the weekend instead of using taxis.", "hire"],
+      ["Excuse me, I think you are sitting in my ______.", "seat"],
+      ["This beach is ______, so anyone can use it without paying.", "public"]
+    ]
+  },
+  {
+    title: "Set 2 — Airport, directions & getting lost",
+    words: ["rush","go straight","get through security","take the stairs","went missing","opposite","check the time","lose your way","board","near here"],
+    items: [
+      ["We had to ______ because our flight was already boarding.", "rush"],
+      ["First, you need to ______, and then you can go to your gate.", "get through security"],
+      ["Please ______ for about 300 metres, then turn left at the bank.", "go straight"],
+      ["If the lift is busy, you can ______ to the second floor.", "take the stairs"],
+      ["My suitcase ______ during the journey, but the airline found it the next day.", "went missing"],
+      ["The pharmacy is ______ the post office, on the other side of the road.", "opposite"],
+      ["I always ______ before leaving home because I hate being late.", "check the time"],
+      ["It is easy to ______ in this area because all the streets look similar.", "lose your way"],
+      ["Passengers can now ______ the plane at Gate 12.", "board"],
+      ["Is there a cash machine ______? I need to take out some money.", "near here"]
+    ]
+  },
+  {
+    title: "Set 3 — People, health & useful phrases",
+    words: ["attractive","elderly people","hurt","get well soon","same here","upset","take care of yourself","famous","acquaintance","whole"],
+    items: [
+      ["The actor became ______ after appearing in a popular TV series.", "famous"],
+      ["This city offers cheaper public transport for ______ over the age of 65.", "elderly people"],
+      ["I only know Daniel through work; he is more of an ______ than a close friend.", "acquaintance"],
+      ["My back started to ______ after I carried the heavy bags upstairs.", "hurt"],
+      ["You look tired. Go home early and ______.", "take care of yourself"],
+      ["I hope you ______ and can come back to school next week.", "get well soon"],
+      ["I was really ______ when I realised I had lost my wallet.", "upset"],
+      ["‘I’m exhausted after that journey.’ — ‘______.’", "same here"],
+      ["The hotel looks much more ______ in the photos than it does in real life.", "attractive"],
+      ["We spent the ______ afternoon walking around the city centre.", "whole"]
+    ]
+  },
+  {
+    title: "Set 4 — Food, hobbies & daily life",
+    words: ["herbs","wholemeal bread","plushie","be into something","a couple of","bring","throw","several","cotton pads","seed"],
+    items: [
+      ["I usually have eggs and ______ for breakfast because it keeps me full for longer.", "wholemeal bread"],
+      ["Add some fresh ______ to the salad to give it more flavour.", "herbs"],
+      ["She keeps her favourite ______ on the bed even though she is already a teenager.", "plushie"],
+      ["I used to ______ photography, but now I spend more time on music.", "be into something"],
+      ["We only need ______ chairs for the balcony, not a whole set.", "a couple of"],
+      ["Could you ______ your laptop tomorrow? We need it for the presentation.", "bring"],
+      ["Please don’t ______ that box away — I still need it.", "throw"],
+      ["I called her ______ times, but she didn’t answer.", "several"],
+      ["She used ______ to remove her make-up before going to bed.", "cotton pads"],
+      ["Plant the ______ about two centimetres deep and water it carefully.", "seed"]
+    ]
+  },
+  {
+    title: "Set 5 — Mixed challenge",
+    words: ["distance","replacement bus service","underground passage","between","search","temple","prayer","private","it doesn’t matter","almost"],
+    items: [
+      ["The ______ from my house to the station is about three kilometres.", "distance"],
+      ["Because the railway line was closed, passengers had to use a ______.", "replacement bus service"],
+      ["Use the ______ if you want to cross the road safely without waiting for the traffic lights.", "underground passage"],
+      ["The café is ______ the bank and the bookshop.", "between"],
+      ["We had to ______ the whole room before we finally found the missing key.", "search"],
+      ["Visitors must take off their shoes before entering the ______.", "temple"],
+      ["She said a short ______ before the ceremony began.", "prayer"],
+      ["This part of the beach is ______ and only hotel guests can use it.", "private"],
+      ["‘Should we meet at six or half past six?’ — ‘______ to me.’", "it doesn’t matter"],
+      ["We are ______ there — just one more stop.", "almost"]
+    ]
+  }
+];
+
+let checked = new Set();
+
+function normalize(s){
+  return s.trim().toLowerCase().replace(/[’']/g,"'").replace(/\s+/g," ");
+}
+
+function render(){
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+  sets.forEach((set, si)=>{
+    const sec = document.createElement('section');
+    sec.className='section';
+    const shuffled = [...set.words].sort(()=>Math.random()-.5);
+    sec.innerHTML = `
+      <h2>${set.title}</h2>
+      <p class="hint">Use each word or phrase once. The words are deliberately mixed across nearby topics.</p>
+      <div class="bank">${shuffled.map(w=>`<span class="word">${w}</span>`).join('')}</div>
+      <div class="questions">
+        ${set.items.map((it, qi)=>`
+          <div class="q">
+            <div class="num">${qi+1}</div>
+            <div>
+              <div class="sentence">${it[0].replace('______', `<input id="i-${si}-${qi}" autocomplete="off" spellcheck="false">`)}</div>
+              <div class="feedback" id="f-${si}-${qi}"></div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="actions">
+        <button class="primary" onclick="checkSet(${si})">Check this set</button>
+        <button class="ghost" onclick="showAnswers(${si})">Show answers</button>
+        <button class="secondary" onclick="clearSet(${si})">Clear</button>
+      </div>
+    `;
+    app.appendChild(sec);
+  });
+}
+
+function checkOne(si, qi){
+  const input = document.getElementById(`i-${si}-${qi}`);
+  const fb = document.getElementById(`f-${si}-${qi}`);
+  const ans = sets[si].items[qi][1];
+  if(!input.value.trim()){
+    input.classList.remove('correct','wrong');
+    fb.textContent = '';
+    fb.className='feedback';
+    checked.delete(`${si}-${qi}`);
+    return false;
+  }
+  checked.add(`${si}-${qi}`);
+  if(normalize(input.value)===normalize(ans)){
+    input.classList.add('correct');
+    input.classList.remove('wrong');
+    fb.textContent='✓ Correct';
+    fb.className='feedback good';
+    return true;
+  } else {
+    input.classList.add('wrong');
+    input.classList.remove('correct');
+    fb.textContent='Try again';
+    fb.className='feedback bad';
+    return false;
+  }
+}
+
+function updateScore(){
+  let score=0, done=0;
+  sets.forEach((set,si)=>set.items.forEach((_,qi)=>{
+    const input=document.getElementById(`i-${si}-${qi}`);
+    if(input.value.trim()) done++;
+    if(normalize(input.value)===normalize(set.items[qi][1])) score++;
+  }));
+  document.getElementById('score').textContent=score;
+  document.getElementById('done').textContent=done;
+}
+
+function checkSet(si){
+  sets[si].items.forEach((_,qi)=>checkOne(si,qi));
+  updateScore();
+}
+
+function checkAll(){
+  sets.forEach((set,si)=>set.items.forEach((_,qi)=>checkOne(si,qi)));
+  updateScore();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showAnswers(si){
+  sets[si].items.forEach((it,qi)=>{
+    const input=document.getElementById(`i-${si}-${qi}`);
+    const fb=document.getElementById(`f-${si}-${qi}`);
+    input.value=it[1];
+    input.classList.add('correct');
+    input.classList.remove('wrong');
+    fb.textContent='Answer shown';
+    fb.className='feedback good';
+  });
+  updateScore();
+}
+
+function clearSet(si){
+  sets[si].items.forEach((_,qi)=>{
+    const input=document.getElementById(`i-${si}-${qi}`);
+    const fb=document.getElementById(`f-${si}-${qi}`);
+    input.value='';
+    input.classList.remove('correct','wrong');
+    fb.textContent='';
+    fb.className='feedback';
+  });
+  updateScore();
+}
+
+function resetAll(){
+  render();
+  checked.clear();
+  updateScore();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+render();
+updateScore();
+
+document.addEventListener('input', e=>{
+  if(e.target.tagName==='INPUT') updateScore();
+});
+</script>
+</body>
+</html>
