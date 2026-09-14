@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Word Formation — Making a Film</title>
+<style>
+  :root{
+    --bg:#0d0d10;
+    --panel:#17171d;
+    --panel2:#202029;
+    --cream:#f5e7c7;
+    --gold:#d5ad54;
+    --red:#a73535;
+    --text:#f7f4ed;
+    --muted:#b8b4aa;
+    --good:#6fbd83;
+    --bad:#df6c6c;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    color:var(--text);
+    font-family:Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(213,173,84,.12), transparent 28%),
+      radial-gradient(circle at 85% 20%, rgba(167,53,53,.10), transparent 24%),
+      linear-gradient(180deg,#0a0a0c,#111116 55%,#0a0a0d);
+    overflow-x:hidden;
+  }
+
+  /* film strips */
+  .filmstrip{
+    position:fixed;
+    left:0; right:0;
+    height:56px;
+    background:#050506;
+    z-index:0;
+    opacity:.95;
+  }
+  .filmstrip.top{top:0}
+  .filmstrip.bottom{bottom:0}
+  .filmstrip::before,
+  .filmstrip::after{
+    content:"";
+    position:absolute;
+    left:0; right:0;
+    height:12px;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        transparent 0 16px,
+        #f5e7c7 16px 32px,
+        transparent 32px 48px
+      );
+    opacity:.85;
+  }
+  .filmstrip::before{top:5px}
+  .filmstrip::after{bottom:5px}
+
+  .wrap{
+    position:relative;
+    z-index:1;
+    width:min(980px,92vw);
+    margin:0 auto;
+    padding:95px 0 95px;
+  }
+
+  .hero{
+    display:grid;
+    grid-template-columns:110px 1fr;
+    gap:24px;
+    align-items:center;
+    margin-bottom:26px;
+  }
+
+  .clapper{
+    width:105px;
+    aspect-ratio:1.05;
+    border-radius:12px;
+    background:#16161b;
+    border:2px solid #ece6d8;
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+    transform:rotate(-4deg);
+    position:relative;
+    overflow:hidden;
+  }
+  .clapper .topbar{
+    height:29px;
+    background:
+      repeating-linear-gradient(135deg,
+      #f3eee4 0 16px,
+      #111217 16px 32px);
+    border-bottom:2px solid #ece6d8;
+  }
+  .clapper .body{
+    padding:12px 10px;
+    font-weight:800;
+    font-size:14px;
+    line-height:1.2;
+    letter-spacing:.04em;
+  }
+  .clapper .take{
+    font-size:10px;
+    color:var(--gold);
+    margin-top:8px;
+  }
+
+  .eyebrow{
+    color:var(--gold);
+    text-transform:uppercase;
+    letter-spacing:.2em;
+    font-size:12px;
+    font-weight:800;
+    margin-bottom:8px;
+  }
+  h1{
+    margin:0;
+    font-family:Georgia, "Times New Roman", serif;
+    font-size:clamp(38px,6vw,72px);
+    line-height:.94;
+    letter-spacing:-.035em;
+  }
+  .sub{
+    color:var(--muted);
+    margin-top:12px;
+    font-size:15px;
+  }
+
+  .card{
+    background:linear-gradient(180deg,rgba(28,28,35,.98),rgba(18,18,24,.98));
+    border:1px solid rgba(245,231,199,.18);
+    border-radius:24px;
+    padding:28px;
+    box-shadow:0 24px 80px rgba(0,0,0,.35);
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";
+    position:absolute;
+    width:190px;height:190px;
+    border:1px solid rgba(213,173,84,.14);
+    border-radius:50%;
+    right:-75px;top:-70px;
+    box-shadow:0 0 0 18px rgba(213,173,84,.025),0 0 0 36px rgba(213,173,84,.018);
+  }
+
+  .instructions{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    background:#101015;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:15px;
+    padding:14px 16px;
+    margin-bottom:22px;
+    color:#ded9cf;
+    font-size:14px;
+    line-height:1.5;
+  }
+  .star{color:var(--gold);font-size:20px;line-height:1}
+
+  .passage{
+    font-family:Georgia, "Times New Roman", serif;
+    font-size:21px;
+    line-height:1.95;
+    color:#f5f1e8;
+  }
+
+  .gap-wrap{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    white-space:nowrap;
+    vertical-align:baseline;
+  }
+  .gap{
+    width:165px;
+    border:none;
+    border-bottom:2px solid var(--gold);
+    background:rgba(255,255,255,.035);
+    color:#fff;
+    font:600 18px/1.2 Georgia,serif;
+    padding:5px 8px 4px;
+    outline:none;
+    border-radius:7px 7px 0 0;
+    transition:.2s;
+    text-align:center;
+  }
+  .gap:focus{
+    background:rgba(213,173,84,.1);
+    box-shadow:0 0 0 3px rgba(213,173,84,.08);
+  }
+  .gap.correct{border-bottom-color:var(--good); background:rgba(111,189,131,.10)}
+  .gap.wrong{border-bottom-color:var(--bad); background:rgba(223,108,108,.10)}
+
+  .base{
+    font-family:Inter, sans-serif;
+    font-weight:900;
+    font-size:10px;
+    letter-spacing:.08em;
+    color:#111;
+    background:var(--cream);
+    padding:5px 7px;
+    border-radius:6px;
+  }
+
+  .controls{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:12px;
+    margin-top:28px;
+    padding-top:22px;
+    border-top:1px dashed rgba(245,231,199,.22);
+  }
+  button{
+    border:0;
+    border-radius:12px;
+    padding:12px 18px;
+    font-weight:800;
+    cursor:pointer;
+    transition:.18s;
+    font-size:14px;
+  }
+  .check{
+    background:var(--gold);
+    color:#16130d;
+  }
+  .check:hover{transform:translateY(-1px);filter:brightness(1.06)}
+  .reset{
+    background:#2a2a33;
+    color:#eee;
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .score{
+    margin-left:auto;
+    color:var(--cream);
+    font-weight:800;
+  }
+  .score b{
+    font-size:22px;
+    color:var(--gold);
+  }
+
+  .answers{
+    display:none;
+    margin-top:18px;
+    background:#101015;
+    border-radius:14px;
+    padding:15px 17px;
+    color:#d8d3c8;
+    font-size:14px;
+    line-height:1.7;
+  }
+  .answers.show{display:block}
+  .answers strong{color:var(--gold)}
+
+  .corner{
+    position:absolute;
+    right:26px;
+    bottom:20px;
+    opacity:.08;
+    font-size:70px;
+    transform:rotate(-10deg);
+    pointer-events:none;
+  }
+
+  @media(max-width:700px){
+    .hero{grid-template-columns:78px 1fr;gap:16px}
+    .clapper{width:78px}
+    .card{padding:20px}
+    .passage{font-size:18px;line-height:1.9}
+    .gap{width:135px;font-size:16px}
+    .base{font-size:9px}
+    .score{width:100%;margin-left:0}
+  }
+</style>
+</head>
+<body>
+<div class="filmstrip top"></div>
+<div class="filmstrip bottom"></div>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="clapper" aria-hidden="true">
+      <div class="topbar"></div>
+      <div class="body">WORD<br>FORMATION<div class="take">TAKE 1</div></div>
+    </div>
+    <div>
+      <div class="eyebrow">EGE • Vocabulary Challenge</div>
+      <h1>Making a Film</h1>
+      <div class="sub">Complete the text by changing the word in CAPITALS so that it fits the gap.</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="instructions">
+      <span class="star">★</span>
+      <span>Read the whole text first. Then decide what part of speech is needed in each gap and transform the word in CAPITALS.</span>
+    </div>
+
+    <div class="passage">
+      Making a film is a long and challenging process that requires both talent and hard work. 
+      Many young people dream of becoming
+      <span class="gap-wrap"><input class="gap" data-answer="successful" autocomplete="off"><span class="base">SUCCESS</span></span>
+      actors or directors, but getting into the film industry is not always easy.
+
+      At the beginning of their careers, actors often feel nervous and lack
+      <span class="gap-wrap"><input class="gap" data-answer="confidence" autocomplete="off"><span class="base">CONFIDENT</span></span>,
+      especially when they have to perform in front of a large film crew.
+
+      However, good directors know how to create a
+      <span class="gap-wrap"><input class="gap" data-answer="comfortable" autocomplete="off"><span class="base">COMFORT</span></span>
+      working environment where everyone can do their best.
+
+      Filmmaking also requires a lot of
+      <span class="gap-wrap"><input class="gap" data-answer="imagination" autocomplete="off"><span class="base">IMAGINE</span></span>,
+      as directors need to find original ways to tell a story and keep the audience interested.
+
+      The visual side of a film is equally important. A
+      <span class="gap-wrap"><input class="gap" data-answer="beautifully" autocomplete="off"><span class="base">BEAUTY</span></span>
+      designed set can completely change the atmosphere of a scene.
+
+      Even small details can make a big
+      <span class="gap-wrap"><input class="gap" data-answer="difference" autocomplete="off"><span class="base">DIFFER</span></span>
+      to how realistic the final result looks.
+
+      Actors also need to listen
+      <span class="gap-wrap"><input class="gap" data-answer="carefully" autocomplete="off"><span class="base">CARE</span></span>
+      to the director's instructions and be ready to repeat the same scene many times.
+
+      In the end, the
+      <span class="gap-wrap"><input class="gap" data-answer="success" autocomplete="off"><span class="base">SUCCEED</span></span>
+      of a film depends on hundreds of people working together towards the same goal.
+    </div>
+
+    <div class="controls">
+      <button class="check" onclick="checkAnswers()">Check answers</button>
+      <button class="reset" onclick="resetTask()">Reset</button>
+      <button class="reset" onclick="toggleAnswers()">Show answers</button>
+      <div class="score">Score: <b id="score">0/8</b></div>
+    </div>
+
+    <div class="answers" id="answers">
+      <strong>Answers:</strong>
+      successful · confidence · comfortable · imagination · beautifully · difference · carefully · success
+    </div>
+
+    <div class="corner">🎬</div>
+  </section>
+</main>
+
+<script>
+function norm(s){
+  return s.trim().toLowerCase().replace(/[’]/g,"'");
+}
+function checkAnswers(){
+  const inputs=[...document.querySelectorAll(".gap")];
+  let score=0;
+  inputs.forEach(inp=>{
+    inp.classList.remove("correct","wrong");
+    if(norm(inp.value)===norm(inp.dataset.answer)){
+      inp.classList.add("correct");
+      score++;
+    } else {
+      inp.classList.add("wrong");
+    }
+  });
+  document.getElementById("score").textContent=`${score}/${inputs.length}`;
+}
+function resetTask(){
+  document.querySelectorAll(".gap").forEach(inp=>{
+    inp.value="";
+    inp.classList.remove("correct","wrong");
+  });
+  document.getElementById("score").textContent="0/8";
+  document.getElementById("answers").classList.remove("show");
+}
+function toggleAnswers(){
+  document.getElementById("answers").classList.toggle("show");
+}
+document.querySelectorAll(".gap").forEach((inp,i,arr)=>{
+  inp.addEventListener("keydown",e=>{
+    if(e.key==="Enter"){
+      e.preventDefault();
+      if(i<arr.length-1) arr[i+1].focus();
+      else checkAnswers();
+    }
+  });
+});
+</script>
+</body>
+</html>
