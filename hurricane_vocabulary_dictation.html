@@ -1,0 +1,93 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hurricane Vocabulary</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(#20343f,#617b82,#d8c7a3);color:#17232b;min-height:100vh}.wrap{max-width:1000px;margin:auto;padding:25px 16px}.box{background:#f5f0e6f5;border-radius:24px;padding:24px;box-shadow:0 15px 45px #0004}h1{font-size:clamp(30px,6vw,56px);margin:0}.sub{color:#5b6870}.tabs{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap}button{border:0;border-radius:12px;padding:11px 15px;font-weight:700;cursor:pointer}.tab{background:#ded7c9}.tab.on{background:#253743;color:white}.panel{display:none}.panel.on{display:block}.info{background:#fff9;border-left:5px solid #e0b34f;padding:12px;border-radius:10px;margin:12px 0}.stats{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.pill{background:white;border-radius:20px;padding:8px 12px;font-weight:bold}.area{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:70px;min-height:690px}.col{display:flex;flex-direction:column;gap:8px;z-index:2}.card{background:white;border:2px solid transparent;border-radius:11px;padding:9px 12px;min-height:39px;cursor:pointer;box-shadow:0 2px 8px #0001}.card.sel{border-color:#e0b34f}.card.done{opacity:.65;border-color:#26a65b}.card.wrong{border-color:#d54a4a}svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.q{background:white;padding:20px;border-radius:18px}.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}.opt{text-align:left;background:#e9e3d7}.opt.good{background:#c9ead7}.opt.bad{background:#f2c8c8}.feedback{font-weight:bold;margin:12px 0;min-height:20px}.progress{height:9px;background:#ddd;border-radius:10px;overflow:hidden}.bar{height:100%;background:#4c7381;width:0}.actions{margin-top:15px}.primary{background:#253743;color:white}
+.spell-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.spell-card{background:white;border-radius:16px;padding:16px}
+.word-big{font-size:28px;font-weight:900;letter-spacing:1px}.letters{font-size:22px;letter-spacing:5px;color:#4c7381;font-weight:bold}
+input[type=text]{width:100%;border:2px solid #d8d0c1;border-radius:12px;padding:12px;font-size:17px;outline:none}
+input[type=text]:focus{border-color:#4c7381}.input-ok{border-color:#26a65b!important;background:#e8f7ee}.input-bad{border-color:#d54a4a!important;background:#fff0f0}
+.hint{color:#68757b;font-size:14px}.dict-word{font-size:18px;font-weight:bold}.hiddenword{filter:blur(7px);user-select:none}
+@media(max-width:650px){.spell-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.box{padding:15px}.area{gap:20px}.card{font-size:12px;padding:7px}.opts{grid-template-columns:1fr}}
+</style></head><body><div class="wrap"><div class="box"><h1>HURRICANE VOCABULARY</h1><p class="sub">New Orleans • hurricanes • emergency response • recovery</p>
+<div class="tabs"><button class="tab on" data-x="match">1. Match</button><button class="tab" data-x="quiz">2. Choose 1 of 4</button>
+<button class="tab" data-x="spelling">3. Spelling Lab</button>
+<button class="tab" data-x="dictation">4. Dictation Prep</button></div>
+<section id="match" class="panel on"><div class="stats"><span class="pill">✓ <b id="g">0</b></span><span class="pill">✕ <b id="b">0</b></span><span class="pill">Matched: <b id="d">0</b>/21</span></div><div class="info">Нажми слово слева, затем перевод справа. Правильно — <b style="color:#26a65b">зелёная линия</b>, ошибка — <b style="color:#d54a4a">красная</b>.</div><div class="area" id="area"><svg id="svg"></svg><div class="col" id="en"></div><div class="col" id="ru"></div></div><div class="actions"><button onclick="resetM()">Начать заново</button></div></section>
+
+<section id="spelling" class="panel">
+<div class="info"><b>Spelling Lab.</b> Сначала внимательно посмотри на слово, затем восстанови его по пропущенным буквам. После проверки можно перейти к написанию по памяти.</div>
+<div class="stats"><span class="pill">Правильно: <b id="spGood">0</b>/12</span></div>
+<div id="spellBox" class="spell-grid"></div>
+<div class="actions"><button class="primary" onclick="checkSpell()">Проверить</button> <button onclick="buildSpell()">Новые слова</button></div>
+</section>
+
+<section id="dictation" class="panel">
+<div class="info"><b>Dictation Prep.</b> Русский перевод остаётся перед глазами, английское слово нужно написать полностью. Подсказка показывает первую букву и количество букв.</div>
+<div class="stats"><span class="pill">Результат: <b id="dictGood">0</b>/12</span></div>
+<div id="dictBox"></div>
+<div class="actions"><button class="primary" onclick="checkDict()">Проверить диктант</button> <button onclick="buildDict()">Новый набор</button></div>
+</section>
+<section id="quiz" class="panel"><div class="progress"><div class="bar" id="bar"></div></div><div class="stats"><span class="pill">Score: <b id="score">0</b>/12</span></div><div id="qbox"></div><div class="actions"><button class="primary" onclick="nextQ()">Следующий →</button> <button onclick="resetQ()">Сначала</button></div></section>
+</div></div><script>
+const P=[["strengthen","укреплять"],["residents","жители"],["declare","объявлять"],["state of emergency","чрезвычайное положение"],["evacuate","эвакуировать"],["eye of the storm","очаг бури"],["below sea level","ниже уровня моря"],["come ashore","выйти на берег"],["levees","дамбы"],["storm surge","штормовой нагон"],["smash","разбить"],["looting","грабежи"],["violence","насилие"],["emergency services","аварийные службы"],["struggle to cope","бороться, чтобы справиться"],["the military","военные"],["desperate","отчаявшиеся"],["army engineers","армейские инженеры"],["pump","насос / откачивать"],["slow recovery","медленное восстановление"],["rebuild","восстанавливать / отстраивать заново"]];
+const sh=a=>[...a].sort(()=>Math.random()-.5);let sel=null,G=0,B=0,D=0,L=[];
+function build(){en.innerHTML="";ru.innerHTML="";P.forEach((p,i)=>en.insertAdjacentHTML("beforeend",`<div class="card" data-i="${i}" data-s="e">${p[0]}</div>`));sh(P.map((p,i)=>[p[1],i])).forEach(x=>ru.insertAdjacentHTML("beforeend",`<div class="card" data-i="${x[1]}" data-s="r">${x[0]}</div>`));document.querySelectorAll(".card").forEach(c=>c.onclick=()=>pick(c));draw()}
+function pick(c){if(c.classList.contains("done"))return;if(!sel){sel=c;c.classList.add("sel");return}if(sel.dataset.s==c.dataset.s){sel.classList.remove("sel");sel=c;c.classList.add("sel");return}let a=sel,z=c;sel.classList.remove("sel");sel=null;let ok=a.dataset.i==z.dataset.i;if(ok){G++;D++;a.classList.add("done");z.classList.add("done");L.push([a,z,"#26a65b",0]);upd();draw()}else{B++;a.classList.add("wrong");z.classList.add("wrong");L.push([a,z,"#d54a4a",1]);upd();draw();setTimeout(()=>{a.classList.remove("wrong");z.classList.remove("wrong");L=L.filter(x=>!(x[0]==a&&x[1]==z&&x[3]));draw()},800)}}
+function upd(){g.textContent=G;b.textContent=B;d.textContent=D}
+function draw(){svg.innerHTML="";let A=area.getBoundingClientRect();L.forEach(x=>{let a=x[0].getBoundingClientRect(),z=x[1].getBoundingClientRect(),l=document.createElementNS("http://www.w3.org/2000/svg","line");let ae=x[0].dataset.s=="e";l.setAttribute("x1",(ae?a.right:a.left)-A.left);l.setAttribute("y1",a.top+a.height/2-A.top);l.setAttribute("x2",(ae?z.left:z.right)-A.left);l.setAttribute("y2",z.top+z.height/2-A.top);l.setAttribute("stroke",x[2]);l.setAttribute("stroke-width","4");l.setAttribute("stroke-linecap","round");svg.appendChild(l)})}
+function resetM(){sel=null;G=B=D=0;L=[];upd();build()}window.onresize=draw;
+const Q=[
+["The government had to ___ a state of emergency.","declare",["declare","strengthen","pump","smash"]],
+["Residents were told to ___ before the hurricane arrived.","evacuate",["rebuild","evacuate","declare","smash"]],
+["New Orleans lies partly ___.","below sea level",["below sea level","come ashore","slow recovery","eye of the storm"]],
+["A powerful ___ pushed seawater towards the city.","storm surge",["storm surge","resident","levee","recovery"]],
+["Police tried to stop ___ in abandoned shops.","looting",["looting","violence","rebuild","pump"]],
+["The ___ struggled to cope with the disaster.","emergency services",["emergency services","residents","levees","military"]],
+["Engineers had to ___ water out of flooded areas.","pump",["pump","declare","smash","evacuate"]],
+["After the disaster, the city began a ___.","slow recovery",["slow recovery","storm surge","state of emergency","violence"]],
+["The community worked to ___ damaged neighbourhoods.","rebuild",["rebuild","come ashore","strengthen","loot"]],
+["The city decided to ___ its levees.","strengthen",["strengthen","evacuate","smash","declare"]],
+["The calm centre of a hurricane is the ___.","eye of the storm",["eye of the storm","storm surge","sea level","levee"]],
+["When a hurricane reaches land, it ___.","comes ashore",["comes ashore","pumps","declares","rebuilds"]]];
+let qi=0,S=0,answered=false;
+function render(){answered=false;let [t,a,o]=Q[qi];qbox.innerHTML=`<div class="q"><h3>${qi+1}. ${t}</h3><div class="opts">${sh(o).map(v=>`<button class="opt" data-v="${v}">${v}</button>`).join("")}</div><div class="feedback" id="fb"></div></div>`;document.querySelectorAll(".opt").forEach(x=>x.onclick=()=>ans(x,a));bar.style.width=(qi/Q.length*100)+"%";score.textContent=S}
+function ans(x,a){if(answered)return;answered=true;document.querySelectorAll(".opt").forEach(y=>{if(y.dataset.v==a)y.classList.add("good")});if(x.dataset.v==a){S++;fb.textContent="✓ Correct!"}else{x.classList.add("bad");fb.textContent="✕ Correct answer: "+a}score.textContent=S}
+function nextQ(){if(!answered){fb.textContent="Сначала выбери ответ.";return}if(qi<Q.length-1){qi++;render()}else{bar.style.width="100%";qbox.innerHTML=`<div class="q"><h2>Finished! 🌊</h2><p>Результат: <b>${S}/${Q.length}</b></p></div>`}}
+function resetQ(){qi=0;S=0;render()}
+
+let spellSet=[];
+function maskWord(w){
+ let chars=[...w], candidates=[];
+ chars.forEach((c,i)=>{if(/[a-z]/i.test(c)&&i>0)candidates.push(i)});
+ sh(candidates).slice(0,Math.max(2,Math.floor(candidates.length*.42))).forEach(i=>chars[i]="_");
+ return chars.join(" ");
+}
+function buildSpell(){
+ spellSet=sh(P).slice(0,12);spGood.textContent="0";
+ spellBox.innerHTML=spellSet.map((p,i)=>`<div class="spell-card">
+ <div class="hint">${p[1]}</div><div class="letters">${maskWord(p[0])}</div>
+ <input type="text" id="sp${i}" autocomplete="off" spellcheck="false" placeholder="Type the English word">
+ <div class="feedback" id="spf${i}"></div></div>`).join("");
+}
+function checkSpell(){
+ let n=0;spellSet.forEach((p,i)=>{let x=document.getElementById("sp"+i),f=document.getElementById("spf"+i);
+ let ok=x.value.trim().toLowerCase()==p[0].toLowerCase();x.className=ok?"input-ok":"input-bad";
+ if(ok){n++;f.textContent="✓"}else f.textContent="→ "+p[0]});spGood.textContent=n;
+}
+let dictSet=[];
+function dictHint(w){let letters=(w.match(/[a-z]/gi)||[]);return (letters[0]||"").toUpperCase()+" + "+letters.length+" letters";}
+function buildDict(){
+ dictSet=sh(P).slice(0,12);dictGood.textContent="0";
+ dictBox.innerHTML=dictSet.map((p,i)=>`<div class="q"><div class="dict-word">${i+1}. ${p[1]}</div>
+ <div class="hint">Hint: ${dictHint(p[0])}</div><input type="text" id="dc${i}" autocomplete="off" spellcheck="false" placeholder="Write in English">
+ <div class="feedback" id="dcf${i}"></div></div>`).join("");
+}
+function checkDict(){
+ let n=0;dictSet.forEach((p,i)=>{let x=document.getElementById("dc"+i),f=document.getElementById("dcf"+i);
+ let ok=x.value.trim().toLowerCase()==p[0].toLowerCase();x.className=ok?"input-ok":"input-bad";
+ if(ok){n++;f.textContent="✓ Correct"}else f.textContent="Correct spelling: "+p[0]});dictGood.textContent=n;
+}
+buildSpell();buildDict();
+
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".tab,.panel").forEach(x=>x.classList.remove("on"));t.classList.add("on");document.getElementById(t.dataset.x).classList.add("on");setTimeout(draw,50)});build();render();
+</script></body></html>
