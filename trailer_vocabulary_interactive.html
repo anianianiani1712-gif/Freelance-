@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trailer Vocabulary — Interactive Practice</title>
+  <style>
+    :root{--ink:#182027;--violet:#4030d7;--violet2:#6b5cff;--soft:#f3f1ff;--line:#d9d4ff;--ok:#16835e;--bad:#ca3b55;--card:#fff;--shadow:0 16px 45px rgba(40,32,105,.12)}
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(135deg,#f9f8ff,#f1efff 48%,#fff);color:var(--ink);font-family:Inter,Arial,sans-serif;min-height:100vh}
+    button,select{font:inherit} button{cursor:pointer}.shell{max-width:1100px;margin:auto;padding:28px 18px 52px}.hero{background:linear-gradient(125deg,#24157c,#4936df 60%,#836eff);border-radius:28px;padding:30px;color:#fff;box-shadow:var(--shadow);position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:290px;height:290px;border:48px solid rgba(255,255,255,.08);border-radius:50%;right:-75px;top:-125px}.kicker{font-size:13px;letter-spacing:.16em;font-weight:800;opacity:.78}.hero h1{font-size:clamp(30px,5vw,54px);line-height:.98;margin:10px 0}.hero p{max-width:650px;margin:0;opacity:.9;font-size:17px}.progress{display:flex;gap:8px;margin:20px 0}.step{height:7px;flex:1;border-radius:10px;background:#d9d4ef}.step.on{background:var(--violet)}
+    .panel{display:none;background:rgba(255,255,255,.92);border:1px solid #eceafa;border-radius:26px;padding:clamp(20px,4vw,38px);box-shadow:var(--shadow)}.panel.active{display:block}.eyebrow{color:var(--violet);font-size:13px;letter-spacing:.13em;font-weight:900}.panel h2{font-size:clamp(25px,4vw,38px);margin:8px 0 5px}.sub{color:#66707a;margin:0 0 24px}.match-grid{display:grid;grid-template-columns:1fr 1.35fr;gap:14px 20px}.col{display:grid;gap:10px;align-content:start}.choice{width:100%;text-align:left;border:2px solid transparent;background:#fff;border-radius:15px;padding:15px 17px;min-height:58px;color:var(--ink);box-shadow:0 5px 20px rgba(40,32,105,.08);transition:.18s}.choice:hover{border-color:var(--line);transform:translateY(-1px)}.choice.selected{border-color:var(--violet);background:var(--soft)}.choice.used{border-color:#b8ead8;background:#effcf7;color:#17694f}.choice.wrong{animation:shake .25s;border-color:#f0a1af;background:#fff2f4}.badge{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;margin-right:9px;border-radius:50%;background:var(--soft);color:var(--violet);font-weight:800;font-size:13px}.used .badge{background:#c9f2e2;color:#116549}@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+    .gap-list{display:grid;gap:12px}.sentence{background:#fff;border:1px solid #eceafa;border-radius:16px;padding:15px 17px;line-height:1.6}.sentence select{border:2px dashed var(--violet2);background:var(--soft);border-radius:11px;padding:6px 9px;color:#292064;min-width:160px}.sentence.good{border-color:#8cd9bf;background:#f4fff9}.sentence.bad{border-color:#efa0ae;background:#fff6f7}.bank{display:flex;flex-wrap:wrap;gap:8px;background:var(--soft);border:1px solid var(--line);padding:13px;border-radius:15px;margin-bottom:18px}.chip{background:var(--violet);color:#fff;border-radius:999px;padding:7px 12px;font-size:14px}.actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:24px}.primary,.secondary{border:0;border-radius:999px;padding:13px 20px;font-weight:800}.primary{background:var(--violet);color:#fff}.primary:hover{background:#3122bd}.secondary{background:#eceafa;color:#35279f}.score{margin-left:auto;font-weight:800;color:var(--violet)}.feedback{min-height:26px;margin:14px 0 0;font-weight:700}.final{text-align:center;padding:28px 10px}.ring{width:140px;height:140px;border-radius:50%;display:grid;place-items:center;margin:20px auto;background:conic-gradient(var(--violet) var(--deg),#e4e0fa 0);position:relative}.ring:after{content:"";position:absolute;inset:12px;background:white;border-radius:50%}.ring strong{z-index:1;font-size:30px;color:var(--violet)}.reflection{max-width:650px;margin:20px auto;text-align:left;background:var(--soft);border-radius:18px;padding:18px}.reflection textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:12px;padding:12px;resize:vertical;margin-top:10px}.tiny{font-size:12px;color:#7a818a;margin-top:20px;text-align:center}
+    @media(max-width:720px){.match-grid{grid-template-columns:1fr}.meaning-col{margin-top:6px}.score{width:100%;margin-left:0}.hero{border-radius:20px}.panel{border-radius:20px}.sentence select{display:block;width:100%;margin:8px 0}}
+  </style>
+</head>
+<body><main class="shell">
+  <section class="hero"><div class="kicker">B1–B2 • INTERACTIVE PRACTICE</div><h1>Trailer Vocabulary</h1><p>Match the expressions, complete the lines and see your score instantly.</p></section>
+  <div class="progress"><span class="step on"></span><span class="step"></span><span class="step"></span></div>
+
+  <section class="panel active" id="p1">
+    <div class="eyebrow">ROUND 1</div><h2>Match the expressions</h2><p class="sub">Choose an expression, then click its meaning. Correct pairs lock automatically.</p>
+    <div class="match-grid"><div class="col" id="terms"></div><div class="col meaning-col" id="defs"></div></div>
+    <p class="feedback" id="matchFeedback" aria-live="polite"></p>
+    <div class="actions"><button class="secondary" id="resetMatch">Start again</button><span class="score" id="matchScore">0 / 10 matched</span><button class="primary" id="toGaps" disabled>Next round →</button></div>
+  </section>
+
+  <section class="panel" id="p2">
+    <div class="eyebrow">ROUND 2</div><h2>Fill in the gaps</h2><p class="sub">Use each expression once. The form in the bank fits the sentence exactly.</p>
+    <div class="bank" id="bank"></div><div class="gap-list" id="gaps"></div>
+    <p class="feedback" id="gapFeedback" aria-live="polite"></p>
+    <div class="actions"><button class="secondary" id="back">← Back</button><button class="secondary" id="resetGaps">Clear</button><span class="score" id="gapScore">0 / 10 correct</span><button class="primary" id="checkGaps">Check answers</button></div>
+  </section>
+
+  <section class="panel" id="p3"><div class="final"><div class="eyebrow">FINISHED!</div><h2>Your result</h2><div class="ring" id="ring"><strong id="totalScore">0%</strong></div><p id="resultText"></p><div class="reflection"><strong>Which 3 expressions would you actually use in your life?</strong><textarea placeholder="Write your three expressions and one example sentence..."></textarea></div><button class="primary" id="restart">Try again</button><div class="tiny">Your answers stay only in this browser tab.</div></div></section>
+</main>
+<script>
+const pairs=[
+ ['crank','turn something up / increase'],['head out','leave / start going somewhere'],['get yourself into something','become involved in something (usually problematic)'],['crook','a criminal, for example a thief or swindler'],['rolled into','arrived'],['grifter','a person who gets money dishonestly by tricking people'],['worth the wait','good enough to justify waiting'],['snuck in','entered secretly'],["you’ve got a point","what you’re saying makes sense"],['wound a little tight','tense / stressed / uptight']
+];
+const answers=['head out','grifter','crook','wound a little tight','rolled into','snuck in','get yourself into','crank','worth the wait','got a point'];
+const lines=[
+ `We’ve been sitting here all night. If we’re gonna do this, let’s {x} before sunrise.`,
+ `That guy’s a professional {x}. He’ll promise you the world and leave you with an empty wallet.`,
+ `Some random {x} tried to sell me a fake Rolex outside the club.`,
+ `Relax, man. You’re {x}. Nobody’s coming after us… yet.`,
+ `We {x} Vice City with two cars, three bags of cash, and absolutely no plan.`,
+ `“How the hell did you get in here?” — “I {x} through the back door while the guard was smoking.”`,
+ `You really wanna {x} something with these people? Trust me, you don’t know what you’re getting into.`,
+ `Turn it up! {x} the volume — I wanna hear this all the way down the block.`,
+ `“We’ve been waiting for three hours.” — “Yeah, but trust me. This score is gonna be {x}.”`,
+ `“So you’re saying we should trust him?” — “I’m not saying that. But… you’ve {x}.”`
+];
+const bank=['head out','snuck in','grifter','wound a little tight','crook','worth the wait','crank','get yourself into','rolled into','got a point'];
+let selected=null,matched=new Set(),matchMistakes=0,gapCorrect=0;
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function shuffled(a){return [...a].sort(()=>Math.random()-.5)}
+function renderMatch(){selected=null;matched.clear();matchMistakes=0;$('#terms').innerHTML='';$('#defs').innerHTML=''; pairs.forEach((p,i)=>{let b=document.createElement('button');b.className='choice term';b.dataset.id=i;b.innerHTML=`<span class="badge">${i+1}</span><strong>${p[0]}</strong>`;$('#terms').append(b)});shuffled(pairs.map((p,i)=>({text:p[1],id:i}))).forEach(o=>{let b=document.createElement('button');b.className='choice def';b.dataset.id=o.id;b.textContent=o.text;$('#defs').append(b)});$('#matchScore').textContent='0 / 10 matched';$('#matchFeedback').textContent='';$('#toGaps').disabled=true}
+document.addEventListener('click',e=>{const term=e.target.closest('.term'),def=e.target.closest('.def');if(term&&!term.classList.contains('used')){$$('.term').forEach(x=>x.classList.remove('selected'));term.classList.add('selected');selected=term.dataset.id}if(def&&!def.classList.contains('used')){if(selected===null){$('#matchFeedback').textContent='Choose an expression first.';return}const t=$(`.term[data-id="${selected}"]`);if(def.dataset.id===selected){t.classList.remove('selected');t.classList.add('used');def.classList.add('used');matched.add(selected);selected=null;$('#matchFeedback').textContent='Nice match!';$('#matchScore').textContent=`${matched.size} / 10 matched`;if(matched.size===10){$('#matchFeedback').textContent='Perfect — all expressions matched!';$('#toGaps').disabled=false}}else{matchMistakes++;def.classList.add('wrong');setTimeout(()=>def.classList.remove('wrong'),350);$('#matchFeedback').textContent='Not quite — try another meaning.'}}});
+function renderGaps(){$('#bank').innerHTML=bank.map(x=>`<span class="chip">${x}</span>`).join('');$('#gaps').innerHTML=lines.map((line,i)=>{const opts=['<option value="">Choose…</option>',...bank.map(x=>`<option>${x}</option>`)].join('');return `<div class="sentence" data-i="${i}"><strong>${i+1}.</strong> ${line.replace('{x}',`<select aria-label="Answer ${i+1}">${opts}</select>`)}</div>`}).join('');$('#gapScore').textContent='0 / 10 correct';$('#gapFeedback').textContent=''}
+function show(n){$$('.panel').forEach((p,i)=>p.classList.toggle('active',i===n-1));$$('.step').forEach((s,i)=>s.classList.toggle('on',i<n));scrollTo({top:0,behavior:'smooth'})}
+$('#resetMatch').onclick=renderMatch;$('#toGaps').onclick=()=>show(2);$('#back').onclick=()=>show(1);$('#resetGaps').onclick=()=>{renderGaps()};
+$('#checkGaps').onclick=()=>{gapCorrect=0;let empty=0;$$('.sentence').forEach((row,i)=>{row.classList.remove('good','bad');let v=row.querySelector('select').value;if(!v)empty++;if(v===answers[i]){gapCorrect++;row.classList.add('good')}else row.classList.add('bad')});$('#gapScore').textContent=`${gapCorrect} / 10 correct`;if(empty){$('#gapFeedback').textContent=`Complete all answers first (${empty} left).`;return}$('#gapFeedback').textContent=gapCorrect===10?'Excellent — every answer is correct!':'Check the highlighted lines and try again.';if(gapCorrect===10)setTimeout(finish,450)};
+function finish(){show(3);const matchPoints=Math.max(0,10-Math.min(10,matchMistakes));const pct=Math.round((matchPoints+gapCorrect)/20*100);$('#totalScore').textContent=pct+'%';$('#ring').style.setProperty('--deg',pct*3.6+'deg');$('#resultText').textContent=pct>=90?'Trailer-ready! You handled this vocabulary brilliantly.':pct>=70?'Strong work — one more round will make it stick.':'Good start — repeat the two rounds and beat your score.'}
+$('#restart').onclick=()=>{renderMatch();renderGaps();show(1)};renderMatch();renderGaps();
+</script></body></html>
