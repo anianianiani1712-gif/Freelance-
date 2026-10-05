@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Present Simple vs Present Continuous — Drag & Drop</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Inter, Arial, sans-serif;
+    background: #f7f4f6;
+    color: #242126;
+  }
+  .app {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 32px 20px 40px;
+  }
+  h1 {
+    margin: 0 0 8px;
+    font-size: clamp(24px, 4vw, 36px);
+    line-height: 1.15;
+  }
+  .subtitle {
+    margin: 0 0 24px;
+    color: #66616a;
+    font-size: 16px;
+  }
+  .bank {
+    background: white;
+    border: 1px solid #e2dde2;
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 20px;
+  }
+  .bank-title {
+    font-weight: 750;
+    margin-bottom: 12px;
+  }
+  .cards {
+    display: grid;
+    gap: 10px;
+  }
+  .card {
+    background: #fff;
+    border: 2px solid #ded9de;
+    border-radius: 12px;
+    padding: 14px 16px;
+    cursor: grab;
+    font-size: 16px;
+    line-height: 1.4;
+    transition: .18s ease;
+    user-select: none;
+  }
+  .card:active { cursor: grabbing; }
+  .card.dragging { opacity: .45; }
+  .card.selected {
+    border-color: #b64d78;
+    box-shadow: 0 0 0 3px rgba(182,77,120,.12);
+  }
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .dropzone {
+    min-height: 300px;
+    background: white;
+    border: 2px dashed #cfc8cf;
+    border-radius: 18px;
+    padding: 18px;
+    transition: .18s ease;
+  }
+  .dropzone.over {
+    border-color: #b64d78;
+    background: #fff7fa;
+  }
+  .dropzone h2 {
+    margin: 0 0 5px;
+    font-size: 21px;
+  }
+  .dropzone p {
+    margin: 0 0 14px;
+    color: #77717a;
+    font-size: 14px;
+  }
+  .dropzone .card {
+    margin-bottom: 9px;
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  button {
+    min-height: 46px;
+    border: 0;
+    border-radius: 11px;
+    padding: 0 18px;
+    font-weight: 750;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  #check {
+    background: #b64d78;
+    color: white;
+  }
+  #reset {
+    background: #ebe6ea;
+    color: #302b31;
+  }
+  #result {
+    min-height: 28px;
+    margin-top: 14px;
+    font-weight: 700;
+  }
+  .correct {
+    border-color: #4d9464 !important;
+    background: #f4fbf6 !important;
+  }
+  .wrong {
+    border-color: #c24c4c !important;
+    background: #fff5f5 !important;
+  }
+  .hint {
+    margin-top: 14px;
+    color: #716b72;
+    font-size: 13px;
+  }
+  @media (max-width: 700px) {
+    .columns { grid-template-columns: 1fr; }
+    .dropzone { min-height: 220px; }
+  }
+</style>
+</head>
+<body>
+<main class="app" id="grammarApp">
+  <h1>Present Simple vs Present Continuous</h1>
+  <p class="subtitle">Drag each rule into the correct column. On a phone, tap a rule and then tap a column.</p>
+
+  <section class="bank" aria-label="Rules to sort">
+    <div class="bank-title">Rules</div>
+    <div class="cards" id="bank"></div>
+  </section>
+
+  <section class="columns">
+    <div class="dropzone" data-answer="ps" tabindex="0" aria-label="Present Simple drop zone">
+      <h2>Present Simple (PS)</h2>
+      <p>Rules about habits, facts and general truths.</p>
+      <div class="zone-cards"></div>
+    </div>
+
+    <div class="dropzone" data-answer="pc" tabindex="0" aria-label="Present Continuous drop zone">
+      <h2>Present Continuous (PC)</h2>
+      <p>Rules about actions happening around now.</p>
+      <div class="zone-cards"></div>
+    </div>
+  </section>
+
+  <div class="actions">
+    <button id="check" type="button">Check answers</button>
+    <button id="reset" type="button">Reset</button>
+  </div>
+  <div id="result" aria-live="polite"></div>
+  <div class="hint">Tip: Look for clues such as <em>at the moment</em>, <em>this week</em>, <em>always</em>, and the <em>-s</em> ending.</div>
+</main>
+
+<script>
+(() => {
+  const app = document.getElementById('grammarApp');
+  const bank = document.getElementById('bank');
+  const result = document.getElementById('result');
+  const rules = [
+    { id: 1, answer: 'pc', text: 'It describes temporary, unfinished actions.' },
+    { id: 2, answer: 'ps', text: 'It describes something that is generally true.' },
+    { id: 3, answer: 'pc', text: "It’s often used with time phrases like at the moment, this month and this week." },
+    { id: 4, answer: 'ps', text: "It’s often used with adverbs like always, usually, sometimes and never." },
+    { id: 5, answer: 'ps', text: 'The third person singular form ends in an -s.' },
+    { id: 6, answer: 'pc', text: 'Negatives are formed with am / is / are + not + -ing.' }
+  ];
+
+  function makeCard(rule) {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.draggable = true;
+    el.tabIndex = 0;
+    el.dataset.id = rule.id;
+    el.dataset.answer = rule.answer;
+    el.textContent = `${rule.id}. ${rule.text}`;
+    el.addEventListener('dragstart', () => {
+      el.classList.add('dragging');
+      el.dataset.dragging = 'true';
+    });
+    el.addEventListener('dragend', () => {
+      el.classList.remove('dragging');
+      delete el.dataset.dragging;
+    });
+    el.addEventListener('click', () => {
+      app.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    });
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        el.click();
+      }
+    });
+    return el;
+  }
+
+  function reset() {
+    bank.innerHTML = '';
+    app.querySelectorAll('.zone-cards').forEach(z => z.innerHTML = '');
+    rules.forEach(r => bank.appendChild(makeCard(r)));
+    result.textContent = '';
+  }
+
+  function moveSelected(zone) {
+    const selected = app.querySelector('.card.selected');
+    if (!selected) return;
+    zone.querySelector('.zone-cards').appendChild(selected);
+    selected.classList.remove('selected');
+    clearFeedback();
+  }
+
+  function clearFeedback() {
+    app.querySelectorAll('.card').forEach(c => c.classList.remove('correct', 'wrong'));
+  }
+
+  app.querySelectorAll('.dropzone').forEach(zone => {
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+      zone.classList.add('over');
+    });
+    zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('over');
+      const card = app.querySelector('.card[data-dragging="true"]');
+      if (card) {
+        zone.querySelector('.zone-cards').appendChild(card);
+        clearFeedback();
+      }
+    });
+    zone.addEventListener('click', e => {
+      if (e.target.closest('.card')) return;
+      moveSelected(zone);
+    });
+    zone.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        moveSelected(zone);
+      }
+    });
+  });
+
+  document.getElementById('check').addEventListener('click', () => {
+    let placed = 0, correct = 0;
+    clearFeedback();
+
+    app.querySelectorAll('.dropzone').forEach(zone => {
+      const answer = zone.dataset.answer;
+      zone.querySelectorAll('.card').forEach(card => {
+        placed++;
+        if (card.dataset.answer === answer) {
+          correct++;
+          card.classList.add('correct');
+        } else {
+          card.classList.add('wrong');
+        }
+      });
+    });
+
+    const total = rules.length;
+    if (placed < total) {
+      result.textContent = `You placed ${placed}/${total}. Move all the rules, then check again.`;
+    } else if (correct === total) {
+      result.textContent = '🎉 Perfect! 6/6 — all the rules are in the correct columns.';
+    } else {
+      result.textContent = `${correct}/${total} correct. Red cards need another look.`;
+    }
+  });
+
+  document.getElementById('reset').addEventListener('click', reset);
+  reset();
+})();
+</script>
+</body>
+</html>
