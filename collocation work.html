@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Political Thought | 90-minute revision lab</title>
+<style>
+:root{--ink:#202438;--muted:#626a80;--paper:#f6f7fb;--card:#fff;--line:#dfe3ef;--berry:#a13d68;--berry2:#7f2c52;--lav:#eee8fb;--blue:#e7f0fc;--green:#e5f4eb;--peach:#fff0e3;--shadow:0 12px 30px #22243a12}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#f7f4fb,#f4f7fc 55%,#fff7f3);color:var(--ink);font:16px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{padding:28px 18px 20px;background:#fffdfef0;border-bottom:1px solid var(--line)}.wrap{max-width:1080px;margin:auto}h1{font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.1;margin:0 0 10px;letter-spacing:-.04em}h2{font-size:1.25rem;margin:0 0 12px}h3{font-size:1rem;margin:0 0 8px}.sub{color:var(--muted);max-width:760px}.pill{display:inline-block;border-radius:999px;padding:5px 10px;background:var(--lav);color:#533b7d;font-size:.8rem;font-weight:750;margin-bottom:12px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}button,.tab{font:inherit;cursor:pointer;border:1px solid var(--line);background:white;color:var(--ink);border-radius:12px;padding:10px 13px;font-weight:700;transition:.15s}button:hover,.tab:hover{border-color:var(--berry);transform:translateY(-1px)}button.primary{background:var(--berry);color:white;border-color:var(--berry)}button.primary:hover{background:var(--berry2)}button:focus-visible,input:focus-visible{outline:3px solid #d9b1c5;outline-offset:2px}
+main{padding:22px 16px 60px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}.stat,.panel,.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.stat{padding:13px 15px}.stat strong{display:block;font-size:1.2rem}.stat span{font-size:.82rem;color:var(--muted)}
+.layout{display:grid;grid-template-columns:245px minmax(0,1fr);gap:18px}.sidebar{align-self:start;position:sticky;top:12px;padding:12px}.step{display:flex;width:100%;align-items:center;gap:10px;text-align:left;margin:4px 0;background:transparent;border-color:transparent}.step.active{background:var(--lav);border-color:#d8c8ef;color:#4e347b}.num{display:grid;place-items:center;min-width:34px;height:34px;border-radius:10px;background:#f0f1f7;font-size:.8rem}.step.active .num{background:white}.step small{display:block;color:var(--muted);font-weight:500}.content{min-width:0}.panel{padding:clamp(16px,3vw,26px);margin-bottom:16px}.panelhead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.eyebrow{text-transform:uppercase;letter-spacing:.1em;color:var(--berry);font-size:.74rem;font-weight:800}.muted{color:var(--muted)}.progress{height:8px;border-radius:20px;background:#eceef5;overflow:hidden;margin:12px 0 18px}.progress div{height:100%;background:linear-gradient(90deg,#a13d68,#7764b7);width:0;transition:width .25s}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{padding:16px;box-shadow:none}.themeA{background:var(--blue)}.themeB{background:var(--green)}.themeC{background:var(--peach)}.big{font-size:1.15rem;font-weight:800}.small{font-size:.88rem}.list{padding-left:20px}.list li{margin:6px 0}.tag{display:inline-block;padding:3px 8px;border-radius:8px;background:#f0f1f7;color:#50576d;font-size:.77rem;font-weight:700}.term{padding:12px;border:1px solid var(--line);border-radius:12px;margin:8px 0;background:white}.term strong{display:block}.term .answer{margin-top:6px;color:#276346;font-weight:700}.hidden{display:none!important}.flashgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.flash{min-height:116px;text-align:left;padding:16px;display:flex;flex-direction:column;justify-content:space-between}.flash .hint{color:var(--muted);font-size:.82rem}.flash .back{color:#276346;font-weight:750;margin-top:12px}.inputrow{display:flex;gap:8px;flex-wrap:wrap}.inputrow input{flex:1;min-width:200px;border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit}.feedback{min-height:28px;font-weight:750;margin-top:10px}.good{color:#23724a}.bad{color:#a13d4e}.question{font-size:1.12rem;font-weight:800;margin:8px 0 14px}.options{display:grid;gap:8px}.options button{text-align:left}.options button.correct{background:#e4f5ea;border-color:#7bb995}.options button.wrong{background:#fff0f0;border-color:#e5a2a2}.answerbox{padding:14px;background:#f4f6fb;border-radius:12px;margin-top:12px}.timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.2rem}.blank{display:inline-block;max-width:210px;width:44%;border:0;border-bottom:2px solid #a13d68;background:#fff8fc;padding:5px 7px;border-radius:5px;font:inherit;color:var(--ink)}.blank.correct{border-bottom-color:#258354;background:#e9f8ef}.blank.incorrect{border-bottom-color:#b33d4b;background:#fff0f0}.footer{color:var(--muted);font-size:.85rem;text-align:center;padding:20px}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.sidebar{position:static;display:flex;overflow:auto;gap:4px}.step{min-width:160px}.stats{grid-template-columns:1fr 1fr}.grid2,.flashgrid{grid-template-columns:1fr}.panelhead{display:block}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<div class="pill">90-MINUTE REVISION LAB · ACADEMIC ENGLISH</div>
+<h1>Political Thought<br>Recall, Collocations & Dialogue</h1>
+<p class="sub">Three texts. One loop: recognise → retrieve → use → recycle. Work from memory first; reveal answers only to check.</p>
+<nav><button class="primary" onclick="startTimer()">Start 90-minute timer</button><button onclick="resetAll()">Reset activities</button><span class="timer" id="timer">90:00</span></nav>
+</div></header>
+<main class="wrap">
+<div class="stats">
+<div class="stat"><strong id="doneCount">0 / 8</strong><span>activities completed</span></div>
+<div class="stat"><strong id="score">0</strong><span>quiz points</span></div>
+<div class="stat"><strong id="ring">A → B → C → A → B → C</strong><span>retrieval loop</span></div>
+</div>
+<div class="layout">
+<aside class="sidebar panel">
+<button class="step active" data-step="0" onclick="showStep(0)"><span class="num">01</span><span>Roadmap<small>90-minute plan</small></span></button>
+<button class="step" data-step="1" onclick="showStep(1)"><span class="num">02</span><span>Text A<small>Aristotle</small></span></button>
+<button class="step" data-step="2" onclick="showStep(2)"><span class="num">03</span><span>Text B<small>Middle Ages</small></span></button>
+<button class="step" data-step="3" onclick="showStep(3)"><span class="num">04</span><span>Text C<small>Renaissance</small></span></button>
+<button class="step" data-step="4" onclick="showStep(4)"><span class="num">05</span><span>Ring practice<small>Mixed recall</small></span></button>
+<button class="step" data-step="5" onclick="showStep(5)"><span class="num">06</span><span>Oral exam<small>Dialogue & exit check</small></span></button>
+<button class="step" data-step="6" onclick="showStep(6)"><span class="num">07</span><span>Collocation lab<small>Controlled practice</small></span></button>
+<button class="step" data-step="7" onclick="showStep(7)"><span class="num">08</span><span>Restore the texts<small>Fill the gaps</small></span></button>
+</aside>
+<section class="content">
+<section class="panel stepview" id="view0">
+<div class="eyebrow">Start here</div><h2>90-minute lesson roadmap</h2><p class="muted">Keep the pace brisk. Student speaks and retrieves; teacher prompts, notes errors, and returns to missed items later.</p>
+<div class="progress"><div id="roadProgress"></div></div>
+<div class="grid2">
+<div class="card"><span class="tag">0–7 min</span><h3>Diagnostic</h3><p>Student gives one sentence about each text. Note gaps in content, vocabulary, pronunciation and grammar.</p></div>
+<div class="card themeA"><span class="tag">7–25 min</span><h3>A · Ancient Political Philosophy</h3><p>Map the text → learn collocations → retrieve without text → answer questions.</p></div>
+<div class="card themeB"><span class="tag">25–42 min</span><h3>B · Middle Ages</h3><p>Build the faith/reason and Church/State map. Retrieve key terms and compare Augustine with Aquinas.</p></div>
+<div class="card themeC"><span class="tag">42–61 min</span><h3>C · Renaissance</h3><p>Separate Machiavelli, Hobbes and Locke. Use contrastive recall to prevent mixing up their ideas.</p></div>
+<div class="card"><span class="tag">61–73 min</span><h3>Ring review</h3><p>Mix A, B and C; revisit older expressions after a delay. Translate both ways and complete gaps.</p></div>
+<div class="card"><span class="tag">73–85 min</span><h3>Exam simulation</h3><p>Short retelling + question-and-answer dialogue + correction of high-impact errors.</p></div>
+<div class="card"><span class="tag">85–90 min</span><h3>Exit check</h3><p>Three ideas per text, 6–8 collocations, and two unexpected questions.</p></div>
+</div>
+<div class="answerbox"><strong>Teaching rule:</strong> count a collocation as provisionally secure after two correct recalls without prompts and one accurate spoken sentence. This is a lesson criterion, not a guarantee of long-term retention.</div>
+</section>
+
+<section class="panel stepview hidden" id="view1">
+<div class="eyebrow">Text A · 18 minutes</div><div class="panelhead"><h2>Ancient Political Philosophy</h2><span class="tag">Aristotle</span></div>
+<div class="card themeA"><h3>Recall map</h3><p><b>Period & scope</b> → Greek and Roman thought; fifth century BCE to fifth century CE in the text.</p><p><b>Central questions</b> → political organisation, forms of rule, relationship between political life and philosophy.</p><p><b>Aristotle</b> → humans as political animals; state as highest community; government assessed by who rules and whose interests it serves.</p></div>
+<h3 style="margin-top:18px">Priority collocations · click to reveal</h3><div id="termsA"></div>
+<h3 style="margin-top:18px">Questions for oral retrieval</h3><ol class="list"><li>What does ancient political philosophy encompass?</li><li>Why is the state important according to Aristotle?</li><li>How does Aristotle distinguish between forms of government?</li><li>What is the difference between monarchy and tyranny?</li></ol>
+<div class="answerbox"><b>Precision alert:</b> In this text, Aristotle uses “democracy” in a specific critical sense: rule by the mob for its own interest. Do not silently replace the text’s account with a modern definition.</div>
+</section>
+
+<section class="panel stepview hidden" id="view2">
+<div class="eyebrow">Text B · 17 minutes</div><div class="panelhead"><h2>Political Thought in the Middle Ages</h2><span class="tag">Augustine · Aquinas</span></div>
+<div class="card themeB"><h3>Recall map</h3><p><b>Context</b> → classical Greek and Roman thought meets medieval Christian theology.</p><p><b>Central tensions</b> → faith and reason; Church and State; secular power and divine law.</p><p><b>Augustine</b> → synthesised Neoplatonism with medieval Christian theology.</p><p><b>Aquinas</b> → combined Aristotle’s theories with Christian doctrine; sought to reconcile reason and faith.</p></div>
+<h3 style="margin-top:18px">Priority collocations · click to reveal</h3><div id="termsB"></div>
+<h3 style="margin-top:18px">Questions for oral retrieval</h3><ol class="list"><li>What was medieval political philosophy concerned with?</li><li>What was the controversy between Church and State about?</li><li>What does “faith versus reason” mean?</li><li>How did Aquinas combine Aristotle’s theories with Christian doctrine?</li></ol>
+</section>
+
+<section class="panel stepview hidden" id="view3">
+<div class="eyebrow">Text C · 19 minutes</div><div class="panelhead"><h2>Renaissance Political Philosophers</h2><span class="tag">Machiavelli · Hobbes · Locke</span></div>
+<div class="grid2">
+<div class="card themeC"><h3>Machiavelli</h3><p>Politics and morality; stability and security of rule; preserving the state; lions and foxes.</p><p><b>Recall:</b> Why might a ruler do evil things?</p></div>
+<div class="card"><h3>Hobbes</h3><p>“War of all against all”; social contract; surrender individual freedom for security, order and self-preservation.</p><p><b>Recall:</b> What is exchanged for security?</p></div>
+<div class="card"><h3>Locke</h3><p>Legitimate government; consent of subjects; natural rights to life, freedom and property; right to rebel.</p><p><b>Recall:</b> When can citizens rebel?</p></div>
+<div class="card"><h3>Contrast</h3><p>Hobbes emphasises order and security; Locke emphasises protection of natural rights and the possibility of resistance if they are violated.</p></div>
+</div>
+<h3 style="margin-top:18px">Priority collocations · click to reveal</h3><div id="termsC"></div>
+<h3 style="margin-top:18px">Questions for oral retrieval</h3><ol class="list"><li>What were the main characteristics of the Renaissance?</li><li>How did Machiavelli contribute to political thought?</li><li>Why did Hobbes consider strong government necessary?</li><li>How did Locke’s views differ from those of Hobbes?</li></ol>
+</section>
+
+<section class="panel stepview hidden" id="view4">
+<div class="eyebrow">12 minutes · Retrieval loop</div><h2>Mixed recall: A → B → C → A → B → C</h2><p class="muted">Say the English expression before flipping each card. Mark only answers you genuinely retrieved without looking.</p>
+<div class="flashgrid" id="flashgrid"></div>
+<div class="inputrow" style="margin-top:14px"><button onclick="shuffleCards()">Shuffle cards</button><button onclick="hideAllCards()">Hide all answers</button></div>
+<h3 style="margin-top:24px">Quick quiz</h3><p class="muted">Choose the best answer. The order deliberately mixes the three texts.</p>
+<div class="card" id="quizbox"><div class="tag" id="quizcount">Question 1</div><div class="question" id="quizq"></div><div class="options" id="quizopts"></div><div class="feedback" id="quizfeedback" aria-live="polite"></div><button class="primary" id="nextquiz" onclick="nextQuestion()" style="margin-top:10px" disabled>Next question</button></div>
+</section>
+
+<section class="panel stepview hidden" id="view5">
+<div class="eyebrow">12 minutes · Oral simulation</div><h2>Dialogue-questioning practice</h2><p class="muted">Teacher asks the question. Student answers in 3–5 sentences using a collocation, then handles one follow-up.</p>
+<div class="card"><span class="tag" id="oralTag">Text A</span><div class="question" id="oralQ"></div><div class="answerbox hidden" id="oralModel"></div><div class="inputrow" style="margin-top:12px"><button class="primary" onclick="showModel()">Show model answer</button><button onclick="nextOral()">Next question</button></div></div>
+<h3 style="margin-top:22px">Useful interaction phrases</h3><div class="grid2">
+<div class="term"><strong>Could you explain what you mean by that?</strong><span class="muted small">Попросить пояснить мысль</span></div>
+<div class="term"><strong>Could you give an example?</strong><span class="muted small">Попросить привести пример</span></div>
+<div class="term"><strong>How would you compare these two philosophers?</strong><span class="muted small">Попросить сравнить</span></div>
+<div class="term"><strong>Could you clarify the difference between these concepts?</strong><span class="muted small">Уточнить различие</span></div>
+</div>
+<h3 style="margin-top:22px">Exit check · teacher scoring</h3><p class="muted">Score each area: 0 = not yet; 1 = with prompts; 2 = independently.</p>
+<div id="rubric"></div><div class="answerbox"><b>Total:</b> <span id="rubricTotal">0 / 8</span> <span id="rubricLabel" class="muted">· Complete the rubric</span></div>
+</section>
+
+<section class="panel stepview hidden" id="view6">
+<div class="eyebrow">Collocation lab · 10–15 minutes</div>
+<h2>Build, retrieve, use</h2>
+<p class="muted">This is the focused collocation practice missing from the first version. Complete each task before revealing the key. The cycle is deliberate: meaning → exact English chunk → sentence → delayed return.</p>
+<div class="grid2">
+<div class="card themeA"><span class="tag">Round A · Ancient</span><h3>1. Match the meaning</h3><p>Translate the prompt aloud, then reveal the target chunk.</p><div id="matchA"></div></div>
+<div class="card themeB"><span class="tag">Round B · Medieval</span><h3>2. Restore the phrase</h3><p>Fill in the missing word(s). Exact wording matters.</p><div id="gapB"></div></div>
+<div class="card themeC"><span class="tag">Round C · Renaissance</span><h3>3. Choose the collocation</h3><p>Select the phrase that fits the meaning and context.</p><div id="choiceC"></div></div>
+<div class="card"><span class="tag">Mixed round · A+B+C</span><h3>4. Use it in context</h3><p>Say a complete sentence using the expression. Reveal the model only after speaking.</p><div id="contextMix"></div></div>
+</div>
+<div class="answerbox"><b>Teacher protocol:</b> 1 point for correct retrieval without a hint; ½ point if the student needs a semantic prompt; 0 if the teacher supplies the answer. Any missed expression goes into the next ring.</div>
+<div class="inputrow" style="margin-top:14px"><button class="primary" onclick="nextCollocationRound()">Next collocation round</button><button onclick="resetCollocationLab()">Reset collocation lab</button></div>
+<div class="feedback" id="collocationFeedback" aria-live="polite"></div>
+</section>
+
+<section class="panel stepview hidden" id="view7">
+<div class="eyebrow">Text restoration · 8–10 minutes</div>
+<h2>Restore the key ideas of each text</h2>
+<p class="muted">The summaries preserve the textbook’s main points. Student fills each gap from memory first, then checks the answer. Do not aim for word-for-word reproduction of the entire source text: restore the core argument and key terminology.</p>
+<div class="card themeA"><h3>A · Ancient Political Philosophy</h3>
+<p>Ancient political philosophy encompasses <input class="blank" data-answer="Greek and Roman thought" aria-label="Gap 1" placeholder="1. ..."> from the fifth century BCE to the fifth century CE. It examines the nature and political organisation of society, forms of political rule, and the relationship between political life and <input class="blank" data-answer="philosophy" aria-label="Gap 2" placeholder="2. ...">.</p>
+<p>According to Aristotle, “Man is a <input class="blank" data-answer="political animal" aria-label="Gap 3" placeholder="3. ...">.” The state is the highest kind of community and aims at the highest good. Forms of government differ according to <input class="blank" data-answer="who rules" aria-label="Gap 4" placeholder="4. ..."> and whose interests they serve. Monarchy serves the general good, while tyranny serves the ruler’s <input class="blank" data-answer="private benefit" aria-label="Gap 5" placeholder="5. ...">.</p>
+<button onclick="checkSummary(this)">Check Text A</button><button onclick="revealSummary(this)">Reveal key</button><div class="feedback" aria-live="polite"></div></div>
+
+<div class="card themeB" style="margin-top:14px"><h3>B · Political Thought in the Middle Ages</h3>
+<p>Medieval political philosophy in Western Europe sought to harmonise Greek and Roman classical philosophy with medieval theories focused on theology, metaphysics, and the relationship between <input class="blank" data-answer="faith and reason" aria-label="Gap 6" placeholder="6. ...">.</p>
+<p>It was also concerned with the boundaries between <input class="blank" data-answer="Church and State" aria-label="Gap 7" placeholder="7. ..."> and the controversy over secular power and divine law. St Augustine synthesised Neoplatonism with medieval Christian theology. Thomas Aquinas combined Aristotle’s theories with Christian doctrine, seeking to <input class="blank" data-answer="reconcile reason and faith" aria-label="Gap 8" placeholder="8. ...">.</p>
+<button onclick="checkSummary(this)">Check Text B</button><button onclick="revealSummary(this)">Reveal key</button><div class="feedback" aria-live="polite"></div></div>
+
+<div class="card themeC" style="margin-top:14px"><h3>C · Renaissance Political Philosophers</h3>
+<p>The Renaissance was marked by renewed interest in classical antiquity, humanism, and scientific and cultural innovation. Machiavelli’s <i>The Prince</i> helped lay the foundations of modern political science. He separated politics from morality and argued that a ruler might need to do evil things to <input class="blank" data-answer="preserve the state" aria-label="Gap 9" placeholder="9. ...">.</p>
+<p>Hobbes described the state of nature as a “<input class="blank" data-answer="war of all against all" aria-label="Gap 10" placeholder="10. ...">” and argued that people surrender individual freedom to a higher authority in exchange for security and order. Locke argued that legitimate government should protect natural rights to life, freedom, and <input class="blank" data-answer="property" aria-label="Gap 11" placeholder="11. ...">. If government violated these rights, citizens had the right to <input class="blank" data-answer="rebel" aria-label="Gap 12" placeholder="12. ...">.</p>
+<button onclick="checkSummary(this)">Check Text C</button><button onclick="revealSummary(this)">Reveal key</button><div class="feedback" aria-live="polite"></div></div>
+<div class="answerbox"><b>Final oral task:</b> Close the page and summarise each text in 30–45 seconds. Include at least three target collocations per text and one contrast or causal relationship.</div>
+
+<h2 style="margin-top:28px">Literal textbook text · full-text reconstruction</h2>
+<p class="muted">These are the original English passages from the supplied textbook extract. Only selected words and expressions have been removed. Reconstruct them from memory, then use “Check this text” or reveal the key.</p>
+
+<div class="card themeA literal-text" style="margin-top:14px">
+<h3>A. ANCIENT POLITICAL PHILOSOPHY</h3>
+<p>(1) Ancient political philosophy means ancient Greek and Roman thought <input class="blank" data-answer="encompassing" placeholder="1" aria-label="Text A gap 1"> the period of Greek thought in the fifth century BCE to the end of the Roman empire in the fifth century CE. In academic literature this period is also referred to as “Classical antiquity”. Ancient political thought focused on the nature and political organization of society, the forms of political rule, the relationship between political life and <input class="blank" data-answer="philosophy" placeholder="2" aria-label="Text A gap 2">. Greek philosophers Plato and Aristotle are considered the greatest intellectual figures of Classical antiquity.</p>
+<p>(2) Aristotle (384 bce—322 bce) was an ancient Greek philosopher and scientist, one of the greatest intellectual figures of Classical antiquity and Western history. “Man is a <input class="blank" data-answer="political animal" placeholder="3" aria-label="Text A gap 3">,” Aristotle observes. The aim of the Politics, Aristotle says, is to investigate, what makes for good government and what makes for bad government. Aristotle asserts that all communities aim at some good. The state (polis) is the highest kind of community, aiming at the highest of goods. Only within a state can human beings <input class="blank" data-answer="fulfill their potential" placeholder="4" aria-label="Text A gap 4">. Government, Aristotle says, must be in the hands of one, of a few, or of the many; and governments may govern for the <input class="blank" data-answer="general good" placeholder="5" aria-label="Text A gap 5"> or for the good of the rulers. Government by a single person for the general good is called “monarchy”; for private benefit, “<input class="blank" data-answer="tyranny" placeholder="6" aria-label="Text A gap 6">.” Government by a minority is “aristocracy” if it aims at the state’s best interest and “oligarchy” if it benefits only the ruling minority. Popular government in the common interest Aristotle calls “polity”; he reserves the word “democracy” for anarchic mob rule.</p>
+<div class="inputrow"><button class="primary" onclick="checkLiteral(this)">Check this text</button><button onclick="revealLiteral(this)">Reveal key</button><button onclick="clearLiteral(this)">Clear gaps</button></div><div class="feedback" aria-live="polite"></div>
+</div>
+
+<div class="card themeB literal-text" style="margin-top:14px">
+<h3>B. POLITICAL THOUGHT IN THE MIDDLE AGES</h3>
+<p>Medieval political philosophy in Western Europe covers the period from the 5th to the 15th century. It aimed to <input class="blank" data-answer="harmonize" placeholder="1" aria-label="Text B gap 1"> Greek and Roman classical philosophy (primarily, the works by Plato and Aristotle) with the medieval theories focusing on theological issues, metaphysics, and the faith and reason <input class="blank" data-answer="dichotomy" placeholder="2" aria-label="Text B gap 2">. Thus, Western medieval thought was concerned with the boundaries between Church and State, and the related controversy over secular power and divine law. The most influential political thinkers of this period were St. Augustine and Thomas Aquinas.</p>
+<p>St. Augustine (354 – 430 AD) <input class="blank" data-answer="synthesized Neoplatonism with medieval Christian theology" placeholder="3" aria-label="Text B gap 3">. His key works are "The City of God", "The Problem of Evil", and "Confessions". Thomas Aquinas (1225–1274) is famous for his work Summa Theologiae (Synopisis of Theology), and considered as the founder of Christian theology. He was the thinker to have combined Aristotle's theories and Christian doctrine, thus <input class="blank" data-answer="reconciling reason and faith" placeholder="4" aria-label="Text B gap 4">. His great intellectual impact on Western philosophy was Scholasticism. But the most important contribution made by Thomas Aquinas included the identification of five arguments for the <input class="blank" data-answer="existence of God" placeholder="5" aria-label="Text B gap 5">.</p>
+<div class="inputrow"><button class="primary" onclick="checkLiteral(this)">Check this text</button><button onclick="revealLiteral(this)">Reveal key</button><button onclick="clearLiteral(this)">Clear gaps</button></div><div class="feedback" aria-live="polite"></div>
+</div>
+
+<div class="card themeC literal-text" style="margin-top:14px">
+<h3>C. RENAISSANCE POLITICAL PHILOSOPHERS</h3>
+<p>The Renaissance is a historical term used to describe a period of dramatic cultural, artistic, economic, and political changes in the life of medieval Europe. It started from the beginning of 14th century and lasted until the end of 17th century. Academic literature describes this period as a "rebirth" in Europe, the core characteristics of which were a revival of interest in classical antiquity, the rise of humanism, revolution in arts, and industrial and scientific innovations. The Renaissance gave birth to such brilliant intellectuals and political thinkers as Niccolò Machiavelli (1469—1527), Thomas Hobbs(1588–1679), John Locke (1632–1704), and many others.</p>
+<p>Niccolò Machiavelli (1469—1527) was a Renaissance political thinker and the author of The Prince, a treatise that had laid the foundations of modern political science describing politics as <input class="blank" data-answer="struggle for power" placeholder="1" aria-label="Text C gap 1">. Machiavelli was the first philosopher to have <input class="blank" data-answer="divorced politics from morality" placeholder="2" aria-label="Text C gap 2"> claiming that the ultimate goal of any ruler was to maintain the stability and security of his rule. His famous argument to the effect that "the ends justify the means" implied that a successful ruler should be prepared to do evil things in order to <input class="blank" data-answer="preserve the state" placeholder="3" aria-label="Text C gap 3">. Another contribution to political science made by Machiavelli was the classification of rulers into lions and foxes. This political metaphor contrasted those who relied on power per se with those who used deception and cunning to achieve their goals. Centuries later this "lions and foxes theory" was expanded by the sociologist Vilfredo Pareto.</p>
+<p>The English philosopher Thomas Hobbs (1588–1679) is best-known for his political theory focusing on the concept of "social contract". In the Leviathan, Hobbs described the life of human beings as "<input class="blank" data-answer="war of all against all" placeholder="4" aria-label="Text C gap 4">" and assumed that the only way for them to survive was to subject themselves to a strong government in the form of social contract. After Hobbs, as a party to the social contract, people should <input class="blank" data-answer="surrender their individual freedom" placeholder="5" aria-label="Text C gap 5"> to a higher authority (the State) in exchange for security, order, and self-preservation. For Hobbs, order was the ultimate political good.</p>
+<p>The English political thinker John Locke (1632–1704) is often referred to as "the father of liberalism". He expanded the concept of "social contract", claiming that any legitimate government should be based on the consent of its subjects, and protect their natural rights to life, freedom, and <input class="blank" data-answer="property" placeholder="6" aria-label="Text C gap 6">. He argued that in case government violated such rights and broke the social contract, citizens would have the right to <input class="blank" data-answer="rebel" placeholder="7" aria-label="Text C gap 7">. This idea was articulated by Jonh Locke in his famous "Two Treatises on Civil Government".</p>
+<div class="inputrow"><button class="primary" onclick="checkLiteral(this)">Check this text</button><button onclick="revealLiteral(this)">Reveal key</button><button onclick="clearLiteral(this)">Clear gaps</button></div><div class="feedback" aria-live="polite"></div>
+</div>
+
+</section>
+
+</section>
+</div>
+<div class="footer">Source-based revision material · Introduction to Political Studies · Use retrieval before revealing answers.</div>
+</main>
+<script>
+const vocab={
+ A:[
+ ["to encompass a period","охватывать период"],
+ ["the nature of political organisation","природа политической организации"],
+ ["the relationship between political life and philosophy","взаимосвязь между политической жизнью и философией"],
+ ["to fulfil one’s potential","реализовать свой потенциал"],
+ ["to govern for the general good","править ради общего блага"],
+ ["government by a minority","правление меньшинства"],
+ ["to benefit the ruling minority","приносить выгоду правящему меньшинству"],
+ ["popular government in the common interest","народное правление в общих интересах"]
+ ],
+ B:[
+ ["to harmonise classical philosophy with medieval theories","согласовать античную философию со средневековыми теориями"],
+ ["the faith and reason dichotomy","дихотомия веры и разума"],
+ ["the boundaries between Church and State","границы между Церковью и государством"],
+ ["secular power and divine law","светская власть и божественный закон"],
+ ["to synthesise Neoplatonism with Christian theology","синтезировать неоплатонизм с христианской теологией"],
+ ["to reconcile reason and faith","согласовать разум и веру"],
+ ["to be concerned with","заниматься вопросами / быть связанным с"],
+ ["the existence of God","существование Бога"]
+ ],
+ C:[
+ ["to lay the foundations of modern political science","заложить основы современной политической науки"],
+ ["to divorce politics from morality","отделить политику от морали"],
+ ["to maintain the stability and security of one’s rule","поддерживать стабильность и безопасность своего правления"],
+ ["to preserve the state","сохранить государство"],
+ ["a war of all against all","война всех против всех"],
+ ["to surrender individual freedom","отказаться от индивидуальной свободы"],
+ ["in exchange for security and order","в обмен на безопасность и порядок"],
+ ["to protect natural rights","защищать естественные права"],
+ ["the right to rebel","право на восстание"]
+ ]
+};
+function renderTerms(letter,id){document.getElementById(id).innerHTML=vocab[letter].map(([en,ru])=>`<div class="term"><button style="width:100%;text-align:left;border:0;padding:0;background:transparent" onclick="this.nextElementSibling.classList.toggle('hidden')"><strong>${en}</strong><span class="muted small">Click to reveal Russian</span></button><div class="answer hidden">${ru}</div></div>`).join('')}
+renderTerms('A','termsA');renderTerms('B','termsB');renderTerms('C','termsC');
+let completed=new Set(),points=0;
+function showStep(n){document.querySelectorAll('.stepview').forEach((v,i)=>v.classList.toggle('hidden',i!==n));document.querySelectorAll('.step').forEach((b,i)=>b.classList.toggle('active',i===n));completed.add(n);document.getElementById('doneCount').textContent=`${completed.size} / 8`;document.getElementById('roadProgress').style.width=`${completed.size/8*100}%`;window.scrollTo({top:0,behavior:'smooth'})}
+function updateScore(){document.getElementById('score').textContent=points}
+const allCards=[...vocab.A.map(x=>({...x,group:'A'})),...vocab.B.map(x=>({...x,group:'B'})),...vocab.C.map(x=>({...x,group:'C'}))];
+let cardOrder=[...allCards];
+function renderCards(){document.getElementById('flashgrid').innerHTML=cardOrder.map((c,i)=>`<button class="flash" onclick="flipCard(${i},this)"><span class="tag">Text ${c.group}</span><strong>${c[0]}</strong><span class="hint">Click to reveal translation</span><span class="back hidden">${c[1]}</span></button>`).join('')}
+function flipCard(i,el){el.querySelector('.back').classList.toggle('hidden');el.querySelector('.hint').classList.toggle('hidden')}
+function shuffleCards(){cardOrder.sort(()=>Math.random()-.5);renderCards()}
+function hideAllCards(){renderCards()}
+renderCards();
+const quiz=[
+ {q:"Which philosopher described humans as “political animals”?",o:["Aristotle","Thomas Aquinas","Thomas Hobbes","John Locke"],a:0,why:"The phrase is attributed to Aristotle in Text A."},
+ {q:"Which issue is central to medieval political thought in the text?",o:["Industrialisation and trade","Faith and reason","Universal suffrage","The separation of economics and culture"],a:1,why:"The text highlights the faith-and-reason dichotomy, alongside Church and State."},
+ {q:"Who argued that legitimate government should protect natural rights?",o:["Machiavelli","Augustine","Hobbes","Locke"],a:3,why:"Locke's account centres on life, freedom and property."},
+ {q:"What does Hobbes say people exchange for security and order?",o:["Their natural rights permanently","Individual freedom, by submitting to a higher authority","The right to rebel","The separation of powers"],a:1,why:"In the text, people surrender individual freedom to a higher authority in exchange for security, order and self-preservation."},
+ {q:"In Aristotle’s classification in the text, what distinguishes monarchy from tyranny?",o:["The ruler’s age","Whether rule serves the general good or the ruler’s private benefit","Whether the ruler is elected","Whether the state has a written constitution"],a:1,why:"The distinction is based on whose interests the ruler serves."},
+ {q:"Which thinker is associated with separating politics from morality?",o:["John Locke","Thomas Aquinas","Niccolò Machiavelli","St Augustine"],a:2,why:"The Renaissance text presents Machiavelli as divorcing politics from morality."},
+ {q:"What did Thomas Aquinas seek to reconcile?",o:["Church and industry","Monarchy and democracy","Reason and faith","Freedom and property"],a:2,why:"The text says Aquinas combined Aristotle's theories and Christian doctrine, reconciling reason and faith."},
+ {q:"What may citizens do if government violates their natural rights, according to Locke?",o:["Surrender all rights","Rebel","Abandon the social contract without action","Establish a monarchy"],a:1,why:"The text says citizens have the right to rebel if government violates their rights."}
+];
+let qi=0,answered=false;
+function renderQuiz(){const q=quiz[qi];document.getElementById('quizcount').textContent=`Question ${qi+1} of ${quiz.length}`;document.getElementById('quizq').textContent=q.q;document.getElementById('quizfeedback').textContent='';document.getElementById('nextquiz').disabled=true;answered=false;document.getElementById('quizopts').innerHTML=q.o.map((o,i)=>`<button onclick="answerQuiz(${i},this)">${o}</button>`).join('')}
+function answerQuiz(i,el){if(answered)return;answered=true;const q=quiz[qi];document.querySelectorAll('#quizopts button').forEach((b,j)=>{if(j===q.a)b.classList.add('correct')});if(i===q.a){points++;document.getElementById('quizfeedback').textContent='Correct. '+q.why;document.getElementById('quizfeedback').className='feedback good'}else{el.classList.add('wrong');document.getElementById('quizfeedback').textContent='Not quite. '+q.why;document.getElementById('quizfeedback').className='feedback bad'}updateScore();document.getElementById('nextquiz').disabled=false;document.getElementById('nextquiz').textContent=qi===quiz.length-1?'Restart quiz':'Next question'}
+function nextQuestion(){qi=qi===quiz.length-1?0:qi+1;renderQuiz()}
+renderQuiz();
+const oral=[
+ {tag:"Text A · Aristotle",q:"What is the aim of politics according to Aristotle?",model:"According to Aristotle, the state is the highest kind of community and aims at the highest good. He distinguishes forms of government by who rules and whose interests they serve. A government may serve the general good or the private benefit of the rulers."},
+ {tag:"Text A · Aristotle",q:"How does Aristotle distinguish monarchy from tyranny?",model:"Monarchy is rule by one person for the general good. Tyranny is rule by one person for private benefit. The key criterion is whose interests the government serves."},
+ {tag:"Text B · Middle Ages",q:"What was medieval political philosophy concerned with?",model:"It aimed to harmonise Greek and Roman classical philosophy with medieval theories focused on theology, metaphysics, faith and reason. It was also concerned with the boundaries between Church and State and the controversy over secular power and divine law."},
+ {tag:"Text B · Middle Ages",q:"How did Thomas Aquinas contribute to political and religious thought?",model:"Thomas Aquinas combined Aristotle’s theories with Christian doctrine. In doing so, he sought to reconcile reason and faith. The text also highlights his five arguments for the existence of God."},
+ {tag:"Text C · Renaissance",q:"How did Hobbes’s and Locke’s views on government differ?",model:"Both discussed the social contract, but they emphasised different aims. Hobbes stressed security, order and self-preservation under a strong government. Locke argued that legitimate government should protect natural rights to life, freedom and property, and that citizens could rebel if those rights were violated."},
+ {tag:"Text C · Renaissance",q:"What does “the ends justify the means” imply in the text about Machiavelli?",model:"In the text, the argument implies that a successful ruler should be prepared to do evil things in order to preserve the state. Machiavelli is presented as separating politics from morality and emphasising the stability and security of a ruler’s rule."}
+];
+let oi=0;
+function renderOral(){const q=oral[oi];document.getElementById('oralTag').textContent=q.tag;document.getElementById('oralQ').textContent=q.q;document.getElementById('oralModel').classList.add('hidden');document.getElementById('oralModel').textContent=q.model}
+function showModel(){document.getElementById('oralModel').classList.remove('hidden')}
+function nextOral(){oi=(oi+1)%oral.length;renderOral()}
+renderOral();
+const rubrics=[["Content","Accurate key ideas from all three texts"],["Collocations","Recalls target expressions without prompts"],["Language accuracy","Grammar, articles and prepositions"],["Dialogue","Answers, explains and responds to follow-ups"]];
+document.getElementById('rubric').innerHTML=rubrics.map((r,i)=>`<div class="term"><strong>${r[0]}</strong><div class="muted small">${r[1]}</div><div class="inputrow" style="margin-top:8px">${[0,1,2].map(n=>`<button onclick="setRubric(${i},${n},this)">${n} · ${['Not yet','With prompts','Independently'][n]}</button>`).join('')}</div></div>`).join('');
+let rubricScores=[0,0,0,0];
+function setRubric(i,n,el){rubricScores[i]=n;el.parentElement.querySelectorAll('button').forEach(b=>b.style.background='white');el.style.background='#e5f4eb';document.getElementById('rubricTotal').textContent=rubricScores.reduce((a,b)=>a+b,0)+' / 8';const s=rubricScores.reduce((a,b)=>a+b,0);document.getElementById('rubricLabel').textContent=s>=7?'· Good readiness':s>=4?'· More retrieval needed':'· Needs further practice'}
+let timerInterval=null,seconds=5400;
+function startTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null;return}timerInterval=setInterval(()=>{seconds=Math.max(0,seconds-1);document.getElementById('timer').textContent=String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');if(seconds===0){clearInterval(timerInterval);timerInterval=null;alert('90 minutes are up. Complete the exit check.')}},1000)}
+function resetAll(){if(timerInterval){clearInterval(timerInterval);timerInterval=null}seconds=5400;document.getElementById('timer').textContent='90:00';points=0;updateScore();completed.clear();document.getElementById('doneCount').textContent='0 / 8';document.getElementById('roadProgress').style.width='0';qi=0;renderQuiz();oi=0;renderOral();rubricScores=[0,0,0,0];document.getElementById('rubricTotal').textContent='0 / 8';document.getElementById('rubricLabel').textContent='· Complete the rubric';document.querySelectorAll('#rubric button').forEach(b=>b.style.background='white');hideAllCards();document.querySelectorAll('.term .answer').forEach(x=>x.classList.add('hidden'));showStep(0)}
+
+// Focused collocation lab: four alternating rounds, with delayed recycling.
+const collocationRounds = [
+ {type:"translate",group:"A · Ancient",prompt:"реализовать свой потенциал",answer:"to fulfil one’s potential",model:"Only within a state can human beings fulfil their potential."},
+ {type:"translate",group:"B · Medieval",prompt:"границы между Церковью и государством",answer:"the boundaries between Church and State",model:"Medieval thought was concerned with the boundaries between Church and State."},
+ {type:"translate",group:"C · Renaissance",prompt:"защищать естественные права",answer:"to protect natural rights",model:"Locke argued that legitimate government should protect natural rights."},
+ {type:"translate",group:"A · Ancient",prompt:"править ради общего блага",answer:"to govern for the general good",model:"Aristotle distinguished governments that govern for the general good from those that serve rulers’ private interests."},
+ {type:"translate",group:"B · Medieval",prompt:"согласовать разум и веру",answer:"to reconcile reason and faith",model:"Thomas Aquinas sought to reconcile reason and faith."},
+ {type:"translate",group:"C · Renaissance",prompt:"отказаться от индивидуальной свободы",answer:"to surrender individual freedom",model:"Hobbes argued that people should surrender individual freedom to a higher authority in exchange for security."}
+];
+let collocationIndex=0, collocationScore=0;
+function norm(s){return s.toLowerCase().replace(/[’‘']/g,"'").replace(/[.,!?;:]/g,"").replace(/\s+/g," ").trim()}
+function nextCollocationRound(){
+ const item=collocationRounds[collocationIndex%collocationRounds.length];
+ document.getElementById('collocationFeedback').innerHTML='';
+ const a=document.getElementById('matchA'),b=document.getElementById('gapB'),c=document.getElementById('choiceC'),d=document.getElementById('contextMix');
+ [a,b,c,d].forEach(x=>x.innerHTML='');
+ const mode=collocationIndex%4;
+ if(mode===0){
+   a.innerHTML=`<p><b>${item.group}</b></p><p class="question">${item.prompt}</p><input id="collInput" class="blank" style="width:100%;max-width:none" placeholder="Type the English collocation"><div class="inputrow" style="margin-top:8px"><button class="primary" onclick="checkCollocation('${encodeURIComponent(item.answer)}','${encodeURIComponent(item.model)}')">Check</button><button onclick="showCollocationAnswer('${encodeURIComponent(item.answer)}','${encodeURIComponent(item.model)}')">Reveal</button></div>`;
+ }else if(mode===1){
+   const words=item.answer.split(' '), hide=Math.max(0,Math.floor(words.length/2)), masked=words.map((w,i)=>i<hide?'_____':w).join(' ');
+   b.innerHTML=`<p><b>${item.group}</b></p><p class="question">${masked}</p><p class="muted small">Meaning: ${item.prompt}</p><input id="collInput" class="blank" style="width:100%;max-width:none" placeholder="Type the complete expression"><div class="inputrow" style="margin-top:8px"><button class="primary" onclick="checkCollocation('${encodeURIComponent(item.answer)}','${encodeURIComponent(item.model)}')">Check</button><button onclick="showCollocationAnswer('${encodeURIComponent(item.answer)}','${encodeURIComponent(item.model)}')">Reveal</button></div>`;
+ }else if(mode===2){
+   const opts=[item.answer,...collocationRounds.filter(x=>x.answer!==item.answer).sort(()=>Math.random()-.5).slice(0,2).map(x=>x.answer)].sort(()=>Math.random()-.5);
+   c.innerHTML=`<p><b>${item.group}</b></p><p class="question">${item.prompt}</p><div class="options">${opts.map(o=>`<button onclick="chooseCollocation(this,'${encodeURIComponent(item.answer)}','${encodeURIComponent(o)}','${encodeURIComponent(item.model)}')">${o}</button>`).join('')}</div><div class="feedback" id="collChoiceFeedback"></div>`;
+ }else{
+   d.innerHTML=`<p><b>${item.group}</b></p><p class="question">Use <u>${item.answer}</u> in a complete sentence.</p><p class="muted small">Meaning cue: ${item.prompt}</p><button class="primary" onclick="showCollocationAnswer('${encodeURIComponent(item.answer)}','${encodeURIComponent(item.model)}')">Show model after speaking</button><div id="collModel" class="answerbox hidden"></div>`;
+ }
+ collocationIndex++;
+}
+function checkCollocation(ans,model){
+ const target=decodeURIComponent(ans), value=document.getElementById('collInput').value;
+ const ok=norm(value)===norm(target);
+ const box=document.getElementById('collocationFeedback');
+ box.innerHTML=ok?`<span class="good">Correct — +1 point.</span><br>Model: ${decodeURIComponent(model)}`:`<span class="bad">Not exact yet.</span><br>Target: <b>${target}</b><br>Model: ${decodeURIComponent(model)}`;
+ if(ok){collocationScore++;points++;updateScore()}
+}
+function showCollocationAnswer(ans,model){
+ const box=document.getElementById('collocationFeedback');
+ box.innerHTML=`<div class="answerbox"><b>Target:</b> ${decodeURIComponent(ans)}<br><b>Model:</b> ${decodeURIComponent(model)}</div>`;
+ const cm=document.getElementById('collModel');if(cm){cm.classList.remove('hidden');cm.innerHTML=`<b>Model:</b> ${decodeURIComponent(model)}`}
+}
+function chooseCollocation(el,ans,choice,model){
+ const target=decodeURIComponent(ans), picked=decodeURIComponent(choice);
+ el.parentElement.querySelectorAll('button').forEach(b=>b.disabled=true);
+ const fb=document.getElementById('collChoiceFeedback');
+ if(norm(target)===norm(picked)){el.classList.add('correct');fb.innerHTML='<span class="good">Correct — +1 point.</span>';points++;updateScore()}
+ else{el.classList.add('wrong');fb.innerHTML=`<span class="bad">Correct answer:</span> ${target}`}
+ fb.innerHTML+=`<div class="answerbox">${decodeURIComponent(model)}</div>`;
+}
+function resetCollocationLab(){collocationIndex=0;collocationScore=0;nextCollocationRound()}
+nextCollocationRound();
+
+function checkSummary(button){
+ const card=button.closest('.card'), fields=card.querySelectorAll('.blank');let correct=0;
+ fields.forEach(f=>{const accepted=f.dataset.answer.split('|').map(norm);if(accepted.includes(norm(f.value))){f.classList.add('correct');f.classList.remove('incorrect');correct++}else{f.classList.add('incorrect');f.classList.remove('correct')}});
+ const fb=card.querySelector('.feedback');fb.className='feedback '+(correct===fields.length?'good':'bad');fb.textContent=`${correct} / ${fields.length} correct. ${correct===fields.length?'Excellent retrieval.':'Review the key, then hide it and try again.'}`;
+}
+function revealSummary(button){
+ const card=button.closest('.card');
+ card.querySelectorAll('.blank').forEach(f=>{f.value=f.dataset.answer.split('|')[0];f.classList.remove('incorrect');f.classList.add('correct')});
+ const fb=card.querySelector('.feedback');fb.className='feedback';fb.textContent='Key revealed. Read the whole summary aloud, then clear the fields and reconstruct it from memory.';
+}
+
+
+function checkLiteral(button){
+ const card=button.closest('.literal-text');const fields=card.querySelectorAll('.blank');let correct=0;
+ fields.forEach(f=>{
+   const accepted=f.dataset.answer.split('|').map(norm);
+   if(accepted.includes(norm(f.value))){f.classList.add('correct');f.classList.remove('incorrect');correct++}
+   else{f.classList.add('incorrect');f.classList.remove('correct')}
+ });
+ const fb=card.querySelector('.feedback');fb.className='feedback '+(correct===fields.length?'good':'bad');
+ fb.textContent=`${correct} / ${fields.length} gaps correct. ${correct===fields.length?'Excellent — now read the whole passage aloud.':'Review only the missed items, then clear and retry from memory.'}`;
+}
+function revealLiteral(button){
+ const card=button.closest('.literal-text');
+ card.querySelectorAll('.blank').forEach(f=>{f.value=f.dataset.answer.split('|')[0];f.classList.remove('incorrect');f.classList.add('correct')});
+ const fb=card.querySelector('.feedback');fb.className='feedback';fb.textContent='Answer key revealed. Read the full passage aloud, then press “Clear gaps” and reconstruct it from memory.';
+}
+function clearLiteral(button){
+ const card=button.closest('.literal-text');
+ card.querySelectorAll('.blank').forEach(f=>{f.value='';f.classList.remove('incorrect','correct')});
+ const fb=card.querySelector('.feedback');fb.className='feedback';fb.textContent='';
+}
+
+</script>
+</body>
+</html>
