@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vocabulary Flashcards</title>
+<style>
+:root{--pink:#f1c4df;--pink2:#fae8f3;--berry:#873c69;--ink:#332b31;--cream:#fffafc;--line:#e8c7d9}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#fff8fc,#f8e8f2);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+main{max-width:900px;margin:auto;padding:24px 16px 40px}.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.75rem;color:var(--berry);font-weight:800}
+h1{font-size:clamp(1.7rem,5vw,2.5rem);margin:.25rem 0}.sub{color:#6e5b67;margin:0 0 20px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0}.toolbar button,.toolbar select,.action{border:1px solid var(--line);background:#fff9fd;color:var(--ink);border-radius:12px;padding:10px 14px;font:inherit;cursor:pointer}.toolbar button:hover,.action:hover{border-color:var(--berry)}.toolbar button.active{background:var(--berry);color:white}
+.progress-wrap{height:8px;background:#ead9e3;border-radius:99px;overflow:hidden;margin:12px 0 22px}.progress{height:100%;background:var(--berry);width:0%;transition:width .2s}
+.study{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}.card{width:100%;min-height:300px;border:1px solid #e7c5d8;border-radius:24px;background:var(--pink);box-shadow:0 12px 30px #7c3e581c;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;cursor:pointer;position:relative;transition:transform .18s,background .18s;user-select:none}.card:hover{transform:translateY(-2px)}.card:focus{outline:3px solid #b46a94;outline-offset:3px}.card .hint{position:absolute;top:16px;left:20px;right:20px;font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:#75415f}.word{font-size:clamp(1.8rem,6vw,3rem);font-weight:700;line-height:1.2;overflow-wrap:anywhere}.meaning{font-size:clamp(1.15rem,3vw,1.6rem);margin-top:16px;white-space:pre-line}.example{font-size:1rem;margin-top:14px;color:#5e3b50;font-style:italic}.hidden{display:none!important}.controls{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:16px}.action{min-width:110px}.action.primary{background:var(--berry);color:white;border-color:var(--berry)}.action:disabled{opacity:.4;cursor:not-allowed}.bottom{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-top:20px}.count{font-variant-numeric:tabular-nums;font-weight:700}.small{font-size:.9rem;color:#745d6a}.quiz{background:#fff9fd;border:1px solid var(--line);border-radius:20px;padding:20px;margin-top:20px}.quiz h2{margin-top:0}.answers{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}.answer{border:1px solid var(--line);background:white;border-radius:12px;padding:12px;text-align:left;font:inherit;cursor:pointer}.answer.correct{background:#e2f4e6;border-color:#6ca57a}.answer.wrong{background:#fde6e7;border-color:#c96c75}.feedback{min-height:1.5em;font-weight:650;margin-top:12px}.footer{text-align:center;margin-top:26px;color:#8a6e7d;font-size:.85rem}
+@media(min-width:700px){.study{grid-template-columns:minmax(0,1fr)}.card{min-height:350px}}
+</style>
+</head>
+<body><main>
+<div class="eyebrow">Vocabulary practice · B1–C1</div>
+<h1>Flashcards</h1>
+<p class="sub">Tap the card to flip it. Practise meaning, collocations and useful phrases.</p>
+<div class="toolbar" aria-label="Study options">
+<button id="allBtn" class="active">All words</button><button id="phrasesBtn">Phrases</button><button id="wordsBtn">Single words</button>
+<select id="direction" aria-label="Card direction"><option value="en">English → Russian</option><option value="ru">Russian → English</option></select>
+<button id="shuffleBtn">Shuffle</button>
+</div>
+<div class="progress-wrap"><div class="progress" id="progress"></div></div>
+<section class="study">
+<div class="card" id="card" role="button" tabindex="0" aria-label="Flashcard. Click to reveal answer">
+<div class="hint" id="hint">Front · tap to reveal</div><div><div class="word" id="front">Asia</div><div class="meaning hidden" id="back"></div><div class="example hidden" id="example"></div></div>
+</div>
+<div class="controls">
+<button class="action" id="prevBtn">← Previous</button><button class="action primary" id="flipBtn">Show answer</button><button class="action" id="nextBtn">Next →</button>
+</div>
+<div class="controls"><button class="action" id="knowBtn">✓ Know it</button><button class="action" id="repeatBtn">↻ Practise again</button></div>
+<div class="bottom"><span class="count" id="count">1 / 1</span><span class="small" id="known">Known: 0 · To practise: all</span></div>
+</section>
+<section class="quiz">
+<h2>Quick check</h2><p id="question">Choose the correct meaning.</p><div class="answers" id="answers"></div><div class="feedback" id="feedback" aria-live="polite"></div><button class="action" id="newQuestion">New question</button>
+</section>
+<div class="footer">Tip: say the phrase aloud and make your own sentence before flipping the card.</div>
+</main>
+<script>
+const deck = [
+{en:"Asia",ru:"Азия",type:"word",ex:"Asia is the largest continent."},
+{en:"Asian",ru:"азиатский; азиат / азиатка",type:"word",ex:"Asian cuisine is popular around the world."},
+{en:"nutritious",ru:"питательный",type:"word",ex:"a nutritious meal"},
+{en:"empty",ru:"пустой",type:"word",ex:"The fridge is empty."},
+{en:"full",ru:"полный; сытый",type:"word",ex:"I'm full, thank you."},
+{en:"filling",ru:"сытный",type:"word",ex:"This soup is really filling."},
+{en:"all-year-round",ru:"круглогодичный; круглый год",type:"phrase",ex:"The resort is open all year round."},
+{en:"go out for dinner",ru:"пойти куда-нибудь поужинать",type:"phrase",ex:"Let's go out for dinner tonight."},
+{en:"eat out",ru:"есть вне дома; ходить в кафе / рестораны",type:"phrase",ex:"We eat out once or twice a week."},
+{en:"twice a day",ru:"дважды в день",type:"phrase",ex:"I brush my teeth twice a day."},
+{en:"to be hungry",ru:"быть голодным",type:"phrase",ex:"I'm hungry. What's for dinner?"},
+{en:"to be starving",ru:"умирать от голода; быть очень голодным",type:"phrase",ex:"I'm starving — let's get something to eat."},
+{en:"to be more decisive",ru:"быть решительнее",type:"phrase",ex:"I want to be more decisive at work."},
+{en:"to be more confident",ru:"быть увереннее",type:"phrase",ex:"She wants to be more confident when speaking English."},
+{en:"I tend to doubt",ru:"я склонен / склонна сомневаться",type:"phrase",ex:"I tend to doubt myself before exams."},
+{en:"It takes me some time to…",ru:"мне нужно некоторое время, чтобы…",type:"phrase",ex:"It takes me some time to feel comfortable in a new place."},
+{en:"make a decision",ru:"принять решение",type:"phrase",ex:"She found it difficult to make a decision."},
+{en:"once",ru:"один раз; однажды",type:"word",ex:"I've only tried surfing once."},
+{en:"surf-core",ru:"серф-эстетика; стиль, вдохновлённый сёрфингом",type:"word",ex:"The photos have a surf-core aesthetic."},
+{en:"I'm scared of…",ru:"я боюсь…",type:"phrase",ex:"I'm scared of swimming in the ocean."},
+{en:"scared",ru:"испуганный; напуганный",type:"word",ex:"I'm scared of the dark."},
+{en:"scary",ru:"страшный; пугающий",type:"word",ex:"This film is so scary."},
+{en:"one-time experience",ru:"разовый опыт; опыт, который случается один раз",type:"phrase",ex:"For me, skydiving was a one-time experience."},
+{en:"more… than…",ru:"более… чем…; скорее…, чем…",type:"phrase",ex:"I'm more into hiking than surfing."},
+{en:"I'm not so much into it",ru:"мне это не очень нравится; я не особо этим увлекаюсь",type:"phrase",ex:"Surfing looks fun, but I'm not so much into it."},
+{en:"lay the table",ru:"накрыть на стол",type:"phrase",ex:"Could you lay the table, please?"},
+{en:"fear",ru:"страх; бояться",type:"word",ex:"Fear of failure can stop people from trying."},
+{en:"judge",ru:"судить; оценивать; осуждать",type:"word",ex:"Try not to judge people too quickly."}
+];
+let filtered=[...deck], index=0, flipped=false, known=new Set(), quizItem=null;
+const $=id=>document.getElementById(id);
+function render(){
+ if(!filtered.length)return;
+ index=Math.max(0,Math.min(index,filtered.length-1)); flipped=false;
+ const item=filtered[index], reverse=$("direction").value==="ru";
+ $("front").textContent=reverse?item.ru:item.en;
+ $("back").textContent=reverse?item.en:item.ru;
+ $("example").textContent="Example: "+item.ex;
+ $("back").classList.add("hidden");$("example").classList.add("hidden");
+ $("hint").textContent="Front · tap to reveal";$("flipBtn").textContent="Show answer";
+ $("count").textContent=`${index+1} / ${filtered.length}`;
+ $("progress").style.width=((index+1)/filtered.length*100)+"%";
+ $("known").textContent=`Known: ${known.size} · To practise: ${deck.length-known.size}`;
+ $("prevBtn").disabled=index===0;$("nextBtn").disabled=index===filtered.length-1;
+}
+function flip(){flipped=!flipped;$("back").classList.toggle("hidden",!flipped);$("example").classList.toggle("hidden",!flipped);$("hint").textContent=flipped?"Answer · example":"Front · tap to reveal";$("flipBtn").textContent=flipped?"Hide answer":"Show answer";}
+function setFilter(type){filtered=deck.filter(x=>type==="all"||(type==="phrase"?x.type==="phrase":x.type==="word"));index=0;document.querySelectorAll(".toolbar button").forEach(b=>b.classList.remove("active"));$(type==="all"?"allBtn":type==="phrase"?"phrasesBtn":"wordsBtn").classList.add("active");render();newQuestion();}
+$("card").addEventListener("click",flip);$("card").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flip();}});
+$("flipBtn").onclick=flip;$("prevBtn").onclick=()=>{index--;render()};$("nextBtn").onclick=()=>{index++;render()};
+$("allBtn").onclick=()=>setFilter("all");$("phrasesBtn").onclick=()=>setFilter("phrase");$("wordsBtn").onclick=()=>setFilter("word");
+$("direction").onchange=render;
+$("shuffleBtn").onclick=()=>{filtered.sort(()=>Math.random()-.5);index=0;render()};
+$("knowBtn").onclick=()=>{known.add(filtered[index].en);render();if(index<filtered.length-1){index++;render()}};
+$("repeatBtn").onclick=()=>{known.delete(filtered[index].en);render()};
+function newQuestion(){
+ const pool=filtered.length?filtered:deck;quizItem=pool[Math.floor(Math.random()*pool.length)];
+ $("question").textContent=`What does “${quizItem.en}” mean?`; $("feedback").textContent="";
+ const choices=[quizItem,...pool.filter(x=>x.en!==quizItem.en).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);
+ $("answers").innerHTML="";
+ choices.forEach(item=>{const b=document.createElement("button");b.className="answer";b.textContent=item.ru;b.onclick=()=>{document.querySelectorAll(".answer").forEach(x=>x.disabled=true);if(item.en===quizItem.en){b.classList.add("correct");$("feedback").textContent="Correct! "+quizItem.en+" — "+quizItem.ru;}else{b.classList.add("wrong");$("feedback").textContent="Not quite. Correct answer: "+quizItem.ru;[...document.querySelectorAll(".answer")].forEach(x=>{if(x.textContent===quizItem.ru)x.classList.add("correct")})}};$("answers").appendChild(b)});
+}
+$("newQuestion").onclick=newQuestion;
+render();newQuestion();
+</script></body></html>
