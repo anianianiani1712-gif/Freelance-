@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Карточки по французскому</title>
+<style>
+:root{--pink:#f5c5ca;--pink-dark:#b84d69;--cream:#fff4ad;--ink:#252333;--paper:#fffaf6;--line:#e7aeb6}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(135deg,#fffaf6,#f7e2e2);font-family:Arial,sans-serif;color:var(--ink)}
+header{padding:24px 16px 12px;text-align:center}
+h1{font-family:Georgia,serif;margin:0 0 8px;color:#273d73;font-size:clamp(26px,5vw,38px)}
+header p{margin:0 auto;max-width:700px;line-height:1.45}
+.wrap{max-width:1000px;margin:auto;padding:12px 16px 34px}
+.controls{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0 18px}
+button,select{font-size:15px;border:1px solid #d9a3ac;border-radius:12px;padding:10px 13px;background:#fff;color:var(--ink);cursor:pointer}
+button.primary{background:var(--pink-dark);color:white;border-color:var(--pink-dark)}
+select{max-width:100%;background:white}
+.status{text-align:center;font-size:14px;color:#675a60;margin:8px 0 14px}
+.card-area{display:flex;justify-content:center;perspective:1000px}
+.flashcard{width:min(100%,650px);min-height:300px;border:0;background:transparent;padding:0;perspective:1000px}
+.inner{position:relative;width:100%;min-height:300px;transition:transform .55s;transform-style:preserve-3d}
+.flashcard.flipped .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;min-height:300px;border-radius:22px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:28px;background:var(--cream);border:2px solid #f0d98a;box-shadow:0 10px 24px #7d51521c;backface-visibility:hidden}
+.face.back{transform:rotateY(180deg);background:#fff;border-color:#e9b9c0}
+.word{font-family:Georgia,serif;font-size:clamp(30px,6vw,48px);font-weight:bold;line-height:1.15}
+.translation{font-size:clamp(22px,4vw,32px);line-height:1.25}
+.note{font-size:15px;color:#71646a;margin-top:14px;line-height:1.4}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:24px}
+.mini{background:#fff8b9;border:1px solid #efdfa0;border-radius:14px;padding:16px;text-align:center;min-height:100px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;gap:7px}
+.mini strong{font-family:Georgia,serif;font-size:20px}
+.mini span{font-size:15px;color:#61555b}
+.section-title{font-family:Georgia,serif;color:#273d73;margin:28px 0 10px;font-size:22px}
+.hidden{display:none}
+footer{text-align:center;color:#776970;font-size:12px;padding:16px}
+@media(max-width:520px){.face,.inner,.flashcard{min-height:260px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.mini{padding:12px}}
+</style>
+</head>
+<body>
+<header>
+<h1>Карточки по французскому</h1>
+<p>Нажми на карточку, чтобы увидеть перевод. Можно тренироваться по темам, перемешивать слова и повторять весь список.</p>
+</header>
+<div class="wrap">
+<div class="controls">
+<select id="category" aria-label="Тема"></select>
+<button id="shuffle">Перемешать</button>
+<button id="showAll">Показать весь список</button>
+</div>
+<div class="status" id="status"></div>
+<div class="card-area" id="practice">
+<button class="flashcard" id="flashcard" aria-label="Перевернуть карточку">
+<div class="inner">
+<div class="face front"><div class="word" id="frontWord"></div><div class="note">Нажми, чтобы проверить себя</div></div>
+<div class="face back"><div class="translation" id="backWord"></div><div class="note" id="backNote"></div></div>
+</div>
+</button>
+</div>
+<div class="controls">
+<button id="prev">← Назад</button><button class="primary" id="flip">Показать перевод</button><button id="next">Далее →</button>
+</div>
+<div id="allCards" class="hidden"></div>
+</div>
+<footer>Французский · Лексические карточки</footer>
+<script>
+const cards = [
+["mille","тысяча","Слово произносится с конечным звуком [l].","Звуки и слова"],
+["ville","город","Конечная согласная произносится: [vil].","Звуки и слова"],
+["tranquille","спокойный, тихий","В конце слышится [l].","Звуки и слова"],
+["appuyer","нажимать; опирать","Например: appuyer sur un bouton — нажать на кнопку.","Глаголы"],
+["s’appuyer","опираться","s’appuyer sur quelque chose — опираться на что-либо.","Глаголы"],
+["fort / forte","сильный / сильная; громкий / громкая","Формы мужского и женского рода.","Прилагательные"],
+["paresseux / paresseuse","ленивый / ленивая","Существительное: la paresse — лень.","Прилагательные"],
+["paresseusement","лениво","Наречие от paresseux / paresseuse.","Наречия"],
+["roi","король","","Слова и выражения"],
+["entourer","окружать; обводить","","Глаголы"],
+["faire un tour","прогуляться; совершить небольшую прогулку","","Глаголы"],
+["faire une promenade","совершить прогулку; погулять","","Глаголы"],
+["même","тот же самый; одинаковый; даже","Значение зависит от контекста.","Слова и выражения"],
+["porter","носить (одежду); нести","porter une robe — носить платье.","Глаголы"],
+["la chanson","песня","","Существительные"],
+["souvent","часто","","Наречия"],
+["devenir","становиться; стать","","Глаголы"],
+["être fier / fière de","гордиться кем-либо / чем-либо","Je suis fier de toi — я горжусь тобой.","Выражения"],
+["je veux","я хочу","Глагол vouloir — хотеть.","Выражения"],
+["la prise","захват; взятие","Также может означать «розетка» или «приём» — в зависимости от контекста.","Существительные"],
+["le bonnet","вязаная шапка","","Одежда"],
+["la casquette","кепка","","Одежда"],
+["la chemise","рубашка","","Одежда"],
+["la tunique","туника","","Одежда"],
+["le petit haut","топ; лёгкая женская блузка","","Одежда"],
+["le foulard","платок; шейный шарф","","Одежда"],
+["le pantalon","брюки; штаны","","Одежда"],
+["la veste","пиджак; жакет; куртка","Перевод зависит от вида одежды.","Одежда"],
+["le pull","свитер; пуловер","","Одежда"],
+["la robe","платье","","Одежда"],
+["jumeaux / jumelles","близнецы (мальчики или смешанная пара) / близнецы-девочки","jumeaux — мужской род или смешанная пара; jumelles — две девочки.","Слова и выражения"],
+["calorique","калорийный","","Еда и характеристики"],
+["riche en calories","с высоким содержанием калорий; калорийный","","Еда и характеристики"],
+["se laver","мыться; умываться","","Возвратные глаголы"],
+["se coucher","ложиться (спать)","","Возвратные глаголы"],
+["se reposer","отдыхать","","Возвратные глаголы"],
+["se maquiller","делать макияж; краситься","","Возвратные глаголы"],
+["se raser","бриться","","Возвратные глаголы"],
+["se doucher","принимать душ","","Возвратные глаголы"],
+["s’habiller","одеваться","","Возвратные глаголы"],
+["se déshabiller","раздеваться","","Возвратные глаголы"],
+["se promener","гулять; прогуливаться","","Возвратные глаголы"],
+["s’amuser","развлекаться; веселиться","","Возвратные глаголы"],
+["se parfumer","пользоваться духами; душиться","","Возвратные глаголы"],
+["se dépêcher","торопиться; спешить","","Возвратные глаголы"]
+];
+let filtered = [...cards], index = 0;
+const category = document.getElementById('category');
+const flashcard = document.getElementById('flashcard');
+function fillCategories(){
+ const cats=['Все темы',...new Set(cards.map(c=>c[3]))];
+ category.innerHTML=cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+}
+function render(){
+ if(!filtered.length)return;
+ index=(index+filtered.length)%filtered.length;
+ flashcard.classList.remove('flipped');
+ document.getElementById('frontWord').textContent=filtered[index][0];
+ document.getElementById('backWord').textContent=filtered[index][1];
+ document.getElementById('backNote').textContent=filtered[index][2]||'';
+ document.getElementById('status').textContent=`Карточка ${index+1} из ${filtered.length} · ${filtered[index][3]}`;
+}
+function flip(){flashcard.classList.toggle('flipped')}
+function filterCards(){
+ const val=category.value;
+ filtered=val==='Все темы'?[...cards]:cards.filter(c=>c[3]===val);
+ index=0; render();
+ document.getElementById('allCards').classList.add('hidden');
+ document.getElementById('practice').classList.remove('hidden');
+ document.querySelectorAll('.controls')[2]?.classList.remove('hidden');
+}
+function showAll(){
+ const area=document.getElementById('allCards');
+ area.innerHTML='';
+ const title=document.createElement('h2');title.className='section-title';title.textContent='Весь словарь';area.appendChild(title);
+ const grid=document.createElement('div');grid.className='grid';
+ filtered.forEach(c=>{
+  const el=document.createElement('button');el.className='mini';
+  const strong=document.createElement('strong');strong.textContent=c[0];
+  const span=document.createElement('span');span.textContent=c[1];
+  el.append(strong,span);el.addEventListener('click',()=>{index=filtered.indexOf(c);document.getElementById('practice').classList.remove('hidden');area.classList.add('hidden');render();});
+  grid.appendChild(el);
+ });
+ area.appendChild(grid);area.classList.remove('hidden');document.getElementById('practice').classList.add('hidden');
+}
+fillCategories();render();
+category.addEventListener('change',filterCards);
+flashcard.addEventListener('click',flip);
+document.getElementById('flip').addEventListener('click',flip);
+document.getElementById('next').addEventListener('click',()=>{index++;render()});
+document.getElementById('prev').addEventListener('click',()=>{index--;render()});
+document.getElementById('shuffle').addEventListener('click',()=>{for(let i=filtered.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[filtered[i],filtered[j]]=[filtered[j],filtered[i]]}index=0;render()});
+document.getElementById('showAll').addEventListener('click',showAll);
+</script>
+</body>
+</html>
