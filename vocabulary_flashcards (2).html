@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vocabulary Flashcards</title>
+<style>
+:root{--blue:#b9d9f5;--blue-deep:#6fa8dc;--yellow:#fff1a8;--ink:#20252b;--paper:#f2f7fb;--muted:#64748b}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(#d9e4ee 1px,transparent 1px),var(--paper);background-size:18px 18px;min-height:100vh}
+main{max-width:1050px;margin:auto;padding:28px 18px 48px}.top{text-align:center;margin-bottom:22px}.top h1{font-size:clamp(1.7rem,4vw,2.5rem);margin:0 0 8px}.top p{color:var(--muted);margin:0}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:20px 0}.toolbar input,.toolbar select,.toolbar button{font:inherit;border:1px solid #cbd5e1;border-radius:12px;padding:10px 13px;background:#fff;color:var(--ink)}.toolbar input{flex:1;min-width:210px;max-width:380px}.toolbar button{cursor:pointer;font-weight:650}.toolbar button.primary{background:var(--blue);border-color:var(--blue)}
+.status{text-align:center;color:var(--muted);font-size:.95rem;margin:8px 0 18px}.deck{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px}.card{height:220px;perspective:1000px;cursor:pointer;outline:none}.inner{height:100%;position:relative;transform-style:preserve-3d;transition:transform .45s}.card.flipped .inner{transform:rotateY(180deg)}.face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;border-radius:5px;box-shadow:0 8px 18px #25364a20;backface-visibility:hidden;overflow-wrap:anywhere}.front{background:var(--blue);font-size:clamp(1.25rem,2.3vw,1.75rem);font-weight:550}.back{background:var(--yellow);transform:rotateY(180deg);font-size:1.15rem;flex-direction:column;gap:12px}.back small{font-size:.78rem;color:#626262;text-transform:uppercase;letter-spacing:.08em}.back .answer{font-size:1.12rem;line-height:1.45}.back .note{font-size:.88rem;color:#5f6470;line-height:1.35}.empty{grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)}.footer{text-align:center;margin-top:24px;color:var(--muted);font-size:.9rem}.tag{display:inline-block;background:#fff;border:1px solid #dbe5ee;border-radius:999px;padding:5px 10px;margin:3px;font-size:.8rem}
+@media(max-width:520px){main{padding:20px 12px 36px}.card{height:190px}.deck{gap:12px}}
+</style>
+</head>
+<body><main>
+<header class="top"><h1>Vocabulary flashcards</h1><p>One word or expression per card · click a card to reveal the meaning</p></header>
+<div class="toolbar"><input id="search" type="search" placeholder="Search expressions or translations…" aria-label="Search flashcards"><select id="mode" aria-label="Card order"><option value="all">All cards</option><option value="unflipped">Not reviewed yet</option><option value="flipped">Reviewed cards</option></select><button id="shuffle" class="primary">Shuffle</button><button id="reset">Reset</button></div>
+<div class="status" id="status" aria-live="polite"></div><section class="deck" id="deck"></section>
+<div class="footer"><span class="tag">Tip: say the expression aloud before flipping</span><span class="tag">Use the search box to practise one topic</span></div>
+</main>
+<script>
+const cards = [
+["It's not a big deal","Это не такая уж большая проблема / Ничего страшного."],
+["cookware","Посуда для готовки"],
+["should + infinitive","Следует / нужно что-то сделать: should + начальная форма глагола."],
+["shouldn't + infinitive","Не следует делать что-либо: shouldn't + начальная форма глагола."],
+["to be good at","Хорошо разбираться в чём-либо / хорошо что-то делать"],
+["to be useless at","Совсем не уметь что-либо делать; быть несведущим в чём-либо"],
+["do household chores","Выполнять работу по дому, заниматься домашними делами"],
+["healthy / unhealthy","Полезный для здоровья / вредный для здоровья"],
+["junk food","Вредная еда; например, фастфуд и сладости"],
+["fast food","Фастфуд; еда быстрого приготовления"],
+["sweets","Сладости"],
+["athletic","Спортивный, атлетичный; об одежде — спортивного типа"],
+["sore spot","Болезненное место; уязвимое место (в переносном смысле)"],
+["regardless of the fact that","Несмотря на то, что…"],
+["sore throat","Боль в горле"],
+["keep — kept — kept","Держать, хранить, поддерживать; формы глагола keep"],
+["for two weeks","В течение двух недель / уже две недели (зависит от контекста)"],
+["lead to","Приводить к чему-либо"],
+["upload","Загружать файл в интернет / на платформу"],
+["versus (vs)","Против; в сравнении с"],
+["answer","Отвечать; ответ"],
+["focus on","Сосредоточиться на чём-либо"],
+["start striving","Начать стремиться к чему-либо"],
+["myself","Себя / сам(а) — о I"],
+["yourself","Себя / сам(а) — об одном человеке, you"],
+["himself","Себя / сам — о мужчине, he"],
+["herself","Себя / сама — о женщине, she"],
+["itself","Себя / сам по себе — о предмете или животном, it"],
+["ourselves","Себя / сами — о we"],
+["yourselves","Себя / сами — о нескольких людях, you"],
+["themselves","Себя / сами — о they"],
+["It's me who is afraid.","Это я боюсь. / Именно я испытываю страх."],
+["mindset","Образ мышления; склад ума; установки"],
+["Sorry, could you repeat?","Извините, не могли бы вы повторить?"],
+["Come again?","Повторите, пожалуйста? / Что, простите? (разговорное)"],
+["I didn't catch that.","Я не расслышал(а) / не понял(а), что вы сказали."],
+["Go slower, please.","Говорите, пожалуйста, помедленнее. Более естественно: Could you speak more slowly, please?"],
+["be afraid of","Бояться чего-либо / кого-либо"],
+["challenging","Сложный, требующий усилий; бросающий вызов"],
+["make sacrifices","Идти на жертвы; чем-то жертвовать"],
+["keep going","Продолжать; не сдаваться"],
+["celebrate small achievements","Отмечать небольшие достижения"],
+["reach your goal","Достичь своей цели"],
+["compare yourself to","Сравнивать себя с кем-либо"],
+["believe in yourself","Верить в себя"],
+["give up","Сдаваться; бросать попытки"],
+["exciting","Захватывающий, увлекательный; очень интересный"],
+["I'm not sure.","Я не уверен(а)."],
+["patience","Терпение"]
+];
+let order = cards.map((_,i)=>i); let flipped = new Set();
+const deck=document.getElementById('deck'), search=document.getElementById('search'), mode=document.getElementById('mode'), status=document.getElementById('status');
+function render(){const q=search.value.trim().toLowerCase();let ids=order.filter(i=>{const c=cards[i];const match=(c[0]+' '+c[1]).toLowerCase().includes(q);const m=mode.value==='all'||(mode.value==='flipped'?flipped.has(i):!flipped.has(i));return match&&m});deck.innerHTML='';status.textContent=`Showing ${ids.length} of ${cards.length} cards · reviewed ${flipped.size}/${cards.length}`;if(!ids.length){deck.innerHTML='<div class="empty">No matching cards. Try another search or reset the filters.</div>';return;}ids.forEach(i=>{const c=cards[i],el=document.createElement('article');el.className='card'+(flipped.has(i)?' flipped':'');el.tabIndex=0;el.setAttribute('role','button');el.setAttribute('aria-label','Flashcard: '+c[0]+'. Press Enter or Space to flip.');el.innerHTML=`<div class="inner"><div class="face front">${escapeHtml(c[0])}</div><div class="face back"><small>Meaning / translation</small><div class="answer">${escapeHtml(c[1])}</div><div class="note">Click to turn back</div></div></div>`;const flip=()=>{if(flipped.has(i))flipped.delete(i);else flipped.add(i);render()};el.addEventListener('click',flip);el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}});deck.appendChild(el)});}
+function escapeHtml(s){return s.replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+search.addEventListener('input',render);mode.addEventListener('change',render);document.getElementById('shuffle').addEventListener('click',()=>{for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]]}render()});document.getElementById('reset').addEventListener('click',()=>{order=cards.map((_,i)=>i);flipped.clear();search.value='';mode.value='all';render()});render();
+</script></body></html>
