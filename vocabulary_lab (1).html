@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vocabulary Lab — Learn & Use</title>
+<style>
+:root{--berry:#a52e63;--pink:#f8e5ee;--cream:#fff9df;--ink:#28232a;--muted:#6c6570;--line:#eadce3;--green:#dff4e7;--red:#ffe4e4}
+*{box-sizing:border-box}body{margin:0;background:#faf7f8;color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:linear-gradient(135deg,#fff1f6,#fff9df);padding:28px 20px 22px;border-bottom:1px solid var(--line)}
+.wrap{max-width:1050px;margin:auto}h1{margin:0;font-size:clamp(1.6rem,4vw,2.5rem);line-height:1.15}header p{margin:8px 0 0;color:var(--muted)}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+button,select,input{font:inherit}button{border:0;border-radius:12px;padding:10px 14px;cursor:pointer;background:#eee7eb;color:var(--ink);font-weight:650;transition:.15s}
+button:hover{transform:translateY(-1px)}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #d98ab0;outline-offset:2px}
+button.active,.primary{background:var(--berry);color:white}.subtle{background:white;border:1px solid var(--line)}
+main{padding:22px 20px 40px}.panel{background:white;border:1px solid var(--line);border-radius:20px;padding:clamp(16px,3vw,28px);box-shadow:0 8px 26px #43203b0a}
+.topline{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}.pill{background:var(--pink);color:var(--berry);border-radius:999px;padding:5px 10px;font-size:.85rem;font-weight:700}
+h2{margin:0 0 6px;font-size:1.35rem} .hint{color:var(--muted);margin:0 0 18px}
+.flash-wrap{display:grid;grid-template-columns:1fr;gap:14px;max-width:650px;margin:auto}
+.flashcard{min-height:230px;border:2px solid #f1d5e2;background:var(--cream);border-radius:22px;display:flex;align-items:center;justify-content:center;text-align:center;padding:26px;cursor:pointer;position:relative}
+.flashcard .word{font-size:clamp(1.8rem,5vw,3rem);font-weight:800;line-height:1.15}.flashcard .small{font-size:1rem;color:var(--muted);margin-top:14px}.flashcard .tap{position:absolute;bottom:12px;font-size:.8rem;color:var(--muted)}
+.controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.tile{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff;min-height:75px}
+label{display:block;font-weight:650;margin:12px 0 5px}input,select{width:100%;padding:11px 12px;border:1px solid #d9ccd3;border-radius:10px;background:white;color:var(--ink)}
+.question{padding:15px;border:1px solid var(--line);border-radius:14px;margin:10px 0;background:#fff}
+.question p{margin:0 0 10px;font-weight:650}.answers{display:flex;gap:8px;flex-wrap:wrap}.answers button{font-weight:500}
+.feedback{margin-top:12px;padding:12px;border-radius:12px;display:none}.good{display:block;background:var(--green)}.bad{display:block;background:var(--red)}
+.progress{height:8px;background:#eee5e9;border-radius:99px;overflow:hidden;margin:12px 0}.progress span{display:block;height:100%;background:var(--berry);width:0;transition:width .2s}
+.footer{color:var(--muted);font-size:.9rem;text-align:center;margin-top:22px}
+.hidden{display:none!important}.sentence{font-size:1.1rem}.score{font-weight:800;color:var(--berry)}
+@media(min-width:700px){.flash-wrap{grid-template-columns:1fr}.question{padding:18px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>Vocabulary Lab</h1><p>Запоминай выражения, проверяй себя и используй лексику в контексте.</p><nav id="nav">
+<button class="active" data-tab="cards">Карточки</button><button data-tab="match">Найди пару</button><button data-tab="quiz">Выбери значение</button><button data-tab="gap">Пропуски</button><button data-tab="translate">Перевод в контексте</button><button data-tab="speak">Speaking challenge</button>
+</nav></div></header>
+<main class="wrap">
+<section id="cards" class="panel">
+<div class="topline"><div><h2>1. Карточки для запоминания</h2><p class="hint">Нажми на карточку, чтобы увидеть перевод и пример.</p></div><span class="pill" id="cardCount"></span></div>
+<div class="flash-wrap"><div class="flashcard" id="flash" tabindex="0" role="button" aria-label="Перевернуть карточку"><div><div class="word" id="front"></div><div class="small" id="back"></div></div><div class="tap">Нажми, чтобы перевернуть</div></div>
+<div class="controls"><button class="subtle" id="prev">← Назад</button><button class="primary" id="flip">Перевернуть</button><button class="subtle" id="next">Дальше →</button><button class="subtle" id="shuffle">Перемешать</button></div>
+<div class="controls"><button id="known" class="subtle">✓ Знаю</button><button id="review" class="subtle">↻ Повторить</button></div><div class="progress"><span id="progress"></span></div><p id="cardStatus" class="hint" style="text-align:center;margin:0"></p></div>
+</section>
+<section id="match" class="panel hidden"><div class="topline"><div><h2>2. Найди пару</h2><p class="hint">Выбери английское выражение, затем его перевод.</p></div><span class="pill" id="matchScore">0 / 6</span></div><div id="matchArea" class="grid"></div><div class="feedback" id="matchFeedback"></div><button class="primary" id="newMatch">Новый раунд</button></section>
+<section id="quiz" class="panel hidden"><h2>3. Выбери правильное значение</h2><p class="hint">Проверка понимания выражений.</p><div id="quizArea"></div><button class="primary" id="checkQuiz">Проверить ответы</button><div class="feedback" id="quizFeedback"></div></section>
+<section id="gap" class="panel hidden"><h2>4. Заполни пропуски</h2><p class="hint">Впиши выражение, которое лучше всего подходит по смыслу. Регистр не важен.</p><div id="gapArea"></div><button class="primary" id="checkGap">Проверить</button><button class="subtle" id="newGap">Другие предложения</button><div class="feedback" id="gapFeedback"></div></section>
+<section id="translate" class="panel hidden"><h2>5. Переведи на английский</h2><p class="hint">Используй выражение из списка. Возможны разные варианты формулировки — ориентируйся на ключевое выражение.</p><div id="transArea"></div><button class="primary" id="showTrans">Показать варианты</button><div class="feedback" id="transFeedback"></div></section>
+<section id="speak" class="panel hidden"><h2>6. Speaking challenge</h2><p class="hint">Говори 30–60 секунд. Постарайся использовать выражения с карточек естественно.</p><div id="speakArea" class="grid"></div><button class="primary" id="newSpeak">Новые задания</button></section>
+<div class="footer">Совет: сначала вспомни значение самостоятельно, затем проверь себя и составь собственный пример.</div>
+</main>
+<script>
+const vocab = [
+["hell","ад; адский ужас","The journey was hell because we missed every connection."],
+["nightmare","кошмар","Moving house can be a complete nightmare."],
+["refuse to","отказываться что-либо делать","He refused to shake my hand."],
+["a habit","привычка","Checking my phone first thing is a bad habit."],
+["win the first prize","занять первое место / выиграть первый приз","She trained hard and won the first prize."],
+["reach a goal / dream","достичь цели / осуществить мечту","It took years to reach her goal."],
+["earthquake","землетрясение","The earthquake damaged several buildings."],
+["predict","предсказывать, прогнозировать","Nobody could predict what would happen next."],
+["have an affair","иметь роман на стороне","The novel is about a politician who had an affair."],
+["spend time on","тратить время на","I spend too much time on social media."],
+["have something in common","иметь что-то общее","We have a lot in common despite our age difference."],
+["do some research","провести исследование / поискать информацию","I did some research before choosing the course."],
+["plague","чума; бедствие","The town was hit by a plague centuries ago."],
+["tell me about","рассказать мне о","Tell me about your new job."],
+["widow / widower","вдова / вдовец","After her husband died, she became a widow."],
+["dress up like","нарядиться как","The children dressed up like superheroes."],
+["I'm off to do something","я отправляюсь / собираюсь пойти что-то сделать","I'm off to do some shopping."],
+["neighbourhood","район, квартал","It's a friendly neighbourhood with a park nearby."],
+["origin / originally","происхождение / изначально","The word is French in origin."],
+["harm","вред; вредить","Too much sun can harm your skin."],
+["seaweed","морские водоросли","Some kinds of seaweed are used in cooking."],
+["to vote","голосовать","Everyone over eighteen has the right to vote."],
+["reinvent the wheel","изобретать велосипед","Use the template; there's no need to reinvent the wheel."],
+["invent","изобретать","Who invented the telephone?"],
+["tell me about it","ещё бы; знаю не понаслышке","'I'm exhausted.' 'Tell me about it!'"],
+["remain","оставаться","Please remain calm and follow the instructions."],
+["human remains","человеческие останки","Human remains were discovered near the site."],
+["hardly","едва; почти не","I could hardly hear him over the music."],
+["get up on the wrong side of the bed","встать не с той ноги","You seem grumpy — did you get up on the wrong side of the bed?"],
+["doze off","задремать, случайно уснуть","I dozed off during the film."],
+["do the ironing","гладить одежду","I usually do the ironing at the weekend."],
+["iron","железо; утюг; гладить","This pan is made of iron."],
+["look alike","быть похожими внешне","The sisters look alike."],
+["negotiate a deal","вести переговоры о сделке","They negotiated a deal with the supplier."],
+["give a talk","выступить с докладом / речью","She gave a talk about climate change."],
+["agenda","повестка дня","The first item on the agenda is the budget."],
+["a bride and groom","невеста и жених","The bride and groom greeted their guests."],
+["a fortress","крепость","The fortress stands on top of the hill."],
+["collect my order at the pick-up point","забрать заказ в пункте выдачи","I'll collect my order at the pick-up point after work."],
+["wet wipes / to wipe","влажные салфетки / вытирать","Use wet wipes to wipe the table."],
+["make up for","компенсировать, возмещать","I'll work late to make up for the time I lost."],
+["harmful","вредный","Smoking is harmful to your health."],
+["success / successful / succeed","успех / успешный / преуспеть","She worked hard and succeeded in business."]
+];
+const $=id=>document.getElementById(id);
+let order=vocab.map((_,i)=>i), idx=0, flipped=false, known=new Set(), matchCorrect=0, matchSelected=null;
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function showCard(){let v=vocab[order[idx]];$('front').textContent=flipped?v[1]:v[0];$('back').textContent=flipped?v[2]:' ';$('cardCount').textContent=`${idx+1} / ${order.length}`;$('progress').style.width=((idx+1)/order.length*100)+'%';$('cardStatus').textContent=`Отмечено «знаю»: ${known.size}`;$('flash').style.background=flipped?'#f8e5ee':'#fff9df'}
+function flip(){flipped=!flipped;showCard()}
+$('flash').onclick=flip;$('flash').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}};$('flip').onclick=flip;
+$('prev').onclick=()=>{idx=(idx-1+order.length)%order.length;flipped=false;showCard()};$('next').onclick=()=>{idx=(idx+1)%order.length;flipped=false;showCard()};
+$('shuffle').onclick=()=>{order=shuffle(order);idx=0;flipped=false;showCard()};
+$('known').onclick=()=>{known.add(order[idx]);idx=(idx+1)%order.length;flipped=false;showCard()};
+$('review').onclick=()=>{known.delete(order[idx]);idx=(idx+1)%order.length;flipped=false;showCard()};
+document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('main section').forEach(s=>s.classList.toggle('hidden',s.id!==b.dataset.tab))});
+function makeMatch(){
+  matchCorrect=0; matchSelected=null;
+  const chosen=shuffle(vocab.map((v,i)=>i)).slice(0,6);
+  const left=shuffle(chosen), right=shuffle(chosen), area=$('matchArea');
+  area.innerHTML='';
+  left.forEach(i=>{
+    const b=document.createElement('button');
+    b.className='tile subtle'; b.textContent=vocab[i][0];
+    b.dataset.idx=i; b.dataset.side='en';
+    b.onclick=()=>{
+      if(b.disabled) return;
+      matchSelected=i;
+      area.querySelectorAll('[data-side="en"]').forEach(x=>x.style.borderColor='');
+      b.style.borderColor='var(--berry)';
+    };
+    area.append(b);
+  });
+  right.forEach(i=>{
+    const b=document.createElement('button');
+    b.className='tile subtle'; b.textContent=vocab[i][1];
+    b.dataset.idx=i; b.dataset.side='ru';
+    b.onclick=()=>{
+      if(b.disabled || matchSelected===null) return;
+      if(Number(b.dataset.idx)===matchSelected){
+        b.disabled=true; b.style.background='var(--green)';
+        area.querySelectorAll('[data-side="en"]').forEach(x=>{
+          if(Number(x.dataset.idx)===matchSelected){
+            x.disabled=true; x.style.background='var(--green)'; x.style.borderColor='';
+          }
+        });
+        matchCorrect++;
+        $('matchScore').textContent=`${matchCorrect} / 6`;
+        if(matchCorrect===6){
+          $('matchFeedback').className='feedback good';
+          $('matchFeedback').textContent='Отлично! Все пары найдены.';
+        }
+      } else {
+        b.style.background='var(--red)';
+        setTimeout(()=>{b.style.background='';},500);
+      }
+      matchSelected=null;
+      area.querySelectorAll('[data-side="en"]').forEach(x=>x.style.borderColor='');
+    };
+    area.append(b);
+  });
+  $('matchScore').textContent='0 / 6';
+  $('matchFeedback').className='feedback';
+  $('matchFeedback').textContent='';
+}
+$('newMatch').onclick=makeMatch;
+function makeQuiz(){let chosen=shuffle(vocab.map((v,i)=>i)).slice(0,8), area=$('quizArea');area.innerHTML='';chosen.forEach((i,n)=>{let opts=shuffle([i,...shuffle(vocab.map((v,j)=>j).filter(j=>j!==i)).slice(0,3)]);let d=document.createElement('div');d.className='question';d.innerHTML=`<p>${n+1}. ${esc(vocab[i][0])}</p><div class="answers">${opts.map(j=>`<button class="subtle" data-answer="${j}" data-correct="${i}">${esc(vocab[j][1])}</button>`).join('')}</div>`;d.querySelectorAll('button').forEach(b=>b.onclick=()=>{d.querySelectorAll('button').forEach(x=>{x.classList.remove('active');x.style.background=''});b.classList.add('active');b.style.background='var(--pink)';d.dataset.selected=b.dataset.answer;d.dataset.correct=i});area.append(d)});$('quizFeedback').className='feedback';$('quizFeedback').textContent=''}
+$('checkQuiz').onclick=()=>{let qs=[...$('quizArea').querySelectorAll('.question')],score=0;qs.forEach(q=>{let ok=q.dataset.selected===q.dataset.correct;if(ok)score++;q.style.borderColor=ok?'#69ad80':'#df8585'});$('quizFeedback').className='feedback '+(score>=6?'good':'bad');$('quizFeedback').textContent=`Результат: ${score} из ${qs.length}. ${score===qs.length?'Безупречно!':'Повтори выражения, где были ошибки, и попробуй ещё раз.'}`};
+const gaps=[
+[ "I was so tired that I started to ___ during the film.","doze off"],
+["You don't need to ___; just adapt the idea that already works.","reinvent the wheel"],
+["They spent months trying to ___ with the supplier.","negotiate a deal"],
+["I could ___ believe my eyes when I saw the damage.","hardly"],
+["She wants to ___ her dream of opening a café.","reach a goal / dream"],
+["We have a lot of ___ despite coming from different backgrounds.","have something in common"],
+["He ___ to answer the question.","refused"],
+["I'm ___ do some shopping. Do you need anything?","off to"],
+["The new policy may ___ small businesses.","harm"],
+["I need to ___ before I choose a university course.","do some research"],
+["He was in a bad mood — maybe he ___ .","got up on the wrong side of the bed"],
+["She ___ a talk about the history of the fortress.","gave"]
+];
+function makeGap(){let chosen=shuffle(gaps).slice(0,8);$('gapArea').innerHTML=chosen.map((g,i)=>`<div class="question"><p>${i+1}. ${esc(g[0])}</p><input data-answer="${esc(g[1])}" placeholder="Введите выражение"></div>`).join('');$('gapFeedback').className='feedback';$('gapFeedback').textContent=''}
+$('checkGap').onclick=()=>{let inputs=[...$('gapArea').querySelectorAll('input')],score=0;inputs.forEach(x=>{let ans=x.value.trim().toLowerCase(),key=x.dataset.answer.toLowerCase();let ok=key.split(' / ').some(k=>ans===k)||ans===key||key.includes(ans)&&ans.length>5;x.style.borderColor=ok?'#69ad80':'#df8585';if(ok)score++});$('gapFeedback').className='feedback '+(score>=6?'good':'bad');$('gapFeedback').textContent=`Верно: ${score} из ${inputs.length}. Ответы: `+inputs.map(x=>x.dataset.answer).join(' • ')};
+$('newGap').onclick=makeGap;
+const translations=[
+["Он отказался пожать мне руку.","refuse to"],
+["Я почти не слышала его из-за музыки.","hardly"],
+["Нам не нужно изобретать велосипед.","reinvent the wheel"],
+["Я собираюсь пойти за покупками.","I'm off to"],
+["Они провели исследование перед сделкой.","do some research"],
+["Она выступила с докладом о землетрясении.","give a talk"],
+["Мне нужно компенсировать потерянное время.","make up for"],
+["Они имеют много общего.","have something in common"],
+["Я случайно задремал во время фильма.","doze off"],
+["Он потратил слишком много времени на эту задачу.","spend time on"]
+];
+function makeTrans(){let chosen=shuffle(translations).slice(0,6);$('transArea').innerHTML=chosen.map((t,i)=>`<div class="question"><p>${i+1}. ${esc(t[0])}</p><input placeholder="Твой перевод"><div class="small" data-key="${esc(t[1])}" style="display:none;color:var(--berry);margin-top:8px">Ключевое выражение: <b>${esc(t[1])}</b></div></div>`).join('');$('transFeedback').className='feedback';$('transFeedback').textContent=''}
+$('showTrans').onclick=()=>{let keys=[...$('transArea').querySelectorAll('[data-key]')];keys.forEach(k=>k.style.display='block');$('transFeedback').className='feedback good';$('transFeedback').textContent='Сверься с ключевым выражением. Проверь, сохранились ли смысл и грамматика.'};
+const prompts=[
+"Расскажи о случае, когда что-то пошло не по плану. Используй nightmare, hardly, harm.",
+"Опиши человека, с которым у тебя много общего. Используй have something in common и look alike.",
+"Расскажи о цели, которой хочешь достичь. Используй reach a goal, spend time on, succeed.",
+"Представь, что ты организуешь мероприятие. Используй agenda, give a talk, negotiate a deal.",
+"Расскажи о своём районе. Используй neighbourhood, originally, remain.",
+"Опиши необычную новость. Используй predict, earthquake, human remains.",
+"Расскажи о привычке, от которой хочешь избавиться. Используй a habit, refuse to, make up for.",
+"Опиши свадьбу или торжество. Используй bride and groom, dress up like, win the first prize."
+];
+function makeSpeak(){$('speakArea').innerHTML=shuffle(prompts).slice(0,4).map((p,i)=>`<div class="tile"><span class="pill">Задание ${i+1}</span><p>${esc(p)}</p><button class="subtle" onclick="this.nextElementSibling.classList.toggle('hidden')">Показать чек-лист</button><ul class="hidden"><li>Используй минимум 3 выражения.</li><li>Добавь конкретную деталь или пример.</li><li>Говори 30–60 секунд без чтения.</li></ul></div>`).join('')}
+$('newSpeak').onclick=makeSpeak;
+showCard();makeMatch();makeQuiz();makeGap();makeTrans();makeSpeak();
+</script>
+</body></html>
