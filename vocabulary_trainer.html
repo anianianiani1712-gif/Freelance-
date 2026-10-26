@@ -3,138 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vocabulary Trainer</title>
+<title>Vocabulary Trainer — Life, Health & Experiences</title>
 <style>
-:root{--bg:#eef5fb;--ink:#25313d;--pink:#f7c5c5;--yellow:#f5e58c;--mint:#b8e3d2;--purple:#e4dcf7;--accent:#7357a6}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,Arial,sans-serif}
-header{padding:28px 18px 18px;text-align:center;background:linear-gradient(120deg,#f8d1d1,#e4dcf7,#c8e8df)}
-h1{margin:0;font-size:clamp(26px,4vw,38px)}header p{margin:6px 0 0}
-main{max-width:1000px;margin:auto;padding:20px 16px 48px}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:4px 0 20px}
-button,select,input{font:inherit}button{border:0;border-radius:12px;padding:11px 16px;background:#fff;color:var(--ink);cursor:pointer;box-shadow:0 3px 10px #26374612;transition:transform .12s,background .12s}
-button:hover{transform:translateY(-1px)}button.primary{background:var(--accent);color:#fff}button.active{outline:2px solid var(--accent);background:#f1eaff}
-.panel{background:#ffffffb8;border:1px solid #ffffff;border-radius:22px;padding:clamp(16px,3vw,28px);box-shadow:0 8px 24px #2637460d}
-.stats{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#5a6671;font-size:14px;margin-bottom:14px}
-.flash-wrap{perspective:1000px;max-width:650px;margin:0 auto}
-.flashcard{min-height:300px;position:relative;transform-style:preserve-3d;transition:transform .45s;cursor:pointer}
-.flashcard.flipped{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;padding:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 8px 18px #27374615}
-.front{background:var(--pink)}.back{background:var(--yellow);transform:rotateY(180deg)}
-.term{font-size:clamp(26px,4vw,38px);font-weight:650;line-height:1.2}.translation{font-size:23px;margin:12px 0}.example{font-size:18px;max-width:520px}.hint{font-size:13px;opacity:.7;margin-top:18px}
-.controls{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin:18px 0 6px}
-.progress{height:7px;background:#dce5ec;border-radius:99px;overflow:hidden;margin:12px auto;max-width:650px}.progress span{display:block;height:100%;background:var(--accent);width:0}
-.row{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin:12px 0}
-input[type=text]{width:min(100%,520px);padding:12px 14px;border:1px solid #d6dfe6;border-radius:12px;background:white}
-.question{font-size:23px;font-weight:650;text-align:center;margin:10px 0 20px}
-.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:700px;margin:0 auto}
-.options button{text-align:left;border:1px solid #e3e8ed}
-.feedback{text-align:center;min-height:28px;font-weight:600;margin:14px 0}
-.small{font-size:13px;color:#66727c;text-align:center}
-.list-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
-.word-item{padding:14px;border-radius:14px;background:#fff;border-left:5px solid var(--mint)}
-.word-item strong{display:block}.word-item span{color:#5e6b76}
-.match-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}.match-cols button{min-height:60px;text-align:left}.match-cols button.chosen{outline:2px solid var(--accent);background:#f1eaff}.match-cols button.correct{background:#c8efda}.match-cols button.wrong{background:#ffd9d9}
-.hidden{display:none!important}
-@media(max-width:560px){.options{grid-template-columns:1fr}.flashcard{min-height:280px}.face{padding:20px}.match-cols{grid-template-columns:1fr 1fr}}
+:root{--pink:#f5c3c5;--berry:#8f3d58;--ink:#29252a;--paper:#fffaf9;--line:#eadfe0;--mint:#d9eee4;--gold:#f4e5b5}
+*{box-sizing:border-box} body{margin:0;background:#fff8f7;color:var(--ink);font:16px/1.5 Inter,Arial,sans-serif}
+header{padding:28px 20px 22px;background:linear-gradient(120deg,#f7d0d0,#fff0e9);border-bottom:1px solid #efdada}
+.wrap{max-width:1100px;margin:auto;padding:0 18px} h1{margin:0 0 6px;font-size:clamp(25px,4vw,38px);letter-spacing:-.6px} header p{margin:0;max-width:700px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 22px}
+button,.tab{border:0;border-radius:12px;padding:11px 15px;font:inherit;font-weight:650;cursor:pointer;transition:.15s}
+button{background:var(--berry);color:white} button:hover{filter:brightness(1.08);transform:translateY(-1px)} button.secondary,.tab{background:white;color:var(--berry);border:1px solid #e8cdd3}
+.tab.active{background:var(--berry);color:white;border-color:var(--berry)}
+.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:clamp(17px,3vw,28px);box-shadow:0 8px 26px #6130440b;margin-bottom:20px}
+.hidden{display:none!important}.muted{color:#71666b}.eyebrow{text-transform:uppercase;letter-spacing:1.4px;font-size:12px;font-weight:800;color:var(--berry)}
+.cardstage{min-height:240px;display:grid;place-items:center;text-align:center;background:#fff7f5;border:1px solid #f0d8d8;border-radius:16px;padding:24px;cursor:pointer}
+.word{font-size:clamp(25px,4vw,36px);font-weight:800;margin:12px 0}.translation{font-size:21px;color:var(--berry);font-weight:700}.example{max-width:720px;margin:16px auto 0;font-size:17px}
+.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:15px}.progress{height:7px;background:#f3e7e7;border-radius:99px;overflow:hidden;margin:14px 0}.progress span{display:block;height:100%;background:var(--berry);width:0;transition:width .2s}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.option{background:white;color:var(--ink);border:1px solid var(--line);text-align:left;min-height:58px}.option.correct{background:#e4f5eb;border-color:#8bc9a6}.option.wrong{background:#fff0ef;border-color:#e7a4a4}
+.question{font-size:22px;font-weight:750;margin:10px 0 18px}.feedback{margin-top:14px;font-weight:700;min-height:25px}.inputrow{display:flex;gap:9px;flex-wrap:wrap}.inputrow input,.answerinput{flex:1;min-width:210px;border:1px solid #d9c9cd;border-radius:12px;padding:13px;font:inherit}
+textarea{width:100%;min-height:110px;border:1px solid #d9c9cd;border-radius:12px;padding:13px;font:inherit;resize:vertical}
+.small{font-size:14px}.pill{display:inline-block;background:#fff0f0;border-radius:99px;padding:4px 10px;color:var(--berry);font-size:13px;font-weight:700}
+.list{display:grid;gap:9px}.vocabrow{padding:12px 14px;border:1px solid var(--line);border-radius:12px;display:grid;grid-template-columns:1.1fr 1fr 1.6fr;gap:12px;align-items:start}.vocabrow strong{color:var(--berry)}.vocabrow em{font-style:normal;color:#655b60}
+footer{text-align:center;padding:12px 10px 28px;color:#82757a;font-size:13px}
+@media(max-width:650px){.vocabrow{grid-template-columns:1fr;gap:3px}.question{font-size:19px}}
 </style>
 </head>
 <body>
-<header><h1>Vocabulary Trainer ✨</h1><p>Карточки, активное вспоминание и практика лексики</p></header>
-<main>
-<div class="tabs">
-<button class="active" data-view="cards">Карточки</button><button data-view="quiz">Выбери перевод</button><button data-view="type">Вспомни слово</button><button data-view="match">Сопоставление</button><button data-view="all">Весь список</button>
-</div>
+<header><div class="wrap">
+<div class="eyebrow">Vocabulary • Learn in context</div>
+<h1>Vocabulary Trainer</h1>
+<p>Запоминай выражения, проверяй себя и используй лексику в живых ответах. Нажимай на карточку, чтобы открыть перевод и пример.</p>
+</div></header>
+<main class="wrap">
+<nav id="tabs">
+<button class="tab active" data-tab="cards">Карточки</button>
+<button class="tab" data-tab="match">Выбери перевод</button>
+<button class="tab" data-tab="gaps">Пропуски</button>
+<button class="tab" data-tab="fix">Найди ошибку</button>
+<button class="tab" data-tab="speak">Speaking</button>
+<button class="tab" data-tab="all">Весь список</button>
+</nav>
+
 <section id="cards" class="panel">
-<div class="stats"><span id="counter">Карточка 1</span><span id="knownCount">Знаю: 0</span></div>
-<div class="progress"><span id="bar"></span></div>
-<div class="flash-wrap"><div class="flashcard" id="flashcard" tabindex="0" role="button" aria-label="Перевернуть карточку">
-<div class="face front"><div class="term" id="frontTerm"></div><div class="hint">Нажми, чтобы увидеть перевод и пример</div></div>
-<div class="face back"><div class="term" id="backTerm"></div><div class="translation" id="translation"></div><div class="example" id="example"></div><div class="hint">Попробуй составить собственное предложение</div></div>
-</div></div>
-<div class="controls"><button id="prev">← Назад</button><button class="primary" id="flip">Перевернуть</button><button id="next">Дальше →</button></div>
-<div class="controls"><button id="know">✓ Знаю</button><button id="again">↻ Повторить</button><button id="shuffle">Перемешать</button></div>
-<p class="small">Совет: сначала произнеси значение и свой пример вслух, затем переворачивай карточку.</p>
+<div class="eyebrow">Режим 1 · запоминание</div>
+<div class="progress"><span id="cardprogress"></span></div>
+<div class="muted small" id="cardcount"></div>
+<div class="cardstage" id="flashcard" role="button" tabindex="0" aria-label="Открыть перевод">
+<div><span class="pill" id="cardtag">Expression</span><div class="word" id="frontword"></div><div class="muted">Нажми, чтобы увидеть перевод и пример</div><div id="backcontent" class="hidden"><div class="translation" id="fronttranslation"></div><div class="example" id="frontexample"></div></div></div>
+</div>
+<div class="controls"><button class="secondary" id="prev">← Назад</button><button id="reveal">Показать ответ</button><button id="next">Следующая →</button><button class="secondary" id="shuffle">Перемешать</button></div>
 </section>
-<section id="quiz" class="panel hidden"><div class="stats"><span id="quizCount">Вопрос 1</span><span id="score">Счёт: 0</span></div><div class="question" id="quizQuestion"></div><div class="options" id="quizOptions"></div><div class="feedback" id="quizFeedback"></div><div class="controls"><button class="primary" id="quizNext">Следующий вопрос →</button><button id="quizRestart">Начать заново</button></div></section>
-<section id="type" class="panel hidden"><div class="stats"><span id="typeCount">Задание 1</span><span>Введи английский термин</span></div><div class="question" id="typeQuestion"></div><div class="row"><input id="typeInput" type="text" autocomplete="off" placeholder="Напиши ответ на английском"><button class="primary" id="checkType">Проверить</button></div><div class="feedback" id="typeFeedback"></div><div class="controls"><button id="showType">Показать ответ</button><button id="typeNext">Следующее →</button></div></section>
-<section id="match" class="panel hidden"><p class="small">Нажми на английский термин, затем на соответствующий перевод.</p><div class="match-cols"><div id="matchTerms"></div><div id="matchTranslations"></div></div><div class="feedback" id="matchFeedback"></div><div class="controls"><button class="primary" id="newMatch">Новая подборка</button></div></section>
-<section id="all" class="panel hidden"><div class="row"><input id="search" type="text" placeholder="Найти слово или перевод…"></div><div id="wordList" class="list-grid"></div></section>
+
+<section id="match" class="panel hidden">
+<div class="eyebrow">Режим 2 · активное вспоминание</div><div class="question" id="matchq"></div><div class="grid" id="matchopts"></div><div class="feedback" id="matchfeedback"></div><button id="matchnext" class="hidden">Следующий вопрос →</button><p class="muted small">Выбери подходящий перевод. После ответа появится объяснение.</p>
+</section>
+
+<section id="gaps" class="panel hidden">
+<div class="eyebrow">Режим 3 · лексика в контексте</div><div class="question" id="gapq"></div><div class="inputrow"><input id="gapinput" autocomplete="off" placeholder="Впиши выражение на английском"><button id="gapcheck">Проверить</button></div><div class="feedback" id="gapfeedback"></div><button id="gapnext" class="hidden">Следующее предложение →</button><p class="muted small">Можно не учитывать регистр и конечную точку. Старайся вспомнить выражение целиком.</p>
+</section>
+
+<section id="fix" class="panel hidden">
+<div class="eyebrow">Режим 4 · исправление ошибок</div><div class="question" id="fixq"></div><div class="inputrow"><input id="fixinput" placeholder="Напиши исправленный вариант"><button id="fixcheck">Проверить</button></div><div class="feedback" id="fixfeedback"></div><button id="fixnext" class="hidden">Следующая ошибка →</button>
+</section>
+
+<section id="speak" class="panel hidden">
+<div class="eyebrow">Режим 5 · говорение</div><span class="pill" id="speaktype">Warm-up</span><div class="question" id="speakq"></div><p id="speakhint" class="muted"></p><textarea id="speakanswer" placeholder="Подготовь ответ на английском. Постарайся использовать 2–3 выражения из списка."></textarea><div class="controls" style="justify-content:flex-start"><button id="speaknext">Другой вопрос</button><button class="secondary" id="speakclear">Очистить ответ</button></div><div class="panel" style="background:#fff9f7;margin-top:18px;margin-bottom:0"><strong>Полезные речевые опоры</strong><p class="small">I feel like… · In my 30s… · I was born… · I’m not in good health. · I’d like to… · For example,… · To be honest,…</p></div>
+</section>
+
+<section id="all" class="panel hidden">
+<div class="eyebrow">Словарь урока</div><p class="muted">Выражение → значение → пример в контексте.</p><div class="list" id="vocablist"></div>
+</section>
+<footer>Совет: пройди карточки, затем закрой перевод и попробуй воспроизвести выражения по памяти.</footer>
 </main>
 <script>
-const words = [
-["listen to something","слушать что-либо","I like to listen to podcasts on my way to work."],
-["pull an all-nighter","не спать всю ночь, готовясь к чему-либо","I had to pull an all-nighter to finish the project."],
-["get to know somebody","познакомиться с кем-либо; узнать кого-либо получше","It takes time to get to know new people."],
-["make somebody do something","заставить кого-либо что-либо сделать","I made her bring it back."],
-["have a good time","хорошо провести время","We had a good time at the party."],
-["have fun","веселиться, получать удовольствие","Have fun on your trip!"],
-["go jogging","ходить на пробежку","I go jogging every morning."],
-["leave school","закончить школу / уйти из школы (по контексту)","She left school at eighteen."],
-["I gotta go","Мне пора; мне нужно идти (разговорное)","Sorry, I gotta go. Call you later!"],
-["clever","умный, сообразительный","That was a clever way to solve the problem."],
-["knowledgeable","хорошо разбирающийся в теме; эрудированный","She's very knowledgeable about history."],
-["deputy headteacher","заместитель директора школы (брит.)","The deputy headteacher spoke to our class."],
-["headteacher","директор школы (брит.)","The headteacher welcomed the new students."],
-["principal","директор школы (амер.)","The principal announced the new rules."],
-["efficient","эффективный; работающий без лишних затрат времени","This is an efficient way to learn vocabulary."],
-["handle something carefully","обращаться с чем-либо осторожно","Please handle the equipment carefully."],
-["handle with care","обращаться осторожно; хрупкое","The box says “Handle with care”."],
-["picky eater","человек, который привередлив в еде","My little brother is a picky eater."],
-["choosy","разборчивый, привередливый в выборе","She's choosy about the food she eats."],
-["offal","субпродукты","Some traditional dishes are made with offal."],
-["liver","печень","Liver is rich in iron."],
-["do housework","заниматься работой по дому","I usually do housework at the weekend."],
-["run some chores","сделать несколько дел / выполнить поручения","I need to run some chores before lunch."],
-["put a lot of pressure on somebody","оказывать сильное давление на кого-либо","Don't put too much pressure on yourself."],
-["handle this","справиться с этим; разобраться с этим","Don't worry. I can handle this."],
-["deal with it","разобраться с этим; справиться с этим","We need to deal with it today."],
-["conduct a survey","проводить опрос","The students conducted a survey about school lunches."],
-["a coach","междугородний автобус; туристический автобус","We travelled to the seaside by coach."],
-["walk down the aisle","идти к алтарю (обычно о невесте/женихе)","They smiled as they walked down the aisle."],
-["a bed scene","постельная сцена в фильме/спектакле","The film contains a brief bed scene."],
-["a sequel","продолжение фильма, книги или истории","The sequel came out three years later."],
-["a prequel","предыстория; произведение о событиях до оригинала","The prequel explains how the characters met."],
-["live up to somebody's expectations","оправдывать чьи-либо ожидания","The film didn't live up to my expectations."],
-["it depends on…","это зависит от…","It depends on the weather."],
-["frustrating","раздражающий; вызывающий досаду","It's frustrating when the internet stops working."],
-["I wonder…","Интересно…; мне любопытно…","I wonder why she's late."],
-["I wonder if he will come","Интересно, придёт ли он","I wonder if he will come to the party."],
-["I wonder what / how / who…","Интересно, что / как / кто…","I wonder what they're talking about."],
-["trace","след; следить за происхождением / прослеживать","Scientists tried to trace the source of the problem."],
-["to be traced back to the 19th century","вести своё происхождение из XIX века","The tradition can be traced back to the 19th century."],
-["a person with a disability","человек с инвалидностью","The building has facilities for people with disabilities."],
-["deaf","глухой / слабослышащий (по контексту)","Her grandfather is deaf in one ear."],
-["blind","слепой / незрячий","The organisation supports blind people."],
-["mute","немой; не говорящий (слово может звучать устаревше или некорректно о человеке)","The character remains mute throughout the scene."],
-["a desert island","необитаемый остров","If I were on a desert island, I'd take a book."],
-["have a musical ear","иметь музыкальный слух","She has a musical ear and learns songs quickly."],
-["have an ear for music","иметь способности к музыке; музыкальный слух","He has an ear for music." ]
+const vocab = [
+["visit friends","навещать друзей","I usually visit friends at the weekend."],
+["have a long walk by the ocean","долго гулять у океана","We had a long walk by the ocean and watched the sunset."],
+["wash off","смывать","I need to wash off the sand after the beach."],
+["an old lady","пожилая женщина","An old lady asked me for directions."],
+["full of energy","полный энергии","Even after the long trip, she was full of energy."],
+["Italian / French / Chinese noodles / Thai food","итальянская / французская / китайская лапша / тайская еда","When we travel, we love trying Thai food."],
+["elderly people","пожилые люди","The community centre offers activities for elderly people."],
+["attend fashion shows","посещать показы мод","She hopes to attend fashion shows in Paris one day."],
+["travel around the world","путешествовать по всему миру","If I had more time, I would travel around the world."],
+["look fresh","выглядеть свежо","A good night's sleep helps me look fresh."],
+["fulfill","выполнять, осуществлять (мечту, обещание)","She worked hard to fulfill her dream of becoming a designer."],
+["are not in good health","не в хорошем состоянии здоровья","Some elderly people are not in good health."],
+["I feel like + -ing","мне хочется что-то сделать","I feel like staying at home and watching a film."],
+["in my 30s","в свои тридцать с небольшим / в возрасте от 30 до 39 лет","I started learning French in my 30s."],
+["I was born","я родился / родилась","I was born in March, but I grew up in Helsinki."],
+["bear","выносить, терпеть","I can't bear loud noise when I'm tired."],
+["I can't bear","я не выношу, терпеть не могу","I can't bear waiting for people who are always late."],
+["on the 28th of March","28 марта","The event takes place on the 28th of March."],
+["autumn","осень","Autumn is my favourite season because the weather is mild."],
+["spring","весна","The city looks beautiful in spring."],
+["offspring","потомство","Some animals protect their offspring for months."]
 ];
-let order=words.map((_,i)=>i), idx=0, known=new Set(), quizOrder=[], qi=0, score=0, answered=false, typeOrder=[], ti=0, chosenTerm=null, matched=new Set(), matchItems=[];
+const gaps = [
+{q:"After the beach, I need to ______ the salt and sand.",a:"wash off",hint:"смывать"},
+{q:"My grandmother is 72, but she is still ______ and loves hiking.",a:"full of energy",hint:"полная энергии"},
+{q:"I don't want to cook tonight. I ______ ordering Thai food.",a:"feel like",hint:"мне хочется (I … + -ing)"},
+{q:"She wants to ______ her dream of opening a small café.",a:"fulfill",hint:"осуществить мечту"},
+{q:"We spent the afternoon walking along the shore. We had a long ______.",a:"walk by the ocean",hint:"долгая прогулка у океана (из выражения have a long walk by the ocean)"},
+{q:"He was born ______ the 28th of March.",a:"on",hint:"предлог с конкретной датой"},
+{q:"I ______ loud chewing. It really annoys me.",a:"can't bear",hint:"не выношу"},
+{q:"When I retire, I hope to ______ the world.",a:"travel around",hint:"путешествовать по всему миру"},
+{q:"After a shower and some rest, you'll ______ again.",a:"look fresh",hint:"выглядеть свежо"},
+{q:"She often ______ friends who live nearby.",a:"visits",hint:"навещает друзей"}
+];
+const fixes = [
+{q:"Find and correct the mistake: “I feel like to go for a walk.”",a:"I feel like going for a walk.",why:"После feel like используется глагол с -ing."},
+{q:"Find and correct the mistake: “I was born on spring.”",a:"I was born in spring.",why:"С временами года используем in; on — с конкретной датой."},
+{q:"Find and correct the mistake: “I can't bear to waiting.”",a:"I can't bear waiting.",why:"После can't bear естественно использовать форму -ing (can't bear to wait тоже возможно)."},
+{q:"Find and correct the mistake: “She is full energy.”",a:"She is full of energy.",why:"Устойчивое выражение: full of energy."},
+{q:"Find and correct the mistake: “He was born in the 28th of March.”",a:"He was born on the 28th of March.",why:"С конкретными датами используем on."},
+{q:"Find and correct the mistake: “I want travel around the world.”",a:"I want to travel around the world.",why:"После want нужен инфинитив с to."}
+];
+const speaking = [
+["Personal information","When and where were you born? What do you remember about the place where you grew up?","Try to use: I was born… / in spring / on the … of …"],
+["Lifestyle","What makes you feel full of energy? What do you do when you want to look fresh?","Use: full of energy, look fresh, I feel like + -ing"],
+["Travel","If you could travel around the world, which three places would you visit and why?","Use: travel around the world, visit friends, have a long walk by the ocean"],
+["Food","What kinds of food do you enjoy trying when you travel?","Use at least two: Thai food, Italian food, Chinese noodles"],
+["People","Do you think society does enough to support elderly people?","Use: elderly people, are not in good health"],
+["Dreams","What dream would you like to fulfill in the next ten years?","Use: fulfill a dream, in my 30s"],
+["Likes and dislikes","What can’t you bear doing? What do you feel like doing at weekends?","Use: I can't bear…, I feel like + -ing"],
+["Fashion","Would you like to attend fashion shows? Why or why not?","Use: attend fashion shows, in my 30s, fulfill a dream"],
+["Seasons","What do you like doing in autumn and spring?","Use both season words and one expression from the list"],
+["Family","Why do some animals take such good care of their offspring? Can you think of an example?","Use: offspring; give a reason and an example"]
+];
+let ci=0, shown=false, mi=0, gi=0, fi=0, si=0;
 const $=id=>document.getElementById(id);
-function shuffleArray(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function renderCard(){let w=words[order[idx]];$("flashcard").classList.remove("flipped");$("frontTerm").textContent=w[0];$("backTerm").textContent=w[0];$("translation").textContent=w[1];$("example").textContent=w[2];$("counter").textContent=`Карточка ${idx+1} из ${order.length}`;$("knownCount").textContent=`Знаю: ${known.size}`;$("bar").style.width=`${(idx+1)/order.length*100}%`}
-function flip(){ $("flashcard").classList.toggle("flipped") }
-$("flashcard").onclick=flip;$("flip").onclick=flip;
-$("prev").onclick=()=>{idx=(idx-1+order.length)%order.length;renderCard()};
-$("next").onclick=()=>{idx=(idx+1)%order.length;renderCard()};
-$("know").onclick=()=>{known.add(order[idx]);idx=(idx+1)%order.length;renderCard()};
-$("again").onclick=()=>{known.delete(order[idx]);idx=(idx+1)%order.length;renderCard()};
-$("shuffle").onclick=()=>{order=shuffleArray(order);idx=0;renderCard()};
-document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-view]").forEach(x=>x.classList.toggle("active",x===b));["cards","quiz","type","match","all"].forEach(v=>$(v).classList.toggle("hidden",v!==b.dataset.view));if(b.dataset.view==="quiz")startQuiz();if(b.dataset.view==="type")startType();if(b.dataset.view==="match")newMatch();if(b.dataset.view==="all")renderList()});
-function startQuiz(){quizOrder=shuffleArray(words.map((_,i)=>i));qi=0;score=0;answered=false;renderQuiz()}
-function renderQuiz(){if(qi>=quizOrder.length){$("quizQuestion").textContent=`Готово! Результат: ${score} из ${quizOrder.length}`;$("quizOptions").innerHTML="";$("quizFeedback").textContent="Отличная работа! Можно пройти ещё раз.";$("quizCount").textContent="Завершено";$("score").textContent=`Счёт: ${score}`;return}answered=false;let i=quizOrder[qi],w=words[i];$("quizCount").textContent=`Вопрос ${qi+1} из ${quizOrder.length}`;$("score").textContent=`Счёт: ${score}`;$("quizQuestion").textContent=w[0];$("quizFeedback").textContent="";let opts=[i];while(opts.length<4){let n=Math.floor(Math.random()*words.length);if(!opts.includes(n))opts.push(n)}shuffleArray(opts);$("quizOptions").innerHTML="";opts.forEach(n=>{let b=document.createElement("button");b.textContent=words[n][1];b.onclick=()=>{if(answered)return;answered=true;if(n===i){score++;$("quizFeedback").textContent="Верно! ✓";b.classList.add("correct")}else{$("quizFeedback").textContent=`Не совсем. Правильный ответ: ${w[1]}`;b.classList.add("wrong")} [...$("quizOptions").children].forEach((x,k)=>{if(opts[k]===i)x.classList.add("correct")});$("score").textContent=`Счёт: ${score}`};$("quizOptions").appendChild(b)})}
-$("quizNext").onclick=()=>{if(qi<quizOrder.length)qi++;renderQuiz()};$("quizRestart").onclick=startQuiz;
-function startType(){typeOrder=shuffleArray(words.map((_,i)=>i));ti=0;renderType()}
-function renderType(){if(ti>=typeOrder.length)ti=0;let w=words[typeOrder[ti]];$("typeCount").textContent=`Задание ${ti+1} из ${typeOrder.length}`;$("typeQuestion").textContent=w[1];$("typeInput").value="";$("typeFeedback").textContent="";$("typeInput").dataset.answer=w[0];}
-function norm(s){return s.toLowerCase().replace(/[’‘`]/g,"'").replace(/[.,!?…]/g,"").replace(/\s+/g," ").trim()}
-$("checkType").onclick=()=>{let ans=norm($("typeInput").value),correct=norm($("typeInput").dataset.answer);$("typeFeedback").textContent=ans===correct?"Верно! ✓":`Попробуй ещё раз. Ответ: ${$("typeInput").dataset.answer}`};
-$("showType").onclick=()=>{$("typeFeedback").textContent=`Ответ: ${$("typeInput").dataset.answer}`};
-$("typeNext").onclick=()=>{ti++;renderType()};$("typeInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("checkType").click()});
-function newMatch(){chosenTerm=null;matched=new Set();let ids=shuffleArray(words.map((_,i)=>i)).slice(0,6);matchItems=ids.map(i=>({i,translation:words[i][1]}));let trans=shuffleArray([...matchItems]);$("matchTerms").innerHTML="";$("matchTranslations").innerHTML="";$("matchFeedback").textContent="";matchItems.forEach(x=>{let b=document.createElement("button");b.textContent=words[x.i][0];b.dataset.i=x.i;b.onclick=()=>{if(matched.has(x.i))return;chosenTerm=x.i;document.querySelectorAll("#matchTerms button").forEach(q=>q.classList.toggle("chosen",Number(q.dataset.i)===x.i))};$("matchTerms").appendChild(b)});trans.forEach(x=>{let b=document.createElement("button");b.textContent=x.translation;b.dataset.i=x.i;b.onclick=()=>{if(chosenTerm===null){$("matchFeedback").textContent="Сначала выбери английский термин.";return}let term=chosenTerm;if(term===x.i){matched.add(term);$("matchFeedback").textContent=`Верно! ${matched.size} из ${matchItems.length}`;$("matchTerms").querySelector(`[data-i="${term}"]`).classList.add("correct");b.classList.add("correct");chosenTerm=null;if(matched.size===matchItems.length)$("matchFeedback").textContent="Все пары найдены! Отлично! ✓"}else{$("matchFeedback").textContent="Пока не совпало — попробуй ещё раз.";$("matchTerms").querySelector(`[data-i="${term}"]`).classList.add("wrong");b.classList.add("wrong");setTimeout(()=>{let t=$("matchTerms").querySelector(`[data-i="${term}"]`);if(t)t.classList.remove("wrong");b.classList.remove("wrong")},650)}};$("matchTranslations").appendChild(b)})}
-$("newMatch").onclick=newMatch;
-function renderList(){let q=norm($("search").value||"");$("wordList").innerHTML="";words.forEach(w=>{if(!q||norm(w.join(" ")).includes(q)){let d=document.createElement("div");d.className="word-item";d.innerHTML=`<strong></strong><span></span><p></p>`;d.children[0].textContent=w[0];d.children[1].textContent=w[1];d.children[2].textContent=w[2];$("wordList").appendChild(d)}})}
-$("search").addEventListener("input",renderList);
-renderCard();renderList();
+function norm(s){return s.toLowerCase().trim().replace(/[.!?]+$/,'').replace(/\s+/g,' ')}
+function showCard(){const v=vocab[ci];$('frontword').textContent=v[0];$('fronttranslation').textContent=v[1];$('frontexample').textContent='“'+v[2]+'”';$('cardtag').textContent='Expression '+(ci+1);$('cardcount').textContent=`Карточка ${ci+1} из ${vocab.length}`;$('cardprogress').style.width=((ci+1)/vocab.length*100)+'%';$('backcontent').classList.toggle('hidden',!shown);$('reveal').textContent=shown?'Скрыть ответ':'Показать ответ'}
+function toggleCard(){shown=!shown;showCard()} $('flashcard').onclick=toggleCard;$('flashcard').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleCard()}};$('reveal').onclick=toggleCard;
+$('prev').onclick=()=>{ci=(ci-1+vocab.length)%vocab.length;shown=false;showCard()};$('next').onclick=()=>{ci=(ci+1)%vocab.length;shown=false;showCard()};$('shuffle').onclick=()=>{ci=Math.floor(Math.random()*vocab.length);shown=false;showCard()};
+function newMatch(){mi=Math.floor(Math.random()*vocab.length);$('matchq').textContent='Что означает: “'+vocab[mi][0]+'” ?';$('matchfeedback').textContent='';$('matchnext').classList.add('hidden');let opts=[mi];while(opts.length<4){let n=Math.floor(Math.random()*vocab.length);if(!opts.includes(n))opts.push(n)}opts.sort(()=>Math.random()-.5);$('matchopts').innerHTML='';opts.forEach(n=>{let b=document.createElement('button');b.className='option';b.textContent=vocab[n][1];b.onclick=()=>{document.querySelectorAll('#matchopts button').forEach(x=>x.disabled=true);if(n===mi){b.classList.add('correct');$('matchfeedback').textContent='Верно! '+vocab[mi][2]}else{b.classList.add('wrong');$('matchfeedback').textContent='Правильный ответ: '+vocab[mi][1]+'. Пример: '+vocab[mi][2];document.querySelectorAll('#matchopts button').forEach((x)=>{if(x.textContent===vocab[mi][1])x.classList.add('correct')})}$('matchnext').classList.remove('hidden')};$('matchopts').appendChild(b)})}
+$('matchnext').onclick=newMatch;
+function newGap(){gi=(gi+1)%gaps.length;const g=gaps[gi];$('gapq').textContent=g.q;$('gapinput').value='';$('gapfeedback').textContent='';$('gapnext').classList.add('hidden');$('gapinput').disabled=false;$('gapcheck').disabled=false}
+function checkGap(){let g=gaps[gi], val=norm($('gapinput').value), ans=norm(g.a);let ok=val===ans || (g.a==='walk by the ocean'&&val==='have a long walk by the ocean') || (g.a==='travel around'&&val==='travel around');$('gapfeedback').textContent=ok?'Отлично! ✓':'Пока не совсем. Ответ: “'+g.a+'”. Подсказка: '+g.hint;$('gapinput').disabled=true;$('gapcheck').disabled=true;$('gapnext').classList.remove('hidden')}
+$('gapcheck').onclick=checkGap;$('gapinput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('gapcheck').disabled)checkGap()});$('gapnext').onclick=newGap;
+function newFix(){fi=(fi+1)%fixes.length;let f=fixes[fi];$('fixq').textContent=f.q;$('fixinput').value='';$('fixfeedback').textContent='';$('fixnext').classList.add('hidden');$('fixinput').disabled=false;$('fixcheck').disabled=false}
+function checkFix(){let f=fixes[fi];let ok=norm($('fixinput').value)===norm(f.a);$('fixfeedback').textContent=(ok?'Верно! ':'Вариант ответа: “'+f.a+'” ')+f.why;$('fixinput').disabled=true;$('fixcheck').disabled=true;$('fixnext').classList.remove('hidden')}
+$('fixcheck').onclick=checkFix;$('fixinput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('fixcheck').disabled)checkFix()});$('fixnext').onclick=newFix;
+function showSpeak(){let s=speaking[si%speaking.length];$('speaktype').textContent=s[0];$('speakq').textContent=s[1];$('speakhint').textContent=s[2]}
+$('speaknext').onclick=()=>{si++;showSpeak()};$('speakclear').onclick=()=>{$('speakanswer').value=''};
+$('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));$(b.dataset.tab).classList.remove('hidden')});
+function makeList(){let root=$('vocablist');vocab.forEach(v=>{let d=document.createElement('div');d.className='vocabrow';let a=document.createElement('strong');a.textContent=v[0];let b=document.createElement('span');b.textContent=v[1];let c=document.createElement('em');c.textContent=v[2];d.append(a,b,c);root.appendChild(d)})}
+showCard();newMatch();gi=-1;newGap();fi=-1;newFix();showSpeak();makeList();
 </script>
-</body></html>
+</body>
+</html>
