@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparatives & Superlatives — Old but Gold</title>
+<style>
+:root{--pink:#f6c6cc;--berry:#96345b;--purple:#d9c5f1;--ink:#282536;--paper:#fffaf9;--green:#e3f2e8}
+*{box-sizing:border-box} body{margin:0;background:#f5f3f5;color:var(--ink);font:16px/1.5 Arial,sans-serif}
+main{max-width:1000px;margin:24px auto;padding:18px}
+header{background:linear-gradient(120deg,#f9d8dc,#eee1fa);border-radius:22px;padding:28px;position:relative;overflow:hidden}
+.hero-photo{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;margin-top:18px}
+.hero-photo img{width:100%;height:180px;object-fit:cover;border-radius:14px;display:block}
+.hero-photo .small-pics{display:grid;grid-template-rows:1fr 1fr;gap:12px}
+.hero-photo .small-pics img{height:84px}
+.visual-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0}
+.visual-card{overflow:hidden;border-radius:13px;background:#fff4f5;border:1px solid #f0dce4}
+.visual-card img{width:100%;height:130px;object-fit:cover;display:block}
+.visual-card div{padding:10px;font-size:14px}
+.rule .mini{display:inline-block;background:#f0e3fb;border-radius:9px;padding:6px 10px;font-size:19px;font-weight:bold;margin:5px 0}
+.example-photo{display:flex;align-items:center;gap:12px;background:#fff8f8;border-radius:12px;padding:10px;margin:9px 0}
+.example-photo img{width:86px;height:70px;object-fit:cover;border-radius:10px}
+.example-photo p{margin:0}
+.rule h3:before{content:"✦ ";color:#bc6284}
+.rule-columns{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch;margin:18px 0}
+.rule-panel{padding:17px;border-radius:16px;border:2px solid #e9c7d4;background:#fff9fa;min-width:0}
+.rule-panel.superlative{border-color:#cbb5e9;background:#fbf8ff}
+.rule-panel h3{text-align:center;font-size:17px;letter-spacing:.4px}
+.formula{background:#fff;border:1px dashed #cda5b7;border-radius:11px;padding:12px;text-align:center;font-weight:bold;font-size:19px;margin:12px 0 5px}
+.superlative .formula{border-color:#b7a0d9}
+.formula-caption{text-align:center;font-size:13px;color:#746879;margin:0 0 12px}
+.highlight{background:#ffdf83;color:#402a16;border-radius:4px;padding:0 3px;font-weight:800}
+.than{background:#ffd0da;color:#842b4d;border-radius:5px;padding:1px 4px;font-weight:900}
+.rule-line{border-top:1px solid #eedfe6;padding:10px 0;font-size:14px}
+.rule-line b{font-size:16px}
+.rule-label{display:block;color:#765c70;font-size:12px;font-weight:bold;margin-bottom:3px}
+.takeaway{background:#f8e7ee;border-radius:9px;padding:10px;font-size:14px;font-weight:bold;margin-top:10px}
+.superlative .takeaway{background:#eee5fb}
+.sentence{display:inline-block;background:white;border:1px solid #e7d9e5;padding:4px 7px;border-radius:7px;margin:3px 0;font-weight:bold}
+@media(max-width:700px){.rule-columns{grid-template-columns:1fr}.hero-photo{grid-template-columns:1fr}.hero-photo img{height:150px}}
+h1{margin:0 0 6px;font-size:clamp(27px,4vw,42px);color:#54254c}
+h2{font-size:24px;margin:8px 0 14px;color:#6b2e59}
+h3{margin:8px 0;color:#6b2e59}
+section{background:white;border-radius:18px;padding:22px;margin:18px 0;box-shadow:0 3px 14px #38263a0c}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.rule{background:#fff7f7;border-left:5px solid var(--pink);padding:13px;border-radius:10px}
+table{border-collapse:collapse;width:100%;margin:10px 0}th,td{border:1px solid #eadfe8;padding:9px;text-align:left}th{background:#f4eafa}
+.tag{display:inline-block;background:#f8d9de;border-radius:7px;padding:3px 8px;margin:2px;font-size:14px}
+.note{background:#f4edff;padding:12px;border-radius:10px}
+.exercise{border:1px solid #eadfe8;padding:14px;border-radius:12px;margin:12px 0}
+input[type=text],select{font:inherit;padding:7px 9px;border:1px solid #cdbdcc;border-radius:8px;max-width:220px}
+button{background:var(--berry);color:white;border:0;border-radius:10px;padding:11px 17px;font:inherit;cursor:pointer;margin:6px 5px 4px 0}
+button.secondary{background:#6b587b} .feedback{font-weight:bold;margin-top:8px}
+.correct{color:#247444}.wrong{color:#a52b45}
+footer{text-align:center;color:#766b77;font-size:13px;padding:12px}
+@media(max-width:600px){main{padding:10px}section{padding:15px}table{font-size:14px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<h1>COMPARATIVES & SUPERLATIVES</h1>
+<div><b>Сравнительная и превосходная степени прилагательных</b> · Old but Gold</div>
+<p>Сравниваем людей, вещи и впечатления: <i>older, wiser, the happiest</i>.</p>
+<div class="hero-photo" aria-label="Фотографии людей старшего возраста">
+<img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1000&q=80" alt="Семья проводит время вместе">
+<div class="small-pics">
+<img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=700&q=80" alt="Друзья вместе">
+<img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=700&q=80" alt="Активный образ жизни">
+</div></div>
+</header>
+
+<section>
+<h2>1. Две формы — две конструкции</h2>
+<p>Смотри на окончание и на то, как прилагательное встраивается в предложение.</p>
+<div class="rule-columns">
+  <div class="rule-panel comparative">
+    <h3>СРАВНИТЕЛЬНАЯ СТЕПЕНЬ</h3>
+    <div class="formula">A + <span class="highlight">-ER</span> + <span class="than">THAN</span> + B</div>
+    <p class="formula-caption">кто/что <b>…-ее / …-ше, чем</b> кто/что</p>
+    <div class="rule-line"><span class="rule-label">Короткое прилагательное</span><b>old → old<span class="highlight">er</span></b><br><i>My grandpa is old<span class="highlight">er</span> <span class="than">than</span> me.</i></div>
+    <div class="rule-line"><span class="rule-label">На -e: добавляем -r</span><b>nice → nice<span class="highlight">r</span></b><br><i>This place is nice<span class="highlight">r</span> <span class="than">than</span> that one.</i></div>
+    <div class="rule-line"><span class="rule-label">Согласная + -y: y → i + -er</span><b>happy → happ<span class="highlight">ier</span></b><br><i>She is happ<span class="highlight">ier</span> <span class="than">than</span> before.</i></div>
+    <div class="rule-line"><span class="rule-label">Краткая гласная + согласная: удваиваем</span><b>big → bi<span class="highlight">gg</span>er</b><br><i>This dog is bi<span class="highlight">gg</span>er <span class="than">than</span> mine.</i></div>
+    <div class="rule-line"><span class="rule-label">Длинное прилагательное: more + adjective</span><b><span class="highlight">more</span> active</b><br><i>Grandma is <span class="highlight">more</span> active <span class="than">than</span> I expected.</i></div>
+    <div class="rule-line"><span class="rule-label">Исключения</span><b>good → better; bad → worse</b><br><i>I feel <b>better <span class="than">than</span></b> yesterday.</i></div>
+    <div class="takeaway">Запомни: в сравнительной конструкции слово <span class="than">THAN</span> = «чем».</div>
+  </div>
+  <div class="rule-panel superlative">
+    <h3>ПРЕВОСХОДНАЯ СТЕПЕНЬ</h3>
+    <div class="formula">the + <span class="highlight">-EST</span> / <span class="highlight">MOST</span> + adjective</div>
+    <p class="formula-caption">кто/что <b>самый / наиболее</b> … в группе</p>
+    <div class="rule-line"><span class="rule-label">Короткое прилагательное</span><b>old → the old<span class="highlight">est</span></b><br><i>He is the old<span class="highlight">est</span> person in the club.</i></div>
+    <div class="rule-line"><span class="rule-label">На -e: добавляем -st</span><b>nice → the nice<span class="highlight">st</span></b><br><i>It is the nice<span class="highlight">st</span> place here.</i></div>
+    <div class="rule-line"><span class="rule-label">Согласная + -y: y → i + -est</span><b>happy → the happ<span class="highlight">iest</span></b><br><i>She is the happ<span class="highlight">iest</span> when visiting friends.</i></div>
+    <div class="rule-line"><span class="rule-label">Краткая гласная + согласная: удваиваем</span><b>big → the bi<span class="highlight">gg</span>est</b><br><i>It is the bi<span class="highlight">gg</span>est dog in the park.</i></div>
+    <div class="rule-line"><span class="rule-label">Длинное прилагательное: the most + adjective</span><b>the <span class="highlight">most</span> active</b><br><i>She is the <span class="highlight">most</span> active person in our family.</i></div>
+    <div class="rule-line"><span class="rule-label">Исключения</span><b>good → the best; bad → the worst</b><br><i>This is the <b>best</b> way to stay active.</i></div>
+    <div class="takeaway">Запомни: перед превосходной степенью обычно ставим <span class="highlight">THE</span>.</div>
+  </div>
+</div>
+<div class="note"><b>Как собрать предложение:</b><br>
+Сравнение двух: <span class="sentence">Subject + be + adjective<span class="highlight">-ER</span> + <span class="than">THAN</span> + object.</span><br>
+Выделяем одного из группы: <span class="sentence">Subject + be + <span class="highlight">THE</span> + adjective<span class="highlight">-EST</span> + in/of + group.</span><br>
+<i>My grandpa is older than me. · Johanna was the oldest gymnast in the competition.</i></div>
+</section>
+
+<section>
+<h2>2. Примеры из темы урока</h2>
+<ul>
+<li>Some elderly people are <b>more active than</b> teenagers.</li>
+<li>My grandma feels <b>happier</b> when she visits friends.</li>
+<li>He is <b>the oldest</b> person in the chess club.</li>
+<li>Travelling around the world is <b>more exciting than</b> staying at home.</li>
+<li>She looks <b>fresher</b> after a long walk by the ocean.</li>
+<li>That fashion show was <b>the most popular</b> event of the year.</li>
+</ul>
+</section>
+
+<section>
+<h2>✨ Сравни по картинкам</h2>
+<div class="example-photo"><img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=400&q=80" alt="Пожилой человек на прогулке"><p><b>Grandpa is older than me.</b><br>Дедушка старше меня.</p></div>
+<div class="example-photo"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=400&q=80" alt="Друзья смеются"><p><b>They are the happiest when they visit friends.</b><br>Они счастливее всего, когда навещают друзей.</p></div>
+<div class="example-photo"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=400&q=80" alt="Путешествие"><p><b>Travelling is more exciting than staying at home.</b><br>Путешествовать увлекательнее, чем оставаться дома.</p></div>
+</section>
+
+<section id="practice">
+<h2>3. Практика</h2>
+<p>Впиши нужную форму. Используй лексику урока: <span class="tag">elderly people</span><span class="tag">stay active</span><span class="tag">full of energy</span><span class="tag">travel around the world</span><span class="tag">visit friends</span><span class="tag">look fresh</span></p>
+
+<div class="exercise" data-answer="older">
+<b>1.</b> My grandpa is (old) <input type="text" aria-label="Ответ 1"> than my grandma.
+<div class="feedback"></div></div>
+<div class="exercise" data-answer="the happiest">
+<b>2.</b> She is (happy) <input type="text" aria-label="Ответ 2"> when she visits friends.
+<div class="feedback"></div></div>
+<div class="exercise" data-answer="more active">
+<b>3.</b> Elderly people can be (active) <input type="text" aria-label="Ответ 3"> than we think.
+<div class="feedback"></div></div>
+<div class="exercise" data-answer="the most energetic">
+<b>4.</b> Of all my friends, my aunt is (energetic) <input type="text" aria-label="Ответ 4">.
+<div class="feedback"></div></div>
+<div class="exercise" data-answer="more popular">
+<b>5.</b> This place is (popular) <input type="text" aria-label="Ответ 5"> with tourists than that village.
+<div class="feedback"></div></div>
+<div class="exercise" data-answer="better">
+<b>6.</b> I feel (good) <input type="text" aria-label="Ответ 6"> after a long walk by the ocean.
+<div class="feedback"></div></div>
+<div class="exercise" data-answer="the oldest">
+<b>7.</b> Johanna was (old) <input type="text" aria-label="Ответ 7"> gymnast in the competition.
+<div class="feedback"></div></div>
+<div class="exercise" data-answer="fresher">
+<b>8.</b> You look (fresh) <input type="text" aria-label="Ответ 8"> today than yesterday.
+<div class="feedback"></div></div>
+<div class="exercise" data-answer="more exciting">
+<b>9.</b> To travel around the world is (exciting) <input type="text" aria-label="Ответ 9"> than to stay at home.
+<div class="feedback"></div></div>
+<div class="exercise" data-answer="the best">
+<b>10.</b> Visiting friends is one of (good) <input type="text" aria-label="Ответ 10"> ways to stay connected.
+<div class="feedback"></div></div>
+<button onclick="checkAnswers()">Проверить ответы</button>
+<button class="secondary" onclick="showAnswers()">Показать ответы</button>
+<button class="secondary" onclick="resetTask()">Сбросить</button>
+<div id="score" class="feedback" aria-live="polite"></div>
+</section>
+
+<section>
+<h2>4. Выбери правильный вариант</h2>
+<div class="exercise" data-select="more">
+<b>11.</b> “This activity is ___ challenging than knitting.”<br>
+<label><input type="radio" name="q11" value="most"> most</label>
+<label><input type="radio" name="q11" value="more"> more</label>
+<label><input type="radio" name="q11" value="the"> the</label>
+<div class="feedback"></div></div>
+<div class="exercise" data-select="the">
+<b>12.</b> “He is ___ wisest person in our family.”<br>
+<label><input type="radio" name="q12" value="a"> a</label>
+<label><input type="radio" name="q12" value="the"> the</label>
+<label><input type="radio" name="q12" value="than"> than</label>
+<div class="feedback"></div></div>
+<div class="exercise" data-select="as">
+<b>13.</b> “My grandma is ___ active as my grandpa.”<br>
+<label><input type="radio" name="q13" value="more"> more</label>
+<label><input type="radio" name="q13" value="as"> as</label>
+<label><input type="radio" name="q13" value="the"> the</label>
+<div class="feedback"></div></div>
+<button onclick="checkChoices()">Проверить выбор</button>
+<div id="score2" class="feedback" aria-live="polite"></div>
+</section>
+<footer>Old but Gold · Grammar practice</footer>
+</main>
+<script>
+function norm(s){return s.trim().toLowerCase().replace(/[.!?]/g,'').replace(/\s+/g,' ')}
+function checkAnswers(){
+ let exercises=[...document.querySelectorAll('#practice .exercise')], score=0;
+ exercises.forEach((e,i)=>{let inp=e.querySelector('input[type=text]'),fb=e.querySelector('.feedback');
+ let ok=norm(inp.value)===norm(e.dataset.answer);fb.textContent=ok?'Верно!':'Попробуй ещё раз.';fb.className='feedback '+(ok?'correct':'wrong');if(ok)score++;});
+ document.getElementById('score').textContent=`Результат: ${score} из ${exercises.length}`;
+}
+function showAnswers(){
+ document.querySelectorAll('#practice .exercise').forEach(e=>{e.querySelector('input').value=e.dataset.answer;let f=e.querySelector('.feedback');f.textContent='Ответ';f.className='feedback correct';});
+ document.getElementById('score').textContent='Все ответы показаны.';
+}
+function resetTask(){
+ document.querySelectorAll('#practice .exercise').forEach(e=>{e.querySelector('input').value='';e.querySelector('.feedback').textContent='';});
+ document.getElementById('score').textContent='';
+}
+function checkChoices(){
+ const answers={q11:'more',q12:'the',q13:'as'};let score=0;
+ Object.entries(answers).forEach(([name,answer])=>{let chosen=document.querySelector(`input[name="${name}"]:checked`),fb=document.querySelector(`input[name="${name}"]`).closest('.exercise').querySelector('.feedback');
+ let ok=chosen&&chosen.value===answer;fb.textContent=ok?'Верно!':'Неверно';fb.className='feedback '+(ok?'correct':'wrong');if(ok)score++;});
+ document.getElementById('score2').textContent=`Результат: ${score} из 3`;
+}
+</script>
+</body></html>
