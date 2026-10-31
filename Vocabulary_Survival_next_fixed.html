@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocabulary Survival — 3 minutes</title>
+<style>
+:root{--berry:#9b3f68;--pink:#f6dce7;--ink:#292632;--cream:#fffaf2;--green:#2e8b65}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#fff8f1,#f8e8ef);font-family:Arial,sans-serif;color:var(--ink);min-height:100vh;display:grid;place-items:center;padding:20px}
+.app{width:min(760px,100%);background:#fffdfb;border:1px solid #f0dce5;border-radius:28px;padding:clamp(20px,4vw,38px);box-shadow:0 18px 50px #67334a18}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--berry);font-weight:700}
+.timer{font-size:clamp(28px,6vw,42px);font-weight:800;font-variant-numeric:tabular-nums;color:var(--berry)}.timer.low{color:#d33}
+.progress{height:8px;background:#f2e8ed;border-radius:99px;overflow:hidden;margin:15px 0 25px}.bar{height:100%;width:100%;background:var(--berry);transition:width .2s}
+.stats{display:flex;gap:10px;flex-wrap:wrap}.pill{background:#f8edf2;padding:8px 12px;border-radius:99px;font-size:13px}
+.question{min-height:180px;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:12px 0}
+.kind{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:#8a7a82;margin-bottom:16px}
+.prompt{font-size:clamp(23px,4vw,34px);line-height:1.35;font-weight:700}.blank{color:var(--berry);border-bottom:3px solid #d8a5bc;display:inline-block;min-width:75px}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:15px 0}.option{border:1px solid #ead8e1;background:white;border-radius:14px;padding:15px 12px;font-size:16px;cursor:pointer;transition:.15s}.option:hover{border-color:var(--berry);background:#fff6fa}.option:disabled{cursor:default}.option.correct{background:#e4f5ec;border-color:#55a87e}.option.wrong{background:#ffebeb;border-color:#db7777}
+.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px}.btn{border:0;border-radius:99px;padding:13px 23px;font-weight:700;font-size:15px;cursor:pointer}.primary{background:var(--berry);color:white}.secondary{background:#f3e8ee;color:var(--berry)}.feedback{min-height:28px;text-align:center;font-weight:700;margin-top:10px}.feedback.good{color:var(--green)}.feedback.bad{color:#c04a4a}.hint{font-size:13px;color:#827680;text-align:center;margin-top:9px}
+.overlay{position:fixed;inset:0;background:#20121de8;display:none;place-items:center;z-index:5;color:white;text-align:center}.overlay.show{display:grid}.overlay h1{font-size:clamp(35px,8vw,70px);margin:0}.overlay p{font-size:20px}.fireworks{font-size:60px;animation:pop .45s ease-in-out infinite alternate}@keyframes pop{to{transform:scale(1.18) rotate(8deg)}}
+@media(max-width:480px){.options{grid-template-columns:1fr}.app{border-radius:20px}}
+</style>
+</head>
+<body>
+<main class="app">
+ <div class="top"><div><div class="eyebrow">Vocabulary survival</div><h1 style="margin:7px 0 0;font-size:25px">Не дай таймеру обнулиться!</h1></div><div class="timer" id="timer">03:00</div></div>
+ <div class="progress"><div class="bar" id="bar"></div></div>
+ <div class="stats"><span class="pill">⭐ Верно: <b id="score">0</b></span><span class="pill">🔥 Серия: <b id="streak">0</b></span><span class="pill">⏱ +5 сек за ответ</span></div>
+ <section class="question"><div class="kind" id="kind">Выбери пропущенное слово</div><div class="prompt" id="prompt">Нажми «Старт»</div></section>
+ <div class="options" id="options"></div>
+ <div class="feedback" id="feedback" aria-live="polite"></div>
+ <div class="hint" id="hint">Задания чередуются: выбор ответа → переведи слово вслух.</div>
+ <div class="controls"><button class="btn primary" id="start">Старт</button><button class="btn secondary" id="next" style="display:none">Дальше →</button><button class="btn secondary" id="speak" style="display:none">🎙 Показать ответ</button><button class="btn secondary" id="spokenCorrect" style="display:none">✓ Верно</button><button class="btn secondary" id="spokenWrong" style="display:none">✗ Неверно</button></div>
+</main>
+<div class="overlay" id="celebrate"><div><div class="fireworks">🎆 🎇 🎆</div><h1>10 правильных!</h1><p>Праздничная пауза — 3 секунды ✨</p></div></div>
+<div class="overlay" id="end"><div><div style="font-size:60px">⏳</div><h1>Время вышло!</h1><p id="result"></p><button class="btn primary" onclick="location.reload()">Ещё раунд</button></div></div>
+<script>
+const vocab = [
+["hell","ад"],["nightmare","ночной кошмар"],["refuse to","отказываться"],["a habit","привычка"],["win the first prize","занять первое место"],["reach a goal/dream","достичь цели/мечты"],["earthquake","землетрясение"],["predict","предсказывать"],["have an affair","иметь роман"],["spend time on","тратить время на"],["they have something in common","иметь что-то общее"],["do some research","провести исследование"],["plague","чума"],["tell me about it","расскажи мне об этом"],["widow/widower","вдова/вдовец"],["dress up like","нарядиться как"],["I'm off to do something","я ухожу делать что-либо"],["neighborhood","район"],["origin","происхождение"],["harm","вред"],["seaweed","водоросли"],["to vote a vote","голосовать"],["in spite of/despite","несмотря на"],["due to","из-за"],["expect","ожидать"],["reinvent the wheel","изобретать велосипед"],["invent","изобрести"],["tell me about it","и не говори"],["remain","оставаться"],["human remains","человеческие останки"],["hardly","почти не"],["get up on the wrong side of the bed","встать не с той ноги"],["to doze off","задремать"],["do the ironing","гладить одежду"],["iron","железо"],["look alike","быть похожими"],["negotiate a deal","вести переговоры о сделке"],["give a talk","выступить с речью"],["agenda","повестка дня"],["a bride and a groom","жених и невеста"],["a fortress","крепость"],["collect my order at the pickpoint","забрать заказ в пункте выдачи"],["wet wipes","влажные салфетки"],["make up for","компенсировать"],["harmful/harmless","вредный/безвредный"],["success/successful/to succeed","успех/успешный/добиться успеха"],["oversee","контролировать"],["accept the invitation","принять приглашение"],["disappointing/disappointed","разочаровывающий/разочарованный"],["disappointment","разочарование"],["explain/explanation","объяснять/объяснение"],["survive","выжить"],["contestant","участник соревнования"]
+];
+let time=180,score=0,streak=0,active=false,paused=false,interval=null,round=0,current=null,locked=false;
+let remaining=[],wrongQueue=[],spokenRevealed=false;
+const $=id=>document.getElementById(id);
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function fmt(t){return `${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`}
+function renderTimer(){$('timer').textContent=fmt(time);$('timer').classList.toggle('low',time<=20);$('bar').style.width=(time/180*100)+'%'}
+function start(){if(active)return;active=true;remaining=shuffle(vocab);$('start').style.display='none';$('next').style.display='inline-block';interval=setInterval(()=>{if(!paused){time--;renderTimer();if(time<=0)finish()}},1000);newQuestion()}
+function finish(){clearInterval(interval);active=false;$('end').classList.add('show');$('result').textContent=`Ты набрал(а) ${score} правильных ответов. Попробуй ещё раз и продержись дольше!`}
+function norm(s){return s.toLowerCase().trim().replace(/[’']/g,"'").replace(/[.!?]/g,'')}
+function newQuestion(){
+ if(!active)return;
+ locked=false;spokenRevealed=false;round++;
+ current=wrongQueue.length?wrongQueue.shift():remaining.shift();
+ if(!current){$('kind').textContent='Раунд завершён!';$('prompt').textContent='Ты прошёл(а) все слова 🎉';$('options').innerHTML='';$('next').style.display='none';$('speak').style.display='none';$('spokenCorrect').style.display='none';$('spokenWrong').style.display='none';$('spokenCorrect').disabled=false;$('spokenWrong').disabled=false;return}
+ $('feedback').textContent='';$('feedback').className='feedback';$('options').innerHTML='';
+ $('speak').style.display='none';$('spokenCorrect').style.display='none';$('spokenWrong').style.display='none';$('spokenCorrect').disabled=false;$('spokenWrong').disabled=false;
+ if(round%2===1){
+  $('kind').textContent='Выбери пропущенное слово';
+  let phrase=makeSentence(current[0]);$('prompt').innerHTML=phrase.replace('___','<span class="blank">_____</span>');
+  let choices=shuffle([current[0],...shuffle(vocab.filter(v=>v[0]!==current[0])).slice(0,3).map(v=>v[0])]);
+  choices.forEach(word=>{let b=document.createElement('button');b.className='option';b.textContent=word;b.onclick=()=>answer(norm(word)===norm(current[0]),b);$('options').appendChild(b)});
+  $('hint').textContent='Выбери правильное слово или выражение.';
+ } else {
+  $('kind').textContent='Скажи по-английски вслух';$('prompt').textContent=current[1];
+  $('hint').textContent='Произнеси английский вариант вслух, нажми «Показать ответ», затем оцени себя кнопкой «Верно» или «Неверно».';
+  $('speak').style.display='inline-block';$('spokenCorrect').style.display='inline-block';$('spokenWrong').style.display='inline-block';
+  $('speak').textContent='Показать ответ';$('speak').onclick=()=>{if(locked||spokenRevealed)return;spokenRevealed=true;$('feedback').textContent='Ответ: '+current[0];$('feedback').className='feedback';$('speak').textContent='Ответ показан';};
+  $('spokenCorrect').onclick=()=>{if(!spokenRevealed){$('feedback').textContent='Сначала нажми «Показать ответ» для самопроверки.';return}registerAnswer(true,null)};
+  $('spokenWrong').onclick=()=>{if(!spokenRevealed){$('feedback').textContent='Сначала нажми «Показать ответ» для самопроверки.';return}registerAnswer(false,null)};
+ }
+}
+function makeSentence(word){const examples={
+"hell":"That was a living ___!","nightmare":"I had a terrible ___ last night.","refuse to":"She ___ help me.","a habit":"Reading before bed is ___ of mine.","win the first prize":"I hope to ___ in the competition.","reach a goal/dream":"Work hard to ___ your ___ .","earthquake":"The ___ damaged several buildings.","predict":"Can you ___ what will happen?","have an affair":"He was accused of ___ .","spend time on":"Don't ___ things that don't matter.","they have something in common":"They both love jazz, so ___ .","do some research":"We need to ___ before deciding.","plague":"The ___ spread rapidly.","tell me about it":"You're exhausted? ___!","widow/widower":"After her husband died, she became a ___ .","dress up like":"For the party, I'll ___ a pirate.","I'm off to do something":"___ the shops. See you later!","neighborhood":"It's a friendly ___ .","origin":"The word is French in ___ .","harm":"Smoking can ___ your health.","seaweed":"Sushi is often wrapped in ___ .","to vote a vote":"It's your right ___ .","in spite of/despite":"___ the rain, we went out.","due to":"The flight was delayed ___ bad weather.","expect":"I didn't ___ to see you here.","reinvent the wheel":"We don't need to ___; use the existing solution.","invent":"Who ___ the telephone?","remain":"Please ___ seated.","human remains":"Archaeologists found ___ .","hardly":"I can ___ hear you.","get up on the wrong side of the bed":"He seems grumpy; maybe he ___ .","to doze off":"I was so tired I started ___ .","do the ironing":"I need to ___ this evening.","iron":"This gate is made of ___ .","look alike":"The twins really ___ .","negotiate a deal":"The two companies will ___ .","give a talk":"She was invited to ___ at the conference.","agenda":"What's first on the ___?","a bride and a groom":"At the wedding, ___ stood by the altar.","a fortress":"The medieval ___ protected the town.","collect my order at the pickpoint":"I need to ___ tomorrow.","wet wipes":"Do you have any ___?","make up for":"I'll work extra hours to ___ the lost time.","harmful/harmless":"Is this substance ___?","success/successful/to succeed":"Hard work is the key to ___ .","oversee":"She will ___ the whole project.","accept the invitation":"I was happy to ___ .","disappointing/disappointed":"The result was ___ .","disappointment":"To my ___, the event was cancelled.","explain/explanation":"Can you ___ the rule?","survive":"Few plants can ___ in this climate.","contestant":"Each ___ has one minute to answer."};
+return examples[word]||`Complete the sentence: ___ .`}
+function answer(ok,btn){if(locked)return;if(btn)btn.classList.add(ok?'correct':'wrong');[...$('options').children].forEach(b=>b.disabled=true);registerAnswer(ok,btn)}
+function registerAnswer(ok,btn){
+ if(locked)return;locked=true;
+ $('spokenCorrect').disabled=true;$('spokenWrong').disabled=true;
+ if(ok){
+  score++;streak++;time+=5;$('feedback').textContent='Верно! +5 секунд ✨';$('feedback').className='feedback good';
+  $('score').textContent=score;$('streak').textContent=streak;
+  if(streak%10===0){paused=true;$('celebrate').classList.add('show');$('next').style.display='none';setTimeout(()=>{$('celebrate').classList.remove('show');paused=false;$('next').style.display='inline-block';newQuestion()},3000)}
+ }else{
+  streak=0;$('streak').textContent=streak;
+  $('feedback').textContent='Ответ не засчитан. Вернёмся к этому слову позже.';$('feedback').className='feedback bad';
+  wrongQueue.push(current);
+  [...$('options').children].forEach(b=>{if(norm(b.textContent)===norm(current[0]))b.classList.add('correct')});
+ }
+}
+$('start').addEventListener('click', start);$('next').addEventListener('click',()=>{if(active&&!paused)newQuestion()});renderTimer();
+</script>
+</body></html>
