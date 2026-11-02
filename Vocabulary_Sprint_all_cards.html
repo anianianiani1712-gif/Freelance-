@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vocabulary Sprint</title>
+<style>
+:root{--berry:#8c4c84;--lav:#dfc7f2;--green:#3b8768;--ink:#302a32}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:#fcf8fb;color:var(--ink);padding:20px}
+main{max-width:780px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-size:12px;color:#856d83;font-weight:800;letter-spacing:.12em}h1{margin:7px 0;font-size:clamp(25px,5vw,36px)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.stat{background:white;border:1px solid #eddfeb;border-radius:14px;text-align:center;padding:12px}.stat small{display:block;color:#817581}.stat strong{font-size:25px;font-variant-numeric:tabular-nums}
+.card{background:white;border:1px solid #eddfeb;border-radius:22px;padding:clamp(22px,5vw,38px);text-align:center;box-shadow:0 8px 25px #48314c0c}.sentence{font-size:clamp(23px,5vw,35px);font-weight:650;line-height:1.45;margin:22px 0}.ru{color:var(--berry);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:5px;cursor:pointer;background:#fae7e7;border-radius:5px;padding:0 3px}.answer[hidden]{display:none!important}.answer{display:inline-block;margin-top:12px;padding:8px 14px;background:#e5f3eb;color:#246448;border-radius:10px;font-weight:750;font-size:18px}
+.actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}button{font:inherit;font-weight:750;border:0;border-radius:13px;padding:13px 20px;cursor:pointer}.start{background:var(--berry);color:white}.know{background:var(--green);color:white;min-width:175px}.repeat{background:var(--lav);color:#3e2c4b;min-width:175px}button:disabled{opacity:.45;cursor:default}.msg{min-height:26px;margin-top:15px;color:var(--berry);font-weight:650}.note{color:#857987;font-size:13px;margin-top:12px}.bar{height:7px;background:#eee5ee;border-radius:9px;margin:12px 0;overflow:hidden}.fill{height:100%;background:var(--berry);width:0}.overlay{display:none;position:fixed;inset:0;background:#2e2235b8;place-items:center;padding:20px}.overlay.show{display:grid}.popup{background:#fff9fc;border-radius:22px;padding:25px;text-align:center;max-width:420px}.cat{font-size:80px}footer{text-align:center;color:#a093a0;font-size:12px;margin:20px}
+</style></head>
+<body><main>
+<div class="top"><div><div class="brand">ANIWAY ENGLISH · VOCABULARY SPRINT</div><h1>3-minute word challenge</h1><div>Прочитай предложение и назови по-английски выражение, выделенное по-русски.</div></div><button class="start" id="start">Начать игру</button></div>
+<div class="stats"><div class="stat"><small>Таймер</small><strong id="timer">03:00</strong></div><div class="stat"><small>Правильные ответы</small><strong id="score">0</strong></div><div class="stat"><small>Серия</small><strong id="streak">0 / 5</strong></div></div><div class="bar"><div class="fill" id="fill"></div></div>
+<section class="card"><div id="label" style="color:var(--berry);font-weight:800;letter-spacing:.1em;font-size:12px">ГОТОВА?</div><div class="sentence" id="sentence">Нажми «Начать игру»</div><div class="note">Сначала произнеси перевод вслух. Нажми на русскую фразу, чтобы увидеть ответ.</div><div id="answer" class="answer" hidden></div>
+<div class="actions"><button class="know" id="know" disabled>✓ Я знаю</button><button class="repeat" id="repeat" disabled>↻ Надо повторить</button></div><div class="msg" id="msg" aria-live="polite"></div></section>
+<div class="note">За правильный ответ: +5 секунд. После 5 ответов — котик и пауза на 5 секунд.</div><footer>@aniway.english</footer></main>
+<div class="overlay" id="overlay"><div class="popup"><div class="cat">🐱🎉</div><h2 id="praise">Amazing job!</h2><p>Пять правильных ответов! Таймер остановлен на 5 секунд.</p><button class="start" id="continue">Продолжить</button></div></div>
+<script>
+const cards=[
+["I was travelling a lot [когда мне было 30–39 лет].","in my thirties"],
+["My grandpa walks every day [чтобы оставаться активным].","to stay active"],
+["My little sister is always [полная жизни].","full of life"],
+["Please [подожди меня] outside the school.","wait for me"],
+["We want to [устроить вечеринку] on Saturday.","throw a party"],
+["I passed my exam! [Я на седьмом небе от счастья]!","I’m on cloud nine"],
+["She got the job. She is [очень счастлива].","over the moon"],
+["I have [меньше свободного времени] this week.","less free time"],
+["There are [меньше машин] on this street today.","fewer cars"],
+["My grandma has a few [морщин].","wrinkles"],
+["The children are [полны энергии] today.","full of energy"],
+["You [выглядишь свежо] this morning!","look fresh"],
+["I [хочу посмотреть] a film tonight.","feel like watching"],
+["Please [потерпи] for one minute.","bear with me"],
+["I [не выношу] loud music.","can’t bear"],
+["The show is free for children [младше пяти лет].","under five"],
+["I don’t like tea, and my sister doesn’t [тоже].","either"],
+["Our street is very [шумная] at night.","noisy"],
+["There is a small park in [моём районе].","my neighbourhood"],
+["This café is [более популярное], than that one.","more popular"],
+["Please don’t [ругайся матом] in class.","swear"],
+["The story is about a famous [завоевателя].","conqueror"],
+["She wants to [поставить рекорд] this year.","set a record"],
+["I want to [принять участие в] the school show.","take part in"],
+["Music is her [страсть].","passion"],
+["I [посещаю] English classes on Mondays.","attend"],
+["I want to [путешествовать по миру].","travel around the world"],
+["We [навещаем друзей] at the weekend.","visit friends"],
+["Please [смой] the paint with water.","wash off"],
+["An [пожилая женщина] lives next door.","old lady"],
+["[Пожилые люди] sometimes need help.","Elderly people"],
+["My birthday is [28 марта].","on the 28th of March"],
+["I love walking in [осень].","autumn"],
+["The animal protects its [потомство].","offspring"],
+["We watched a [показ мод] yesterday.","fashion show"],
+["The room is [полная] people.","full of"]
+
+,["Music can lift your [дух].","spirit"]
+,["This medicine can [исцелить] you.","heal"]
+,["I won three games [подряд].","in a row"]
+,["There is a green [холм] near our house.","hill"]
+,["I stood in the [первом ряду] at the concert.","front row"]
+,["He wants to [набрать вес] this year.","gain weight"]
+,["She wants to build [мышцы].","gain muscles"]
+,["I need to [повторить] these words.","revise"]
+,["We have a short [повторение] before the test.","revision"]
+,["My dad [учил] me to swim.","taught"]
+,["She is a [бескорыстная] person.","selfless"]
+,["I haven’t seen him [с 2005 года].","since 2005"]
+,["We haven’t met [с прошлого года].","since last year"]
+,["I haven’t seen her [с тех пор, как мы виделись в последний раз].","since we last met"]
+,["Her art is an [источник вдохновения].","inspiration"]
+,["These shoes have high [каблуки].","heels"]
+];
+let time=180,score=0,streak=0,idx=0,active=false,paused=false,tick=null,pauseId=null,seen=[];
+const el=id=>document.getElementById(id);
+function clock(){el("timer").textContent=`${String(Math.floor(time/60)).padStart(2,"0")}:${String(time%60).padStart(2,"0")}`;el("fill").style.width=((180-time)/180*100)+"%"}
+function choose(){if(seen.length===cards.length)seen=[];do{idx=Math.floor(Math.random()*cards.length)}while(seen.includes(idx));seen.push(idx);display()}
+function display(){el("label").textContent=`КАРТОЧКА ${score+1}`;el("sentence").innerHTML=cards[idx][0].replace(/\[([^\]]+)\]/g,'<span class="ru" role="button" tabindex="0" title="Нажми, чтобы открыть ответ">$1</span>');el("answer").hidden=true;el("answer").textContent=cards[idx][1];el("msg").textContent="";el("know").disabled=!active||paused;el("repeat").disabled=!active||paused;const phrase=el("sentence").querySelector(".ru");phrase.onclick=()=>{el("answer").hidden=false};phrase.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();el("answer").hidden=false}}}
+function right(){if(!active||paused)return;score++;streak++;time+=5;el("score").textContent=score;el("streak").textContent=`${streak} / 5`;clock();if(streak===5){streak=0;el("streak").textContent="0 / 5";paused=true;el("know").disabled=el("repeat").disabled=true;el("praise").textContent=["Amazing job!","You’re on fire!","Fantastic!","Brilliant!"][Math.floor(score/5)%4];el("overlay").classList.add("show");pauseId=setTimeout(resume,5000)}else choose()}
+function retry(){if(!active||paused)return;el("msg").textContent="Окей! Попробуй ещё раз — другое предложение.";choose()}
+function resume(){clearTimeout(pauseId);paused=false;el("overlay").classList.remove("show");display()}
+function start(){clearInterval(tick);time=180;score=streak=0;seen=[];active=true;paused=false;el("score").textContent="0";el("streak").textContent="0 / 5";el("start").textContent="Начать заново";clock();choose();tick=setInterval(()=>{if(active&&!paused){time--;clock();if(time<=0){time=0;active=false;clearInterval(tick);el("know").disabled=el("repeat").disabled=true;el("label").textContent="ВРЕМЯ ВЫШЛО";el("sentence").textContent=`Отлично! Правильных ответов: ${score}.`;el("msg").textContent="Well done!"}}},1000)}
+el("start").onclick=start;el("know").onclick=right;el("repeat").onclick=retry;el("continue").onclick=resume;
+</script></body></html>
