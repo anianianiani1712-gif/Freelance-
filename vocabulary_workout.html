@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vocabulary Workout</title>
+<style>
+:root{--ink:#243047;--blue:#cbd8fb;--green:#b9e4d2;--orange:#ffc493;--bg:#f7f8fc;--accent:#5269ad}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Arial,sans-serif}
+header{padding:28px 18px;background:linear-gradient(120deg,#dce5ff,#fce0ca);text-align:center}
+h1{margin:0 0 6px;font-size:clamp(25px,5vw,36px)}header p{margin:0}
+main{max-width:900px;margin:22px auto;padding:0 14px 40px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+button,select,input{font:inherit}button{border:0;border-radius:12px;padding:11px 15px;background:var(--accent);color:white;cursor:pointer}
+button.secondary{background:#e5e9f5;color:var(--ink)}button:disabled{opacity:.45;cursor:default}
+.panel{background:white;border-radius:18px;padding:22px;box-shadow:0 5px 20px #27365312}
+.meta{display:flex;justify-content:space-between;gap:10px;color:#66718a;font-size:14px}
+.progress{height:8px;background:#edf0f7;border-radius:10px;overflow:hidden;margin:12px 0 20px}.bar{height:100%;width:0;background:#7abda3;transition:width .2s}
+.prompt{font-size:clamp(21px,4vw,28px);font-weight:700;margin:14px 0}
+.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:16px 0}
+.options button{background:#eef2ff;color:var(--ink);border:2px solid transparent;text-align:left}
+.options button:hover{border-color:#8295d0}.options button.correct{background:#d8f1e5;border-color:#65ad8b}.options button.wrong{background:#ffe1dc;border-color:#d9897c}
+input.answer{width:100%;padding:13px;border:2px solid #dce2ef;border-radius:10px;margin:8px 0 12px}
+.feedback{min-height:28px;font-weight:700;margin:10px 0}.good{color:#27845d}.bad{color:#b54e42}
+.small{font-size:14px;color:#68748b}.hidden{display:none}.wordbank{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.chip{background:#fff0e3;border-radius:9px;padding:7px 10px}
+footer{text-align:center;color:#788198;font-size:13px;margin-top:18px}
+</style>
+</head>
+<body>
+<header><h1>Vocabulary Workout</h1><p>Words in context · meaning · collocations · active recall</p></header>
+<main>
+<div class="tabs">
+<button data-mode="match">1. Match</button><button class="secondary" data-mode="choice">2. Choose</button>
+<button class="secondary" data-mode="gap">3. Gap fill</button><button class="secondary" data-mode="translate">4. Translate</button>
+<button class="secondary" data-mode="fix">5. Correct it</button><button class="secondary" data-mode="forms">6. Word forms</button>
+</div>
+<section class="panel">
+<div class="meta"><span id="modeName">Match the words</span><span id="counter">1 / 10</span></div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div id="task"></div>
+<div class="feedback" id="feedback" aria-live="polite"></div>
+<div style="display:flex;gap:9px;flex-wrap:wrap">
+<button id="check">Check</button><button id="next" class="secondary" disabled>Next</button><button id="restart" class="secondary">Restart section</button>
+</div>
+</section>
+<footer>Совет: проговаривай ответ вслух, прежде чем нажимать Check.</footer>
+</main>
+<script>
+const vocab = [
+["selfless love","бескорыстная любовь"],["to be dedicated to","быть преданным чему-либо / посвящать себя"],["dedicate your life to","посвятить свою жизнь чему-либо"],
+["truck","грузовик"],["pull a wagon","тянуть повозку / тележку"],["pool","бассейн"],["pull someone's leg","разыгрывать кого-либо; подшучивать"],
+["tiny","крошечный"],["solve a problem","решить проблему"],["anniversary","годовщина"],["terrified","в ужасе; очень напуганный"],
+["edit","редактировать"],["wedding anniversary","годовщина свадьбы"],["both","оба / обе"],["wisdom","мудрость"],["wise","мудрый"],["a wise man","мудрый человек"],
+["set – set – set","ставить; класть (в определённых выражениях)"],["put – put – put","класть; ставить"],["cut – cut – cut","резать"],["relationship","отношения"],["fight","бороться; сражаться; ссора"],["fighter","борец"],["happiness","счастье"],["grandchildren","внуки"],
+["I didn't catch that.","Я не расслышал(а) / не понял(а)."],["eye drops","глазные капли"],["she doesn't need help","ей не нужна помощь"],["she can do everything herself","она всё может сделать сама"],
+["have a headache","страдать от головной боли / болит голова"],["painkillers","обезболивающие"],["water doesn't help","вода не помогает"]
+];
+const gapTasks=[
+["Their relationship is based on ______ love.","selfless"],["She has always been ______ to her family.","dedicated"],["He wants to ______ his life to helping children.","dedicate"],["We went swimming in the ______.","pool"],["Stop it! Are you ______ my leg?","pulling"],["I was ______ when I heard the noise.","terrified"],["They are celebrating their 10th wedding ______.","anniversary"],["Grandparents often enjoy spending time with their ______.","grandchildren"],["She has a terrible headache, but ______ don't help.","painkillers"],["I didn't ______ that. Could you repeat it?","catch"],["She doesn't need help. She can do everything ______.","herself"],["We need to ______ this problem together.","solve"]
+];
+const choiceTasks=[
+["Which phrase means «подшучивать над кем-либо»?",["pull someone's leg","pull a wagon","solve a problem"],0],
+["Choose the correct collocation:",["make a headache","have a headache","do a headache"],1],
+["What is the noun form of wise?",["wisdom","wise man","wisely"],0],
+["Which word means «крошечный»?",["terrified","tiny","both"],1],
+["Choose the correct phrase:",["wedding anniversary","wedding relationship","wedding wisdom"],0],
+["«Оба» in English:",["each","both","either"],1],
+["Which one is a person?",["fighter","fight","happiness"],0],
+["Choose the correct expression:",["eye drops","eyes drops","eye dropes"],0],
+["What does «I didn't catch that» mean?",["Я не расслышал(а)","Я не поймал(а) его","Я не согласен(на)"],0],
+["Which verb means «редактировать»?",["dedicate","edit","cut"],1]
+];
+const fixTasks=[
+["She can do everything by her.","She can do everything herself."],
+["He is dedicate to his work.","He is dedicated to his work."],
+["I have a headache. Water don't help.","I have a headache. Water doesn't help."],
+["They celebrate their wedding anniversary yesterday.","They celebrated their wedding anniversary yesterday."],
+["Both of them is terrified.","Both of them are terrified."],
+["She dedicated her life for children.","She dedicated her life to children."]
+];
+const formTasks=[
+["wise → noun","wisdom"],["happy → noun","happiness"],["fight → person","fighter"],["terrify → adjective","terrified"],["edit → noun (a person who edits)","editor"],["dedicate → adjective","dedicated"]
+];
+const modes={match:"Match the words",choice:"Choose the correct answer",gap:"Complete the sentence",translate:"Translate into English",fix:"Correct the mistake",forms:"Word formation"};
+let mode="match",items=[],index=0,score=0,answered=false,selected=null;
+const $=id=>document.getElementById(id);
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function build(){
+ index=0;score=0;answered=false;selected=null;
+ if(mode==="match") items=shuffle(vocab).slice(0,10);
+ if(mode==="choice") items=shuffle(choiceTasks);
+ if(mode==="gap") items=shuffle(gapTasks);
+ if(mode==="translate") items=shuffle(vocab).slice(0,12);
+ if(mode==="fix") items=shuffle(fixTasks);
+ if(mode==="forms") items=shuffle(formTasks);
+ render();
+}
+function render(){
+ answered=false;selected=null;$("feedback").textContent="";$("feedback").className="feedback";
+ $("modeName").textContent=modes[mode];$("counter").textContent=`${index+1} / ${items.length}`;
+ $("bar").style.width=`${index/items.length*100}%`; $("next").disabled=true;
+ $("check").disabled=false;
+ const t=items[index];let html="";
+ if(mode==="match"){
+  const opts=shuffle(vocab.filter(x=>x!==t).slice(0,3).concat([t]));
+  html=`<div class="prompt">${t[0]}</div><div class="small">Выбери правильный перевод.</div><div class="options">${opts.map(x=>`<button data-answer="${esc(x[1])}">${x[1]}</button>`).join("")}</div>`;
+ }else if(mode==="choice"){
+  html=`<div class="prompt">${t[0]}</div><div class="options">${t[1].map((x,i)=>`<button data-index="${i}">${x}</button>`).join("")}</div>`;
+ }else if(mode==="gap"){
+  html=`<div class="prompt">${t[0].replace("______","<span style='color:#8a9bd0'>________</span>")}</div><input class="answer" id="answer" placeholder="Type the missing word">`;
+ }else if(mode==="translate"){
+  html=`<div class="prompt">${t[1]}</div><div class="small">Напиши английский вариант.</div><input class="answer" id="answer" placeholder="Your answer">`;
+ }else if(mode==="fix"){
+  html=`<div class="prompt">${t[0]}</div><div class="small">Перепиши предложение правильно.</div><input class="answer" id="answer" placeholder="Correct sentence">`;
+ }else{
+  html=`<div class="prompt">${t[0]}</div><input class="answer" id="answer" placeholder="Your answer">`;
+ }
+ $("task").innerHTML=html;
+ document.querySelectorAll("[data-answer],[data-index]").forEach(b=>b.onclick=()=>{
+  if(answered)return;document.querySelectorAll(".options button").forEach(x=>x.classList.remove("correct","wrong"));
+  b.classList.add("correct");selected=mode==="match"?b.dataset.answer:Number(b.dataset.index);
+ });
+}
+function norm(s){return (s||"").toLowerCase().trim().replace(/[’']/g,"'").replace(/[.!?,]/g,"").replace(/\s+/g," ")}
+function check(){
+ if(answered)return;const t=items[index];let ok=false,expected="";
+ if(mode==="match"){expected=t[1];ok=selected===expected}
+ if(mode==="choice"){expected=t[1][t[2]];ok=selected===t[2]}
+ if(mode==="gap"){expected=t[1];ok=norm($("answer").value)===norm(expected)}
+ if(mode==="translate"){expected=t[0];ok=norm($("answer").value)===norm(expected)}
+ if(mode==="fix"){expected=t[1];ok=norm($("answer").value)===norm(expected)}
+ if(mode==="forms"){expected=t[1];ok=norm($("answer").value)===norm(expected)}
+ if(!selected && (mode==="match"||mode==="choice")){$("feedback").textContent="Сначала выбери вариант.";return}
+ if((mode==="gap"||mode==="translate"||mode==="fix"||mode==="forms")&&!$("answer").value.trim()){$("feedback").textContent="Введи ответ.";return}
+ answered=true;if(ok)score++;
+ $("feedback").textContent=ok?"Correct! ✓":`Not quite. Correct answer: ${expected}`;
+ $("feedback").className="feedback "+(ok?"good":"bad");$("check").disabled=true;$("next").disabled=false;
+ document.querySelectorAll(".options button").forEach(b=>{if((mode==="match"&&b.dataset.answer===expected)||(mode==="choice"&&Number(b.dataset.index)===t[2]))b.classList.add("correct")});
+ if(index===items.length-1){$("next").textContent="See results"}else $("next").textContent="Next";
+}
+function next(){
+ if(!answered)return;
+ if(index<items.length-1){index++;render()}else{
+  $("bar").style.width="100%";$("counter").textContent="Finished";
+  $("task").innerHTML=`<div class="prompt">Section complete!</div><p>You got <b>${score} / ${items.length}</b> correct.</p><p>${score===items.length?"Excellent work!": "Review the tricky words and try again."}</p>`;
+  $("feedback").textContent="";$("check").disabled=true;$("next").disabled=true;
+ }
+}
+function esc(s){return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;")}
+document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll("[data-mode]").forEach(x=>x.classList.toggle("secondary",x!==b));$("next").textContent="Next";build()});
+$("check").onclick=check;$("next").onclick=next;$("restart").onclick=()=>{$("next").textContent="Next";build()};
+build();
+</script>
+</body></html>
