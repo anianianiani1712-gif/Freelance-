@@ -2,153 +2,141 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vocabulary Workout</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocabulary Practice</title>
 <style>
-:root{--ink:#243047;--blue:#cbd8fb;--green:#b9e4d2;--orange:#ffc493;--bg:#f7f8fc;--accent:#5269ad}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Arial,sans-serif}
-header{padding:28px 18px;background:linear-gradient(120deg,#dce5ff,#fce0ca);text-align:center}
-h1{margin:0 0 6px;font-size:clamp(25px,5vw,36px)}header p{margin:0}
-main{max-width:900px;margin:22px auto;padding:0 14px 40px}
-.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
-button,select,input{font:inherit}button{border:0;border-radius:12px;padding:11px 15px;background:var(--accent);color:white;cursor:pointer}
-button.secondary{background:#e5e9f5;color:var(--ink)}button:disabled{opacity:.45;cursor:default}
-.panel{background:white;border-radius:18px;padding:22px;box-shadow:0 5px 20px #27365312}
-.meta{display:flex;justify-content:space-between;gap:10px;color:#66718a;font-size:14px}
-.progress{height:8px;background:#edf0f7;border-radius:10px;overflow:hidden;margin:12px 0 20px}.bar{height:100%;width:0;background:#7abda3;transition:width .2s}
-.prompt{font-size:clamp(21px,4vw,28px);font-weight:700;margin:14px 0}
-.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:16px 0}
-.options button{background:#eef2ff;color:var(--ink);border:2px solid transparent;text-align:left}
-.options button:hover{border-color:#8295d0}.options button.correct{background:#d8f1e5;border-color:#65ad8b}.options button.wrong{background:#ffe1dc;border-color:#d9897c}
-input.answer{width:100%;padding:13px;border:2px solid #dce2ef;border-radius:10px;margin:8px 0 12px}
-.feedback{min-height:28px;font-weight:700;margin:10px 0}.good{color:#27845d}.bad{color:#b54e42}
-.small{font-size:14px;color:#68748b}.hidden{display:none}.wordbank{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.chip{background:#fff0e3;border-radius:9px;padding:7px 10px}
-footer{text-align:center;color:#788198;font-size:13px;margin-top:18px}
+:root{--yellow:#ffe477;--ink:#222;--muted:#6d6d6d;--paper:#fffdf7;--line:#eadfae;--pink:#f4dce7;--green:#dff1df}
+*{box-sizing:border-box}body{margin:0;background:#f6f5f1;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+.wrap{max-width:1000px;margin:auto;padding:24px 18px 50px}
+header{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:24px;margin-bottom:18px}
+h1{font-size:clamp(25px,4vw,38px);margin:0 0 8px}header p{margin:0;color:var(--muted);line-height:1.5}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+button,select,input{font:inherit}button{border:0;border-radius:12px;padding:11px 15px;background:var(--yellow);cursor:pointer;font-weight:700;transition:.15s}
+button:hover{transform:translateY(-1px);filter:brightness(.98)}button.secondary{background:#ece9e0}button.active{background:#222;color:white}
+.panel{display:none;background:white;border:1px solid #e7e4dc;border-radius:18px;padding:22px;min-height:330px}.panel.active{display:block}
+h2{margin:0 0 8px;font-size:23px}.hint{color:var(--muted);margin:0 0 18px;line-height:1.45}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.flip{min-height:120px;background:var(--yellow);border-radius:14px;padding:16px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:20px;font-weight:700;cursor:pointer;box-shadow:0 3px 8px #00000012;white-space:pre-line}
+.flip small{display:block;font-size:13px;font-weight:400;color:#555;margin-top:8px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.spaced{justify-content:space-between}
+select,input[type=text]{padding:12px;border:1px solid #ccc;border-radius:10px;min-width:190px;background:white}
+.question{font-size:23px;font-weight:700;margin:18px 0}
+.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.options button{background:#f2efe7;text-align:left}.options button.correct{background:var(--green)}.options button.wrong{background:var(--pink)}
+.feedback{min-height:28px;margin:12px 0;font-weight:700}.progress{color:var(--muted);font-size:14px}
+.match-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}.match-col{display:grid;gap:8px}.match-col button{background:#f1efe9;min-height:54px}.match-col button.chosen{outline:3px solid #d2ad28;background:var(--yellow)}.match-col button.done{background:var(--green);opacity:.8}
+textarea{width:100%;min-height:95px;border:1px solid #ccc;border-radius:10px;padding:12px;font:inherit}
+.note{background:#fff5c8;border-left:4px solid #e1bd37;padding:12px 14px;border-radius:8px;line-height:1.5;margin-top:18px}
+.score{font-weight:700}
+@media(max-width:600px){.wrap{padding:12px}.panel{padding:16px}.match-wrap{grid-template-columns:1fr}.flip{font-size:18px}}
 </style>
 </head>
-<body>
-<header><h1>Vocabulary Workout</h1><p>Words in context · meaning · collocations · active recall</p></header>
-<main>
-<div class="tabs">
-<button data-mode="match">1. Match</button><button class="secondary" data-mode="choice">2. Choose</button>
-<button class="secondary" data-mode="gap">3. Gap fill</button><button class="secondary" data-mode="translate">4. Translate</button>
-<button class="secondary" data-mode="fix">5. Correct it</button><button class="secondary" data-mode="forms">6. Word forms</button>
-</div>
-<section class="panel">
-<div class="meta"><span id="modeName">Match the words</span><span id="counter">1 / 10</span></div>
-<div class="progress"><div class="bar" id="bar"></div></div>
-<div id="task"></div>
-<div class="feedback" id="feedback" aria-live="polite"></div>
-<div style="display:flex;gap:9px;flex-wrap:wrap">
-<button id="check">Check</button><button id="next" class="secondary" disabled>Next</button><button id="restart" class="secondary">Restart section</button>
-</div>
+<body><main class="wrap">
+<header>
+<h1>Vocabulary workout</h1>
+<p>Повторяем лексику разными способами: карточки, перевод, выбор ответа, сопоставление и пропуски. В конце можно проверить результат.</p>
+</header>
+<nav class="tabs" id="tabs">
+<button class="active" data-tab="cards">1. Карточки</button>
+<button data-tab="choice">2. Multiple choice</button>
+<button data-tab="match">3. Matching</button>
+<button data-tab="translate">4. Перевод</button>
+<button data-tab="gap">5. Пропуски</button>
+<button data-tab="review">6. Повторение</button>
+</nav>
+
+<section class="panel active" id="cards">
+<h2>Карточки на запоминание</h2><p class="hint">Нажми на карточку, чтобы увидеть перевод. Перемешай набор, чтобы повторять слова в другом порядке.</p>
+<div class="row" style="margin-bottom:14px"><button id="shuffleCards">Перемешать</button><span class="progress" id="cardCount"></span></div>
+<div class="card-grid" id="cardGrid"></div>
+<div class="note"><b>Подсказка:</b> сначала попробуй вспомнить перевод самостоятельно, а потом открывай карточку.</div>
 </section>
-<footer>Совет: проговаривай ответ вслух, прежде чем нажимать Check.</footer>
+
+<section class="panel" id="choice">
+<h2>Выбери правильный перевод</h2><p class="hint">Выбери один вариант. После ответа появится следующее слово.</p>
+<div class="row spaced"><span class="progress" id="choiceProgress"></span><span class="score" id="choiceScore">Верно: 0</span></div>
+<div class="question" id="choiceQuestion"></div><div class="options" id="choiceOptions"></div><div class="feedback" id="choiceFeedback"></div>
+<button id="choiceNext" class="secondary">Следующий вопрос</button>
+</section>
+
+<section class="panel" id="match">
+<h2>Найди пары</h2><p class="hint">Сначала нажми на английское слово, затем на его русский перевод. Собери все пары.</p>
+<div class="row spaced"><span class="progress" id="matchProgress"></span><button id="matchRestart" class="secondary">Начать заново</button></div>
+<div class="match-wrap" style="margin-top:15px"><div class="match-col" id="matchEn"></div><div class="match-col" id="matchRu"></div></div>
+<div class="feedback" id="matchFeedback"></div>
+</section>
+
+<section class="panel" id="translate">
+<h2>Вспомни слово</h2><p class="hint">Переведи слово или выражение на английский. Регистр и лишние пробелы не важны.</p>
+<div class="row spaced"><span class="progress" id="translateProgress"></span><span class="score" id="translateScore">Верно: 0</span></div>
+<div class="question" id="translateQuestion"></div>
+<div class="row"><input id="translateInput" type="text" placeholder="Твой ответ"><button id="translateCheck">Проверить</button><button id="translateNext" class="secondary">Дальше</button></div>
+<div class="feedback" id="translateFeedback"></div>
+</section>
+
+<section class="panel" id="gap">
+<h2>Заполни пропуск</h2><p class="hint">Впиши подходящее слово или выражение из изученной лексики.</p>
+<div class="row spaced"><span class="progress" id="gapProgress"></span><span class="score" id="gapScore">Верно: 0</span></div>
+<div class="question" id="gapQuestion"></div>
+<div class="row"><input id="gapInput" type="text" placeholder="Пропущенное слово"><button id="gapCheck">Проверить</button><button id="gapNext" class="secondary">Дальше</button></div>
+<div class="feedback" id="gapFeedback"></div>
+</section>
+
+<section class="panel" id="review">
+<h2>Мини-повторение: полезные сочетания</h2><p class="hint">Прочитай выражение и попробуй объяснить его значение или составить с ним своё предложение.</p>
+<div class="card-grid" id="phraseGrid"></div>
+<div class="note"><b>Обрати внимание на точность:</b> <i>stuffy</i> обычно значит «душный», а «мягкая игрушка» — <i>soft toy</i> или <i>stuffed toy</i>. <i>Employer</i> — работодатель, <i>employee</i> — сотрудник. <i>Cooker</i> — плита, <i>cook</i> — повар / готовить.</div>
+</section>
 </main>
 <script>
 const vocab = [
-["selfless love","бескорыстная любовь"],["to be dedicated to","быть преданным чему-либо / посвящать себя"],["dedicate your life to","посвятить свою жизнь чему-либо"],
-["truck","грузовик"],["pull a wagon","тянуть повозку / тележку"],["pool","бассейн"],["pull someone's leg","разыгрывать кого-либо; подшучивать"],
-["tiny","крошечный"],["solve a problem","решить проблему"],["anniversary","годовщина"],["terrified","в ужасе; очень напуганный"],
-["edit","редактировать"],["wedding anniversary","годовщина свадьбы"],["both","оба / обе"],["wisdom","мудрость"],["wise","мудрый"],["a wise man","мудрый человек"],
-["set – set – set","ставить; класть (в определённых выражениях)"],["put – put – put","класть; ставить"],["cut – cut – cut","резать"],["relationship","отношения"],["fight","бороться; сражаться; ссора"],["fighter","борец"],["happiness","счастье"],["grandchildren","внуки"],
-["I didn't catch that.","Я не расслышал(а) / не понял(а)."],["eye drops","глазные капли"],["she doesn't need help","ей не нужна помощь"],["she can do everything herself","она всё может сделать сама"],
-["have a headache","страдать от головной боли / болит голова"],["painkillers","обезболивающие"],["water doesn't help","вода не помогает"]
+["dusty","пыльный"],["muddy","грязный; в грязи; слякотный"],["muddy puddles","грязные лужи"],["flattered","польщённый"],["to apply / send an application","подать заявку"],["public attention","общественное внимание"],["to fail","потерпеть неудачу; провалиться"],["a failure","неудача; провал"],["to please","доставлять удовольствие"],["modest","скромный"],["a modest family","скромная семья"],["restful","спокойный; дающий отдых"],["against all odds","вопреки всему; несмотря ни на что"],
+["employment","занятость; трудоустройство"],["unemployment","безработица"],["employer","работодатель"],["employee","сотрудник; работник"],["to employ","нанимать; трудоустраивать"],["to look for","искать"],["cooker","плита"],["cook","повар; готовить"],["Russian cuisine","русская кухня"],["Italian cuisine","итальянская кухня"],["Chinese cuisine","китайская кухня"],["Georgian cuisine","грузинская кухня"],["Thai cuisine","тайская кухня"],["cookery book","кулинарная книга"],["soft toy / stuffed toy","мягкая игрушка"],
+["to prepare / get ready","готовиться; подготовиться"],["to vote","голосовать"],["wear – wore – worn","носить (одежду)"],["evil character","злой персонаж"],["a survey","опрос"],["title","заголовок; название"],["consist of","состоять из"],["to expect","ожидать"],["unexpected","неожиданный"],["unexpectedly","неожиданно"],["live up to my expectations","оправдать мои ожидания"],["the main purpose","главная цель"],["feel under the weather","плохо себя чувствовать"],["I'm getting used to my new timetable","Я привыкаю к новому расписанию"],["I got used to something","Я привык(ла) к чему-либо"],["a piece of cake","проще простого; сущий пустяк"]
 ];
-const gapTasks=[
-["Their relationship is based on ______ love.","selfless"],["She has always been ______ to her family.","dedicated"],["He wants to ______ his life to helping children.","dedicate"],["We went swimming in the ______.","pool"],["Stop it! Are you ______ my leg?","pulling"],["I was ______ when I heard the noise.","terrified"],["They are celebrating their 10th wedding ______.","anniversary"],["Grandparents often enjoy spending time with their ______.","grandchildren"],["She has a terrible headache, but ______ don't help.","painkillers"],["I didn't ______ that. Could you repeat it?","catch"],["She doesn't need help. She can do everything ______.","herself"],["We need to ______ this problem together.","solve"]
+const gaps = [
+["The streets are covered in dust. Everything is ______.","dusty"],
+["After the rain, the garden path was ______.","muddy"],
+["The children jumped into the ______.","muddy puddles"],
+["I was really ______ by her compliment.","flattered"],
+["You need ______ for the course before Friday.","to apply"],
+["The actor suddenly found himself in the ______.","public attention"],
+["He tried hard, but unfortunately he ______.","failed"],
+["Getting this job was no ______.","failure"],
+["The trip was designed to be calm and ______.","restful"],
+["She succeeded ______, despite all the difficulties.","against all odds"],
+["High ______ can make it difficult to find a job.","unemployment"],
+["An ______ hires people; an ______ works for a company.","employer; employee"],
+["I'm ______ my keys. Have you seen them?","looking for"],
+["Italian ______ is famous all over the world.","cuisine"],
+["This story has an interesting main ______.","character"],
+["The report ______ three sections.","consists of"],
+["I didn't ______ the test to be so difficult.","expect"],
+["The ending was completely ______.","unexpected"],
+["The film didn't ______ my expectations.","live up to"],
+["The ______ of the survey is to collect opinions.","main purpose"],
+["I can't come today. I feel ______.","under the weather"],
+["I'm slowly ______ to the new timetable.","getting used"],
+["For her, learning languages is ______.","a piece of cake"]
 ];
-const choiceTasks=[
-["Which phrase means «подшучивать над кем-либо»?",["pull someone's leg","pull a wagon","solve a problem"],0],
-["Choose the correct collocation:",["make a headache","have a headache","do a headache"],1],
-["What is the noun form of wise?",["wisdom","wise man","wisely"],0],
-["Which word means «крошечный»?",["terrified","tiny","both"],1],
-["Choose the correct phrase:",["wedding anniversary","wedding relationship","wedding wisdom"],0],
-["«Оба» in English:",["each","both","either"],1],
-["Which one is a person?",["fighter","fight","happiness"],0],
-["Choose the correct expression:",["eye drops","eyes drops","eye dropes"],0],
-["What does «I didn't catch that» mean?",["Я не расслышал(а)","Я не поймал(а) его","Я не согласен(на)"],0],
-["Which verb means «редактировать»?",["dedicate","edit","cut"],1]
-];
-const fixTasks=[
-["She can do everything by her.","She can do everything herself."],
-["He is dedicate to his work.","He is dedicated to his work."],
-["I have a headache. Water don't help.","I have a headache. Water doesn't help."],
-["They celebrate their wedding anniversary yesterday.","They celebrated their wedding anniversary yesterday."],
-["Both of them is terrified.","Both of them are terrified."],
-["She dedicated her life for children.","She dedicated her life to children."]
-];
-const formTasks=[
-["wise → noun","wisdom"],["happy → noun","happiness"],["fight → person","fighter"],["terrify → adjective","terrified"],["edit → noun (a person who edits)","editor"],["dedicate → adjective","dedicated"]
-];
-const modes={match:"Match the words",choice:"Choose the correct answer",gap:"Complete the sentence",translate:"Translate into English",fix:"Correct the mistake",forms:"Word formation"};
-let mode="match",items=[],index=0,score=0,answered=false,selected=null;
+let cardSet=[...vocab], choiceIndex=0, choiceRight=0, matchPairs=[], selectedEn=null, matchDone=0, translateIndex=0, translateRight=0, gapIndex=0, gapRight=0;
 const $=id=>document.getElementById(id);
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
-function build(){
- index=0;score=0;answered=false;selected=null;
- if(mode==="match") items=shuffle(vocab).slice(0,10);
- if(mode==="choice") items=shuffle(choiceTasks);
- if(mode==="gap") items=shuffle(gapTasks);
- if(mode==="translate") items=shuffle(vocab).slice(0,12);
- if(mode==="fix") items=shuffle(fixTasks);
- if(mode==="forms") items=shuffle(formTasks);
- render();
-}
-function render(){
- answered=false;selected=null;$("feedback").textContent="";$("feedback").className="feedback";
- $("modeName").textContent=modes[mode];$("counter").textContent=`${index+1} / ${items.length}`;
- $("bar").style.width=`${index/items.length*100}%`; $("next").disabled=true;
- $("check").disabled=false;
- const t=items[index];let html="";
- if(mode==="match"){
-  const opts=shuffle(vocab.filter(x=>x!==t).slice(0,3).concat([t]));
-  html=`<div class="prompt">${t[0]}</div><div class="small">Выбери правильный перевод.</div><div class="options">${opts.map(x=>`<button data-answer="${esc(x[1])}">${x[1]}</button>`).join("")}</div>`;
- }else if(mode==="choice"){
-  html=`<div class="prompt">${t[0]}</div><div class="options">${t[1].map((x,i)=>`<button data-index="${i}">${x}</button>`).join("")}</div>`;
- }else if(mode==="gap"){
-  html=`<div class="prompt">${t[0].replace("______","<span style='color:#8a9bd0'>________</span>")}</div><input class="answer" id="answer" placeholder="Type the missing word">`;
- }else if(mode==="translate"){
-  html=`<div class="prompt">${t[1]}</div><div class="small">Напиши английский вариант.</div><input class="answer" id="answer" placeholder="Your answer">`;
- }else if(mode==="fix"){
-  html=`<div class="prompt">${t[0]}</div><div class="small">Перепиши предложение правильно.</div><input class="answer" id="answer" placeholder="Correct sentence">`;
- }else{
-  html=`<div class="prompt">${t[0]}</div><input class="answer" id="answer" placeholder="Your answer">`;
- }
- $("task").innerHTML=html;
- document.querySelectorAll("[data-answer],[data-index]").forEach(b=>b.onclick=()=>{
-  if(answered)return;document.querySelectorAll(".options button").forEach(x=>x.classList.remove("correct","wrong"));
-  b.classList.add("correct");selected=mode==="match"?b.dataset.answer:Number(b.dataset.index);
- });
-}
-function norm(s){return (s||"").toLowerCase().trim().replace(/[’']/g,"'").replace(/[.!?,]/g,"").replace(/\s+/g," ")}
-function check(){
- if(answered)return;const t=items[index];let ok=false,expected="";
- if(mode==="match"){expected=t[1];ok=selected===expected}
- if(mode==="choice"){expected=t[1][t[2]];ok=selected===t[2]}
- if(mode==="gap"){expected=t[1];ok=norm($("answer").value)===norm(expected)}
- if(mode==="translate"){expected=t[0];ok=norm($("answer").value)===norm(expected)}
- if(mode==="fix"){expected=t[1];ok=norm($("answer").value)===norm(expected)}
- if(mode==="forms"){expected=t[1];ok=norm($("answer").value)===norm(expected)}
- if(!selected && (mode==="match"||mode==="choice")){$("feedback").textContent="Сначала выбери вариант.";return}
- if((mode==="gap"||mode==="translate"||mode==="fix"||mode==="forms")&&!$("answer").value.trim()){$("feedback").textContent="Введи ответ.";return}
- answered=true;if(ok)score++;
- $("feedback").textContent=ok?"Correct! ✓":`Not quite. Correct answer: ${expected}`;
- $("feedback").className="feedback "+(ok?"good":"bad");$("check").disabled=true;$("next").disabled=false;
- document.querySelectorAll(".options button").forEach(b=>{if((mode==="match"&&b.dataset.answer===expected)||(mode==="choice"&&Number(b.dataset.index)===t[2]))b.classList.add("correct")});
- if(index===items.length-1){$("next").textContent="See results"}else $("next").textContent="Next";
-}
-function next(){
- if(!answered)return;
- if(index<items.length-1){index++;render()}else{
-  $("bar").style.width="100%";$("counter").textContent="Finished";
-  $("task").innerHTML=`<div class="prompt">Section complete!</div><p>You got <b>${score} / ${items.length}</b> correct.</p><p>${score===items.length?"Excellent work!": "Review the tricky words and try again."}</p>`;
-  $("feedback").textContent="";$("check").disabled=true;$("next").disabled=true;
- }
-}
-function esc(s){return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;")}
-document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll("[data-mode]").forEach(x=>x.classList.toggle("secondary",x!==b));$("next").textContent="Next";build()});
-$("check").onclick=check;$("next").onclick=next;$("restart").onclick=()=>{$("next").textContent="Next";build()};
-build();
-</script>
-</body></html>
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===b.dataset.tab))}));
+function renderCards(){ $('cardCount').textContent=cardSet.length+' карточек';$('cardGrid').innerHTML='';cardSet.forEach(([en,ru])=>{let d=document.createElement('div');d.className='flip';d.innerHTML='<div>'+en+'<small>Нажми, чтобы открыть перевод</small></div>';let open=false;d.onclick=()=>{open=!open;d.style.background=open?'#e5f0df':'var(--yellow)';d.innerHTML='<div>'+(open?ru:en)+'<small>'+(open?'Нажми, чтобы вернуться':'Нажми, чтобы открыть перевод')+'</small></div>'};$('cardGrid').append(d)})}
+$('shuffleCards').onclick=()=>{cardSet=shuffle(vocab);renderCards()};renderCards();
+function nextChoice(){choiceIndex++;if(choiceIndex>=20)choiceIndex=0;renderChoice()}
+function renderChoice(){let item=vocab[choiceIndex%vocab.length];$('choiceProgress').textContent='Вопрос '+(choiceIndex+1)+' / 20';$('choiceQuestion').textContent=item[0];$('choiceFeedback').textContent='';let opts=shuffle([item[1],...shuffle(vocab.filter(x=>x!==item)).slice(0,3).map(x=>x[1])]);$('choiceOptions').innerHTML='';opts.forEach(o=>{let b=document.createElement('button');b.textContent=o;b.onclick=()=>{if(b.dataset.done)return;document.querySelectorAll('#choiceOptions button').forEach(x=>x.disabled=true);if(o===item[1]){b.classList.add('correct');choiceRight++;$('choiceFeedback').textContent='Верно!';}else{b.classList.add('wrong');$('choiceFeedback').textContent='Не совсем. Правильный ответ: '+item[1];} $('choiceScore').textContent='Верно: '+choiceRight;};$('choiceOptions').append(b)})}
+$('choiceNext').onclick=nextChoice;renderChoice();
+function setupMatch(){matchPairs=shuffle(vocab).slice(0,8);selectedEn=null;matchDone=0;$('matchProgress').textContent='Найдено: 0 / 8';$('matchFeedback').textContent='';$('matchEn').innerHTML='';$('matchRu').innerHTML='';let right=shuffle(matchPairs);matchPairs.forEach(([en,ru])=>{let b=document.createElement('button');b.textContent=en;b.onclick=()=>{if(b.classList.contains('done'))return;document.querySelectorAll('#matchEn button').forEach(x=>x.classList.remove('chosen'));selectedEn={en,ru,button:b};b.classList.add('chosen')};$('matchEn').append(b)});right.forEach(([en,ru])=>{let b=document.createElement('button');b.textContent=ru;b.onclick=()=>{if(!selectedEn||b.classList.contains('done'))return;if(b.textContent===selectedEn.ru){b.classList.add('done');selectedEn.button.classList.add('done');selectedEn.button.classList.remove('chosen');matchDone++;$('matchProgress').textContent='Найдено: '+matchDone+' / 8';$('matchFeedback').textContent='Отлично! Пара найдена.';selectedEn=null;if(matchDone===8)$('matchFeedback').textContent='Все пары собраны!';}else{$('matchFeedback').textContent='Эта пара не подходит. Попробуй ещё раз.';selectedEn.button.classList.remove('chosen');selectedEn=null}};$('matchRu').append(b)})}
+$('matchRestart').onclick=setupMatch;setupMatch();
+function norm(s){return s.toLowerCase().trim().replace(/[’']/g,"'").replace(/\s+/g,' ')}
+function renderTranslate(){let item=vocab[translateIndex%vocab.length];$('translateProgress').textContent='Карточка '+(translateIndex+1)+' / '+vocab.length;$('translateQuestion').textContent=item[1];$('translateInput').value='';$('translateFeedback').textContent='';$('translateInput').focus()}
+$('translateCheck').onclick=()=>{let item=vocab[translateIndex%vocab.length], ans=norm($('translateInput').value);let accepted=item[0].split(' / ').map(norm);if(accepted.some(x=>ans===x)||ans===norm(item[0])){translateRight++;$('translateFeedback').textContent='Верно! '+item[0];}else{$('translateFeedback').textContent='Возможный ответ: '+item[0];}$('translateScore').textContent='Верно: '+translateRight};
+$('translateNext').onclick=()=>{translateIndex++;renderTranslate()};$('translateInput').addEventListener('keydown',e=>{if(e.key==='Enter')$('translateCheck').click()});renderTranslate();
+function renderGap(){let item=gaps[gapIndex%gaps.length];$('gapProgress').textContent='Задание '+(gapIndex+1)+' / '+gaps.length;$('gapQuestion').textContent=item[0];$('gapInput').value='';$('gapFeedback').textContent=''}
+$('gapCheck').onclick=()=>{let item=gaps[gapIndex%gaps.length], answer=norm($('gapInput').value), expected=norm(item[1]);if(answer===expected||answer===expected.replace(/^to /,'')){gapRight++;$('gapFeedback').textContent='Правильно!';}else{$('gapFeedback').textContent='Ответ: '+item[1];}$('gapScore').textContent='Верно: '+gapRight};
+$('gapNext').onclick=()=>{gapIndex++;renderGap()};$('gapInput').addEventListener('keydown',e=>{if(e.key==='Enter')$('gapCheck').click()});renderGap();
+const phrases=[["wear – wore – worn","три формы глагола wear"],["expect → unexpected → unexpectedly","словообразовательная цепочка"],["employment ↔ unemployment","противоположные понятия"],["employer ↔ employee","работодатель и сотрудник"],["get used to + noun / -ing","привыкнуть к чему-либо"],["be getting used to","быть в процессе привыкания"],["live up to expectations","оправдать ожидания"],["against all odds","вопреки всем трудностям"]];
+$('phraseGrid').innerHTML=phrases.map(p=>'<div class="flip" style="cursor:default"><div>'+p[0]+'<small>'+p[1]+'</small></div></div>').join('');
+</script></body></html>
