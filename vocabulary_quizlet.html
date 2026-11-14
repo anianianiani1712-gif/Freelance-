@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocabulary practice — Quizlet style</title>
+<style>
+:root{--ink:#292735;--muted:#777487;--berry:#a83f70;--pink:#f8e7ef;--paper:#fffdfb;--line:#eee8ed;--yellow:#fff4bf}
+*{box-sizing:border-box}body{margin:0;background:#f7f5f7;color:var(--ink);font:16px/1.5 Inter,Arial,sans-serif}
+header{background:linear-gradient(120deg,#fff1f5,#fff9e9);padding:28px 20px 24px;border-bottom:1px solid var(--line)}
+.wrap{max-width:1050px;margin:auto;padding:0 18px}h1{font-size:clamp(25px,4vw,38px);margin:0 0 7px;letter-spacing:-.7px}header p{margin:0;color:var(--muted)}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}
+.tab,.btn{border:1px solid #e6dce3;background:white;color:var(--ink);padding:10px 15px;border-radius:12px;cursor:pointer;font-weight:650}
+.tab.active,.btn.primary{background:var(--berry);border-color:var(--berry);color:white}
+.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:22px;margin:14px 0;box-shadow:0 6px 24px #3b1b2a08}
+h2{font-size:22px;margin:0 0 6px} .sub{color:var(--muted);margin:0 0 17px}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}th{background:#fff8fb;color:#665665;position:sticky;top:0}
+.tablebox{max-height:65vh;overflow:auto;border:1px solid var(--line);border-radius:12px}
+td:first-child{font-weight:700;width:42%}.count{color:var(--muted);font-size:13px}
+.progress{height:7px;background:#f0eaf0;border-radius:10px;overflow:hidden;margin:12px 0 20px}.bar{height:100%;width:0;background:var(--berry);transition:width .2s}
+.prompt{font-size:clamp(23px,4vw,32px);font-weight:750;line-height:1.25;margin:10px 0 18px}
+.hint{color:var(--muted);margin:0 0 12px}.answer{width:100%;font-size:19px;padding:14px;border:1.5px solid #ded5de;border-radius:12px;outline:none}.answer:focus{border-color:var(--berry);box-shadow:0 0 0 3px #a83f7018}
+.feedback{min-height:28px;font-weight:700;margin:12px 0}.good{color:#247b51}.bad{color:#b23e53}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.small{font-size:13px;color:var(--muted)}
+.flash{min-height:220px;display:grid;place-items:center;text-align:center;background:linear-gradient(140deg,#fff9fb,#fff9e7);border:1px solid #f0e6ec;border-radius:18px;padding:25px;cursor:pointer}
+.flash .big{font-size:clamp(27px,5vw,40px);font-weight:750}.flash .tiny{color:var(--muted);margin-top:12px}
+.hidden{display:none!important}.pill{display:inline-block;padding:4px 9px;border-radius:20px;background:var(--pink);color:#853455;font-size:12px;font-weight:700}
+@media(max-width:600px){.panel{padding:16px}th,td{padding:8px}.actions .btn{flex:1}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>Vocabulary practice</h1><p>Карточки, перевод и пропущенное слово. По одному слову или выражению за раз.</p></div></header>
+<main class="wrap">
+<nav>
+<button class="tab active" data-tab="list">1. Список слов</button>
+<button class="tab" data-tab="cards">2. Карточки</button>
+<button class="tab" data-tab="type">3. Впиши перевод</button>
+<button class="tab" data-tab="cloze">4. Пропущенное слово</button>
+</nav>
+<section id="list" class="panel">
+<h2>Полный список слов и выражений</h2><p class="sub">Все единицы со стикеров. Составные выражения разбиты на отдельные элементы там, где это возможно.</p>
+<div class="tablebox"><table><thead><tr><th>English</th><th>Перевод</th></tr></thead><tbody id="vocabRows"></tbody></table></div>
+<p class="count" id="total"></p>
+</section>
+<section id="cards" class="panel hidden">
+<h2>Карточки</h2><p class="sub">Нажми на карточку, чтобы увидеть перевод. Переключай по одной.</p>
+<div class="progress"><div class="bar" id="cardBar"></div></div>
+<div class="flash" id="flashcard" role="button" tabindex="0"><div><div class="pill" id="cardIndex"></div><div class="big" id="cardFront"></div><div class="tiny" id="cardBack">Нажми, чтобы перевернуть</div></div></div>
+<div class="actions"><button class="btn" id="prevCard">← Назад</button><button class="btn primary" id="flip">Показать перевод</button><button class="btn" id="nextCard">Далее →</button><button class="btn" id="shuffle">Перемешать</button></div>
+</section>
+<section id="type" class="panel hidden">
+<h2>Вспомни перевод</h2><p class="sub">Дан один английский элемент. Впиши его перевод по-русски.</p>
+<div class="progress"><div class="bar" id="typeBar"></div></div><div class="count" id="typeCount"></div>
+<div class="prompt" id="typePrompt"></div><input class="answer" id="typeAnswer" autocomplete="off" placeholder="Впиши перевод…">
+<div class="feedback" id="typeFeedback"></div><div class="actions"><button class="btn primary" id="checkType">Проверить</button><button class="btn" id="showType">Показать ответ</button><button class="btn" id="nextType">Следующее →</button></div>
+</section>
+<section id="cloze" class="panel hidden">
+<h2>Впиши недостающее слово</h2><p class="sub">В каждом задании пропущена ровно одна целевая единица. Если исходное выражение состоит из нескольких слов, оно тренируется целиком как одна лексическая единица.</p>
+<div class="progress"><div class="bar" id="clozeBar"></div></div><div class="count" id="clozeCount"></div>
+<div class="prompt" id="clozePrompt"></div><p class="hint" id="clozeHint"></p>
+<input class="answer" id="clozeAnswer" autocomplete="off" placeholder="Впиши пропущенное слово / выражение…">
+<div class="feedback" id="clozeFeedback"></div><div class="actions"><button class="btn primary" id="checkCloze">Проверить</button><button class="btn" id="showCloze">Показать ответ</button><button class="btn" id="nextCloze">Следующее →</button></div>
+</section>
+<p class="small" style="text-align:center;padding:12px 0 28px">Совет: проходи режимы по порядку — сначала узнай слова, затем вспомни перевод и закрепи их в контексте.</p>
+</main>
+<script>
+const words = [
+["hell","ад; преисподняя"],["nightmare","ночной кошмар"],["refuse","отказываться"],["shake hands","пожимать руки"],
+["a habit","привычка"],["win the first prize","занять первое место; выиграть первый приз"],["reach a goal","достичь цели"],["reach a dream","осуществить мечту"],
+["earthquake","землетрясение"],["predict","предсказывать; прогнозировать"],["have an affair","иметь роман; заводить интрижку"],["spend time on","тратить время на"],
+["have something in common","иметь что-то общее"],["do some research","проводить исследование; искать информацию"],["plague","чума"],["tell me about it","и не говори; знаю не понаслышке"],
+["widow","вдова"],["widower","вдовец"],["dress up like","наряжаться как; одеваться под"],["I'm off to","я отправляюсь; мне пора"],
+["do something","делать что-либо"],["neighbourhood","район; квартал"],["origin","происхождение"],["originally","изначально; первоначально"],
+["harm","вред; ущерб"],["seaweed","водоросли"],["vote (verb)","голосовать"],["a vote (noun)","голос; голосование"],
+["in spite of","несмотря на; вопреки"],["despite","несмотря на"],["due to","из-за; вследствие"],["expect","ожидать"],
+["reinvent the wheel","изобретать велосипед"],["invent","изобретать"],["remain","оставаться"],["human remains","человеческие останки"],
+["hardly","едва ли; почти не"],["get up on the wrong side of the bed","встать не с той ноги"],["doze off","задремать; случайно заснуть"],
+["fall asleep","заснуть"],["do the ironing","гладить одежду"],["iron (noun)","железо"],["look alike","быть похожими; выглядеть одинаково"],
+["negotiate a deal","вести переговоры о сделке"],["negotiations","переговоры"],["give a talk","выступить с речью; прочитать доклад"],
+["agenda","повестка дня"],["on the agenda","в повестке дня"],["a bride","невеста"],["a groom","жених"],
+["a fortress","крепость"],["collect my order","забрать мой заказ"],["pickpoint","пункт выдачи заказов"],
+["wet wipes","влажные салфетки"],["wipe","протирать; вытирать"],["make up for","компенсировать; возмещать"],
+["harmful","вредный"],["harmless","безвредный"],["success","успех"],["successful","успешный"],
+["succeed","добиться успеха"],["oversee","надзирать; контролировать"],["accept","принимать"],["an invitation","приглашение"],
+["disappointing","разочаровывающий"],["disappointed","разочарованный"],["disappointment","разочарование"],
+["explain","объяснять"],["explanation","объяснение"],["survive","выжить; пережить"],["contestant","участник конкурса"]
+];
+const clozes = [
+["The children were frightened by the ______.","ночной кошмар","nightmare"],
+["He had to ______ to say no.","отказываться","refuse"],
+["They ______ before the meeting.","пожимать руки","shake hands"],
+["She has a bad ______ of biting her nails.","привычка","habit"],
+["She hopes to ______ at the competition.","выиграть первый приз","win the first prize"],
+["You need to ______ before you can succeed.","достичь цели","reach a goal"],
+["Scientists can sometimes ______ natural disasters.","предсказывать","predict"],
+["They decided to ______ after the conference.","иметь роман","have an affair"],
+["I don't want to ______ this problem.","тратить время на","spend time on"],
+["We ______: we both love jazz.","иметь что-то общее","have something in common"],
+["We need to ______ before making a decision.","провести исследование","do some research"],
+["The ______ spread quickly through the city.","чума","plague"],
+["My grandmother became a ______ after her husband died.","вдова","widow"],
+["He became a ______ when his wife died.","вдовец","widower"],
+["The children like to ______ superheroes.","наряжаться как","dress up like"],
+["I'm ______ the shops. Do you need anything?","я отправляюсь","I'm off to"],
+["They live in a quiet ______.","район","neighbourhood"],
+["The word has Latin ______.","происхождение","origin"],
+["This product can ______ the environment.","нанести вред","harm"],
+["Many people eat ______ in salads.","водоросли","seaweed"],
+["Everyone will ______ in the election.","голосовать","vote"],
+["______ the bad weather, we went out.","несмотря на","In spite of"],
+["The match was cancelled ______ the rain.","из-за","due to"],
+["I ______ that she will arrive soon.","ожидать","expect"],
+["Don't try to ______; find a new solution.","изобретать велосипед","reinvent the wheel"],
+["Who ______ the telephone?","изобрёл","invent"],
+["Please ______ here until I return.","оставаться","remain"],
+["The museum displayed ancient ______.","человеческие останки","human remains"],
+["I could ______ hear him.","едва","hardly"],
+["I got up on the ______ side of the bed today.","не с той ноги","wrong"],
+["I was so tired that I started to ______ on the sofa.","задремать","doze off"],
+["I need to ______ these shirts.","погладить одежду","do the ironing"],
+["The gate is made of ______.","железо","iron"],
+["The twins ______ a lot.","быть похожими","look alike"],
+["They hope to ______ with the supplier.","договориться о сделке","negotiate a deal"],
+["The ______ will continue tomorrow.","переговоры","negotiations"],
+["She was invited to ______ at the event.","выступить с речью","give a talk"],
+["What's the first item on the ______?","повестка дня","agenda"],
+["The wedding is ______ for Saturday.","в повестке дня","on the agenda"],
+["The ______ looked beautiful in her dress.","невеста","bride"],
+["The ______ waited at the altar.","жених","groom"],
+["The old ______ stood on the hill.","крепость","fortress"],
+["I'll ______ at the collection point.","забрать мой заказ","collect my order"],
+["Don't forget to pack some ______.","влажные салфетки","wet wipes"],
+["How can we ______ the extra cost?","компенсировать","make up for"],
+["Too much sugar can be ______.","вредный","harmful"],
+["This chemical is completely ______.","безвредный","harmless"],
+["Hard work is the key to ______.","успех","success"],
+["She had a very ______ career.","успешная","successful"],
+["If you work hard, you can ______.","добиться успеха","succeed"],
+["The manager will ______ the project.","контролировать","oversee"],
+["Did you ______ the invitation?","принять","accept"],
+["Thank you for the ______.","приглашение","invitation"],
+["The film was rather ______.","разочаровывающий","disappointing"],
+["I was really ______ with the result.","разочарован","disappointed"],
+["To my ______, nobody came.","разочарованию","disappointment"],
+["Can you ______ the rules?","объяснить","explain"],
+["The teacher gave a clear ______.","объяснение","explanation"],
+["Some animals cannot ______ in this climate.","выжить","survive"],
+["Each ______ answered a question.","участник конкурса","contestant"]
+];
+const $=id=>document.getElementById(id);
+words.forEach(([en,ru])=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${en}</td><td>${ru}</td>`;$('vocabRows').appendChild(tr)});
+$('total').textContent=`Всего: ${words.length} отдельных слов и выражений.`;
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));['list','cards','type','cloze'].forEach(id=>$(id).classList.toggle('hidden',id!==b.dataset.tab));}));
+let deck=words.map((x,i)=>({...{en:x[0],ru:x[1]},i})),ci=0,flipped=false;
+function showCard(){let w=deck[ci];$('cardIndex').textContent=`Карточка ${ci+1} / ${deck.length}`;$('cardFront').textContent=flipped?w.ru:w.en;$('cardBack').textContent=flipped?w.en:'Нажми, чтобы перевернуть';$('cardBar').style.width=((ci+1)/deck.length*100)+'%';$('flip').textContent=flipped?'Показать английский':'Показать перевод'}
+function flip(){flipped=!flipped;showCard()}$('flashcard').onclick=flip;$('flashcard').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}};
+$('flip').onclick=flip;$('prevCard').onclick=()=>{ci=(ci-1+deck.length)%deck.length;flipped=false;showCard()};$('nextCard').onclick=()=>{ci=(ci+1)%deck.length;flipped=false;showCard()};$('shuffle').onclick=()=>{deck.sort(()=>Math.random()-.5);ci=0;flipped=false;showCard()};showCard();
+let ti=0,td=words.map(x=>x);function norm(s){return s.toLowerCase().trim().replace(/[.,!?;:]/g,'').replace(/\s+/g,' ')}
+function showType(){$('typePrompt').textContent=td[ti][0];$('typeCount').textContent=`Задание ${ti+1} / ${td.length}`;$('typeAnswer').value='';$('typeFeedback').textContent='';$('typeFeedback').className='feedback';$('typeBar').style.width=((ti+1)/td.length*100)+'%';$('typeAnswer').focus()}
+$('checkType').onclick=()=>{let ok=norm($('typeAnswer').value)===norm(td[ti][1]);$('typeFeedback').textContent=ok?'✓ Верно!':`✗ Правильный ответ: ${td[ti][1]}`;$('typeFeedback').className='feedback '+(ok?'good':'bad')};
+$('showType').onclick=()=>{$('typeFeedback').textContent='Ответ: '+td[ti][1]};$('nextType').onclick=()=>{ti=(ti+1)%td.length;showType()};$('typeAnswer').addEventListener('keydown',e=>{if(e.key==='Enter')$('checkType').click()});showType();
+let zi=0;function showCloze(){let z=clozes[zi];$('clozePrompt').textContent=z[0];$('clozeHint').textContent='Подсказка: '+z[1];$('clozeCount').textContent=`Задание ${zi+1} / ${clozes.length}`;$('clozeAnswer').value='';$('clozeFeedback').textContent='';$('clozeFeedback').className='feedback';$('clozeBar').style.width=((zi+1)/clozes.length*100)+'%';$('clozeAnswer').focus()}
+$('checkCloze').onclick=()=>{let target=clozes[zi][2],v=norm($('clozeAnswer').value);let ok=v===norm(target)||v===norm(target.replace(/[()]/g,''));$('clozeFeedback').textContent=ok?'✓ Верно!':`✗ Правильный ответ: ${target}`;$('clozeFeedback').className='feedback '+(ok?'good':'bad')};
+$('showCloze').onclick=()=>{$('clozeFeedback').textContent='Ответ: '+clozes[zi][2]};$('nextCloze').onclick=()=>{zi=(zi+1)%clozes.length;showCloze()};$('clozeAnswer').addEventListener('keydown',e=>{if(e.key==='Enter')$('checkCloze').click()});showCloze();
+</script></body></html>
