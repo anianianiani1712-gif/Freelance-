@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Food Around the World — Drag & Drop</title>
+<style>
+:root{
+  --ink:#2c2430;
+  --berry:#b83f68;
+  --berry2:#f6dce5;
+  --cream:#fffaf6;
+  --card:#ffffff;
+  --green:#4f8a65;
+  --red:#c94b55;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink);
+  background:linear-gradient(135deg,#fffaf6,#f9edf1);
+}
+.wrap{max-width:1180px;margin:0 auto;padding:34px 28px 50px}
+h1{font-family:Georgia,serif;text-align:center;margin:0 0 8px;font-size:38px}
+.subtitle{text-align:center;margin:0 0 28px;color:#735d67}
+.instructions{
+  background:#fff;border:2px solid var(--berry2);border-radius:18px;padding:16px 20px;
+  text-align:center;font-size:18px;box-shadow:0 6px 20px #0000000b;
+}
+.grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:25px;
+}
+.card{
+  background:var(--card);border-radius:18px;overflow:hidden;
+  box-shadow:0 8px 24px #00000012;border:1px solid #f0dfe5;
+}
+.photo{width:100%;height:185px;object-fit:cover;display:block}
+.cardbody{padding:14px}
+.number{font-weight:700;color:var(--berry);font-size:14px}
+.drop{
+  min-height:52px;margin-top:8px;border:2px dashed #d6a8b8;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  background:#fff9fb;color:#8b6c77;padding:8px;font-weight:700;
+}
+.drop.over{background:#f7dce6;border-color:var(--berry)}
+.drop.correct{background:#e8f5ec;border-color:var(--green);color:#27613c}
+.drop.wrong{background:#fde9eb;border-color:var(--red);color:#963640}
+.word-bank{
+  margin-top:28px;background:#fff;border-radius:18px;padding:20px;
+  box-shadow:0 8px 24px #00000010;border:1px solid #eadbe1;
+}
+.word-bank h2,.have h2{font-family:Georgia,serif;margin:0 0 14px;font-size:25px}
+.words{display:flex;flex-wrap:wrap;gap:10px}
+.word{
+  background:var(--berry);color:white;border-radius:999px;padding:11px 16px;
+  cursor:grab;font-weight:700;user-select:none;
+}
+.word:active{cursor:grabbing}
+.feedback{text-align:center;font-weight:700;margin-top:15px;min-height:24px}
+.have{
+  margin-top:28px;background:var(--cream);border:3px solid var(--berry);
+  border-radius:18px;padding:22px;
+}
+.have p{font-size:21px;font-weight:700;margin:0 0 14px}
+.questions{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.q{
+  background:white;border-radius:12px;padding:14px;border:1px solid #eadbe1;
+  min-height:52px;
+}
+.btns{text-align:center;margin-top:25px}
+button{
+  border:0;border-radius:999px;background:var(--ink);color:#fff;padding:12px 22px;
+  font-size:16px;font-weight:700;cursor:pointer;
+}
+@media(max-width:800px){.grid{grid-template-columns:1fr 1fr}.questions{grid-template-columns:1fr}}
+@media(max-width:540px){.grid{grid-template-columns:1fr}.wrap{padding:22px 14px}}
+
+.photo-wrap{position:relative}
+.photo-link{display:block;text-align:center;font-size:12px;color:#8b6c77;text-decoration:underline;margin-top:5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Food Around the World 🌎</h1>
+  <p class="subtitle">Match each photo with the correct dish. Drag the food name into the box.</p>
+
+  <div class="instructions">
+    <b>Drag & Drop:</b> Match each picture with the name of the dish.
+  </div>
+
+  <section class="grid">
+    <div class="card">
+      <div class="photo-wrap"><a href="https://upload.wikimedia.org/wikipedia/commons/5/58/Hamburger_%288%29.jpg" target="_blank" rel="noopener"><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/5/58/Hamburger_%288%29.jpg" alt="Hamburger" loading="eager" referrerpolicy="no-referrer"></a><a class="photo-link" href="https://upload.wikimedia.org/wikipedia/commons/5/58/Hamburger_%288%29.jpg" target="_blank" rel="noopener">Open photo</a></div>
+      <div class="cardbody"><div class="number">1</div><div class="drop" data-answer="hamburger">Drop the dish here</div></div>
+    </div>
+    <div class="card">
+      <div class="photo-wrap"><a href="https://upload.wikimedia.org/wikipedia/commons/7/77/Sushi%21.jpg" target="_blank" rel="noopener"><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/7/77/Sushi%21.jpg" alt="Sushi" loading="eager" referrerpolicy="no-referrer"></a><a class="photo-link" href="https://upload.wikimedia.org/wikipedia/commons/7/77/Sushi%21.jpg" target="_blank" rel="noopener">Open photo</a></div>
+      <div class="cardbody"><div class="number">2</div><div class="drop" data-answer="sushi">Drop the dish here</div></div>
+    </div>
+    <div class="card">
+      <div class="photo-wrap"><a href="https://upload.wikimedia.org/wikipedia/commons/a/a8/Tacos.jpg" target="_blank" rel="noopener"><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/a/a8/Tacos.jpg" alt="Tacos" loading="eager" referrerpolicy="no-referrer"></a><a class="photo-link" href="https://upload.wikimedia.org/wikipedia/commons/a/a8/Tacos.jpg" target="_blank" rel="noopener">Open photo</a></div>
+      <div class="cardbody"><div class="number">3</div><div class="drop" data-answer="tacos">Drop the dish here</div></div>
+    </div>
+    <div class="card">
+      <div class="photo-wrap"><a href="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Burrito.jpg/960px-Burrito.jpg" target="_blank" rel="noopener"><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Burrito.jpg/960px-Burrito.jpg" alt="Burrito" loading="eager" referrerpolicy="no-referrer"></a><a class="photo-link" href="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Burrito.jpg/960px-Burrito.jpg" target="_blank" rel="noopener">Open photo</a></div>
+      <div class="cardbody"><div class="number">4</div><div class="drop" data-answer="burrito">Drop the dish here</div></div>
+    </div>
+    <div class="card">
+      <div class="photo-wrap"><a href="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Noodles_.jpg/960px-Noodles_.jpg" target="_blank" rel="noopener"><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Noodles_.jpg/960px-Noodles_.jpg" alt="Chinese noodles" loading="eager" referrerpolicy="no-referrer"></a><a class="photo-link" href="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Noodles_.jpg/960px-Noodles_.jpg" target="_blank" rel="noopener">Open photo</a></div>
+      <div class="cardbody"><div class="number">5</div><div class="drop" data-answer="noodles">Drop the dish here</div></div>
+    </div>
+    <div class="card">
+      <div class="photo-wrap"><a href="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Pork_Wonton_Soup.jpg/960px-Pork_Wonton_Soup.jpg" target="_blank" rel="noopener"><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Pork_Wonton_Soup.jpg/960px-Pork_Wonton_Soup.jpg" alt="Wonton soup" loading="eager" referrerpolicy="no-referrer"></a><a class="photo-link" href="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Pork_Wonton_Soup.jpg/960px-Pork_Wonton_Soup.jpg" target="_blank" rel="noopener">Open photo</a></div>
+      <div class="cardbody"><div class="number">6</div><div class="drop" data-answer="wonton soup">Drop the dish here</div></div>
+    </div>
+  </section>
+
+  <section class="word-bank">
+    <h2>🍽 Dish names</h2>
+    <div class="words">
+      <div class="word" draggable="true" data-word="hamburger">hamburger</div>
+      <div class="word" draggable="true" data-word="sushi">sushi</div>
+      <div class="word" draggable="true" data-word="tacos">tacos</div>
+      <div class="word" draggable="true" data-word="burrito">burrito</div>
+      <div class="word" draggable="true" data-word="noodles">noodles</div>
+      <div class="word" draggable="true" data-word="wonton soup">wonton soup</div>
+    </div>
+    <div class="feedback" id="feedback"></div>
+  </section>
+
+  <section class="have">
+    <h2>💬 Have you ever tried...?</h2>
+    <p>Choose a dish and ask your partner:</p>
+    <div class="questions">
+      <div class="q">Have you ever tried <b>sushi</b>?</div>
+      <div class="q">Have you ever tried <b>tacos</b>?</div>
+      <div class="q">Have you ever tried a <b>burrito</b>?</div>
+      <div class="q">Have you ever tried <b>wonton soup</b>?</div>
+      <div class="q">Have you ever tried <b>noodles</b>?</div>
+      <div class="q">Have you ever tried a <b>hamburger</b>?</div>
+    </div>
+  </section>
+
+  <div class="btns"><button onclick="resetAll()">Reset</button></div>
+</div>
+
+<script>
+let dragged=null;
+document.querySelectorAll('.word').forEach(w=>{
+  w.addEventListener('dragstart',e=>{dragged=w;e.dataTransfer.setData('text/plain',w.dataset.word)});
+});
+document.querySelectorAll('.drop').forEach(d=>{
+  d.addEventListener('dragover',e=>{e.preventDefault();d.classList.add('over')});
+  d.addEventListener('dragleave',()=>d.classList.remove('over'));
+  d.addEventListener('drop',e=>{
+    e.preventDefault(); d.classList.remove('over');
+    const word=e.dataTransfer.getData('text/plain');
+    if(word===d.dataset.answer){
+      d.textContent=word; d.classList.remove('wrong'); d.classList.add('correct');
+      dragged.style.opacity='.35'; dragged.setAttribute('draggable','false');
+      document.getElementById('feedback').textContent='✓ Correct!';
+      if([...document.querySelectorAll('.drop')].every(x=>x.classList.contains('correct')))
+        document.getElementById('feedback').textContent='🎉 Excellent! You matched all six dishes!';
+    }else{
+      d.classList.remove('correct'); d.classList.add('wrong');
+      d.textContent='Try again!';
+      document.getElementById('feedback').textContent='Not quite — try another dish.';
+      setTimeout(()=>{d.classList.remove('wrong');d.textContent='Drop the dish here'},900);
+    }
+  });
+});
+function resetAll(){
+  document.querySelectorAll('.drop').forEach(d=>{d.className='drop';d.textContent='Drop the dish here'});
+  document.querySelectorAll('.word').forEach(w=>{w.style.opacity='1';w.setAttribute('draggable','true')});
+  document.getElementById('feedback').textContent='';
+}
+</script>
+</body>
+</html>
