@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vocabulary practice</title>
+<style>
+:root{--berry:#a83d69;--pink:#f7e8ef;--ink:#29252a;--muted:#77717a;--line:#e8dce2}
+*{box-sizing:border-box}body{margin:0;background:#fbf8fa;color:var(--ink);font:16px/1.5 Arial,sans-serif;display:grid;min-height:100vh;place-items:center;padding:22px}
+main{width:min(720px,100%);background:white;border:1px solid var(--line);border-radius:22px;padding:clamp(22px,5vw,42px);box-shadow:0 12px 40px #5d344015}
+.top{display:flex;justify-content:space-between;gap:12px;align-items:center;color:var(--muted);font-size:14px}
+h1{font-size:clamp(23px,4vw,32px);margin:12px 0 4px}.sub{color:var(--muted);margin:0 0 26px}
+.progress{height:7px;background:#f1e9ed;border-radius:9px;overflow:hidden;margin:16px 0 28px}.bar{height:100%;width:0;background:var(--berry);transition:width .2s}
+.prompt{background:#fcf5f8;border-radius:16px;padding:22px;margin-bottom:18px}
+.ru{font-size:14px;color:var(--berry);font-weight:700;margin-bottom:8px}
+.sentence{font-size:clamp(20px,3.5vw,27px);line-height:1.5}
+.blank{display:inline-block;min-width:110px;border-bottom:2px solid var(--berry);color:var(--berry);text-align:center}
+input{width:100%;padding:15px 16px;border:1.5px solid #d9cbd2;border-radius:12px;font-size:18px;outline:none}
+input:focus{border-color:var(--berry);box-shadow:0 0 0 3px #a83d6918}
+.buttons{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+button{border:0;border-radius:12px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer}
+.primary{background:var(--berry);color:white}.secondary{background:var(--pink);color:var(--berry)}.plain{background:#f4f1f3;color:#514a50}
+button:disabled{opacity:.45;cursor:not-allowed}
+.feedback{min-height:28px;margin:14px 0 0;font-weight:700}.ok{color:#24834d}.no{color:#b34a45}.hint{color:#76566a;font-weight:400}
+.bottom{display:flex;justify-content:space-between;align-items:center;margin-top:22px;color:var(--muted);font-size:14px}
+.hidden{display:none}.finish{text-align:center;padding:24px 0}.finish strong{font-size:34px;color:var(--berry)}
+@media(max-width:480px){main{padding:22px 18px}.bottom{align-items:flex-start;gap:12px;flex-direction:column}}
+</style>
+</head>
+<body>
+<main>
+ <div class="top"><span>VOCABULARY PRACTICE</span><span id="counter">1 / 25</span></div>
+ <h1>Вставь пропущенное слово</h1>
+ <p class="sub">Впиши английское слово или выражение. Используются слова с твоих карточек.</p>
+ <div class="progress"><div class="bar" id="bar"></div></div>
+ <section id="quiz">
+  <div class="prompt">
+   <div class="ru" id="translation"></div>
+   <div class="sentence" id="sentence"></div>
+  </div>
+  <input id="answer" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Твой ответ на английском">
+  <div class="buttons">
+   <button class="primary" id="check">Проверить</button>
+   <button class="secondary" id="hint">Подсказка</button>
+   <button class="plain" id="show">Показать ответ</button>
+  </div>
+  <div class="feedback" id="feedback" aria-live="polite"></div>
+  <div class="bottom"><span id="score">Правильно: 0</span><button class="plain" id="next" disabled>Следующее →</button></div>
+ </section>
+ <section class="finish hidden" id="finish">
+  <h1>Готово!</h1><p>Твой результат:</p><strong id="result"></strong><p id="resultText"></p>
+  <button class="primary" id="restart">Пройти ещё раз</button>
+ </section>
+</main>
+<script>
+const tasks = [
+ {ru:"происхождение",s:"The _____ of this word is unclear.",a:["origin"]},
+ {ru:"первоначально",s:"This building was _____ a school.",a:["originally"]},
+ {ru:"вред, ущерб",s:"Too much sugar can do _____ to your teeth.",a:["harm"]},
+ {ru:"водоросли",s:"Some people add _____ to their soup.",a:["seaweed"]},
+ {ru:"компенсировать",s:"I stayed late to _____ the time I had lost.",a:["make up for"]},
+ {ru:"вредный",s:"Smoking is _____ to your health.",a:["harmful"]},
+ {ru:"безвредный",s:"This chemical is completely _____.",a:["harmless"]},
+ {ru:"успех",s:"Hard work is often the key to _____.",a:["success"]},
+ {ru:"успешный",s:"She is a very _____ businesswoman.",a:["successful"]},
+ {ru:"добиться успеха",s:"If you keep trying, you will _____ in the end.",a:["succeed"]},
+ {ru:"мне безразличны",s:"I'm _____ _____ flowers.",a:["indifferent to"]},
+ {ru:"сохранять природу",s:"We should _____ _____.",a:["preserve nature","preserve the nature"]},
+ {ru:"консерванты",s:"These _____ help food last longer.",a:["preservatives"]},
+ {ru:"консервы",s:"We took tins of _____ on the camping trip.",a:["preserves"]},
+ {ru:"в последнее время",s:"Have you seen her _____?",a:["recently","lately"]},
+ {ru:"изнурённый, очень уставший",s:"After the long journey, I felt completely _____.",a:["exhausted"]},
+ {ru:"до сих пор, к этому часу",s:"_____ , nobody has found the answer.",a:["so far"]},
+ {ru:"передумать",s:"I wanted to go out, but then I _____ _____.",a:["changed my mind"]},
+ {ru:"обществознание",s:"We have a _____ lesson at school today.",a:["social studies"]},
+ {ru:"наизусть",s:"I know this poem _____ _____.",a:["by heart"]},
+ {ru:"улучшать(ся)",s:"You can _____ your English by practising every day.",a:["improve"]},
+ {ru:"как только себя помню",s:"I've known her _____ _____.",a:["for as long as i can remember"]},
+ {ru:"целую вечность, очень давно",s:"I haven't seen you _____!",a:["for ages"]},
+ {ru:"экстрасенс",s:"The _____ claimed she could read people's minds.",a:["psychic"]},
+ {ru:"я на мели, у меня нет денег",s:"I can't buy it now. _____ _____!",a:["i'm broke","im broke"]},
+ {ru:"болезнь",s:"He couldn't come to work because of a serious _____.",a:["disease"]},
+ {ru:"спокойно, непринуждённо",s:"She felt _____ _____ talking to the new students.",a:["at ease"]},
+ {ru:"злой, зло",s:"In the story, the hero fights an _____ witch.",a:["evil"]},
+ {ru:"язык (орган)",s:"The doctor asked me to stick out my _____.",a:["tongue"]},
+ {ru:"прилипать, приклеиваться",s:"Wet paper can _____ to the table.",a:["stick"]}
+];
+let order=[...tasks.keys()], i=0, score=0, solved=false, hinted=false;
+const $=id=>document.getElementById(id);
+function norm(x){return x.toLowerCase().trim().replace(/[’']/g,"'").replace(/\s+/g," ")}
+function render(){
+ if(i>=order.length){$("quiz").classList.add("hidden");$("finish").classList.remove("hidden");$("result").textContent=score+" / "+tasks.length;$("resultText").textContent=score===tasks.length?"Идеально! Все ответы верные.":"Хорошая работа! Можно пройти ещё раз и закрепить слова.";return}
+ const t=tasks[order[i]];solved=false;hinted=false;
+ $("counter").textContent=(i+1)+" / "+tasks.length;$("bar").style.width=(i/tasks.length*100)+"%";
+ $("translation").textContent="Перевод: "+t.ru;
+ $("sentence").innerHTML=t.s.replace("_____","<span class='blank'>_____</span>");
+ $("answer").value="";$("answer").disabled=false;$("feedback").textContent="";$("feedback").className="feedback";
+ $("check").disabled=false;$("hint").disabled=false;$("show").disabled=false;$("next").disabled=true;
+ $("score").textContent="Правильно: "+score;$("answer").focus();
+}
+function reveal(correct,msg){
+ solved=true;$("answer").disabled=true;$("check").disabled=true;$("hint").disabled=true;$("show").disabled=true;$("next").disabled=false;
+ $("feedback").textContent=msg+" "+correct;$("feedback").className="feedback "+(msg.startsWith("Верно")?"ok":"no");
+}
+function check(){
+ if(solved)return;
+ const t=tasks[order[i]], val=norm($("answer").value);
+ if(t.a.some(a=>norm(a)===val)){score++;reveal(t.a[0],"Верно!");}
+ else {$("feedback").textContent="Пока неверно. Попробуй ещё раз или воспользуйся подсказкой.";$("feedback").className="feedback no";}
+ $("score").textContent="Правильно: "+score;
+}
+$("check").onclick=check;
+$("answer").addEventListener("keydown",e=>{if(e.key==="Enter"){if(!$("next").disabled)$("next").click();else check();}});
+$("hint").onclick=()=>{if(solved)return;const a=tasks[order[i]].a[0];const first=a.split(" ").map(w=>w[0]).join(" ");$("feedback").textContent="Первая буква каждого слова: "+first;$("feedback").className="feedback hint";};
+$("show").onclick=()=>reveal(tasks[order[i]].a[0],"Ответ:");
+$("next").onclick=()=>{i++;render()};
+$("restart").onclick=()=>{i=0;score=0;order=[...tasks.keys()];$("finish").classList.add("hidden");$("quiz").classList.remove("hidden");render()};
+render();
+</script>
+</body>
+</html>
