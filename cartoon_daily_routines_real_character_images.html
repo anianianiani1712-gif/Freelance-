@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartoon Characters — Daily Routines</title>
+<style>
+*{box-sizing:border-box}body{font-family:Arial,sans-serif;background:#fff5fa;color:#392b3c;margin:0;padding:22px}
+.wrap{max-width:1120px;margin:auto}h1{text-align:center;color:#a32b70;font-size:clamp(23px,4vw,34px)}
+.intro{text-align:center;line-height:1.5}.scroll{overflow-x:auto;border-radius:16px;box-shadow:0 8px 28px #7e41621b;background:white}
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:850px;background:#fff}
+th,td{border-right:1px solid #f0d5e3;border-bottom:1px solid #f0d5e3;padding:10px;text-align:center}
+th{background:#a32b70;color:white;min-width:125px}th:first-child{min-width:165px}
+.character{width:165px}.character img{display:block;width:132px;height:132px;object-fit:contain;margin:0 auto;background:#fff;border-radius:12px}
+.character strong{display:block;margin-top:7px}.pick{width:74px;height:50px;font-size:27px;border:2px solid #e6c4d5;background:#fff;border-radius:11px;cursor:pointer;font-weight:bold}
+.pick.yes{color:#16854d;background:#e5f8ee;border-color:#16854d}.pick.no{color:#c1324a;background:#ffebee;border-color:#c1324a}
+.buttons{display:flex;justify-content:center;gap:12px;margin:22px}.buttons button{padding:12px 20px;border:0;border-radius:10px;background:#a32b70;color:white;cursor:pointer;font-size:16px}
+.hint{text-align:center;font-size:14px;color:#725b6c}.foot{text-align:center;color:#a32b70;font-weight:bold;margin-top:24px}
+@media(max-width:600px){body{padding:12px}.character img{width:112px;height:112px}}
+</style>
+</head>
+<body><div class="wrap">
+<h1>Cartoon Characters &amp; Daily Routines</h1>
+<p class="intro">Click each square to choose <b>✓ Yes</b> or <b>✕ No</b>. Click again to clear your answer.</p>
+<div class="scroll"><table aria-label="Daily routines table">
+<thead><tr><th>Character</th><th>Get up early</th><th>Have breakfast</th><th>Go to school</th><th>Play with friends</th><th>Go to bed late</th></tr></thead><tbody>
+<tr><td class="character"><img src="https://clipart-library.com/image_gallery/n1185681.png" alt="Elsa from Frozen"><strong>Elsa</strong></td>
+<td><button class="pick" aria-label="Elsa — Get up early"></button></td><td><button class="pick" aria-label="Elsa — Have breakfast"></button></td><td><button class="pick" aria-label="Elsa — Go to school"></button></td><td><button class="pick" aria-label="Elsa — Play with friends"></button></td><td><button class="pick" aria-label="Elsa — Go to bed late"></button></td></tr>
+<tr><td class="character"><img src="https://spongebobwiki.s3.us-east-va.io.cloud.ovh.us/thumb/5/5d/SpongeBob.svg/1200px-SpongeBob.svg.png" alt="SpongeBob SquarePants"><strong>SpongeBob</strong></td>
+<td><button class="pick" aria-label="SpongeBob — Get up early"></button></td><td><button class="pick" aria-label="SpongeBob — Have breakfast"></button></td><td><button class="pick" aria-label="SpongeBob — Go to school"></button></td><td><button class="pick" aria-label="SpongeBob — Play with friends"></button></td><td><button class="pick" aria-label="SpongeBob — Go to bed late"></button></td></tr>
+<tr><td class="character"><img src="https://grizly.club/uploads/posts/2023-02/1675964050_grizly-club-p-klipart-vinni-28.png" alt="Winnie the Pooh"><strong>Winnie the Pooh</strong></td>
+<td><button class="pick" aria-label="Winnie the Pooh — Get up early"></button></td><td><button class="pick" aria-label="Winnie the Pooh — Have breakfast"></button></td><td><button class="pick" aria-label="Winnie the Pooh — Go to school"></button></td><td><button class="pick" aria-label="Winnie the Pooh — Play with friends"></button></td><td><button class="pick" aria-label="Winnie the Pooh — Go to bed late"></button></td></tr>
+<tr><td class="character"><img src="https://i.pinimg.com/originals/2a/34/f1/2a34f1c2ed7f15d8a0818164b0fca8c0.png" alt="Minions from Despicable Me"><strong>Minions</strong></td>
+<td><button class="pick" aria-label="Minions — Get up early"></button></td><td><button class="pick" aria-label="Minions — Have breakfast"></button></td><td><button class="pick" aria-label="Minions — Go to school"></button></td><td><button class="pick" aria-label="Minions — Play with friends"></button></td><td><button class="pick" aria-label="Minions — Go to bed late"></button></td></tr>
+<tr><td class="character"><img src="https://neal.fun/unusual-suspects/suspects/peppapig.webp" alt="Peppa Pig"><strong>Peppa Pig</strong></td>
+<td><button class="pick" aria-label="Peppa Pig — Get up early"></button></td><td><button class="pick" aria-label="Peppa Pig — Have breakfast"></button></td><td><button class="pick" aria-label="Peppa Pig — Go to school"></button></td><td><button class="pick" aria-label="Peppa Pig — Play with friends"></button></td><td><button class="pick" aria-label="Peppa Pig — Go to bed late"></button></td></tr>
+</tbody></table></div>
+<div class="buttons"><button id="reset" type="button">Reset all</button><button type="button" onclick="window.print()">Print</button></div>
+<p class="hint">Speaking practice: “Do the Minions get up early?” — “Yes, they do.” / “No, they don't.”</p>
+<div class="foot">@aniway.english</div></div>
+<script>
+document.querySelectorAll('.pick').forEach(b=>b.addEventListener('click',()=>{let s=((+(b.dataset.state||0))+1)%3;b.dataset.state=s;b.textContent=s===1?'✓':s===2?'✕':'';b.className='pick '+(s===1?'yes':s===2?'no':'')}));
+document.getElementById('reset').addEventListener('click',()=>document.querySelectorAll('.pick').forEach(b=>{b.dataset.state=0;b.textContent='';b.className='pick'}));
+</script></body></html>
