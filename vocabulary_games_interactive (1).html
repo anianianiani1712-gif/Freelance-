@@ -1,0 +1,114 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vocabulary Games</title>
+<style>
+:root{--purple:#a66bd1;--pale:#ead8f7;--mint:#b2dfce;--ink:#292333;--line:#e9e1ef}
+*{box-sizing:border-box}body{margin:0;font:16px/1.45 system-ui,sans-serif;color:var(--ink);background:radial-gradient(#e5dce9 1px,transparent 1px) 0 0/23px 23px,#faf7fc}
+main{max-width:960px;margin:auto;padding:25px 15px 60px}h1{margin:0;font-size:30px}.subtitle{color:#766b80;margin:3px 0 22px}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}button{font:inherit;cursor:pointer;border:0;border-radius:12px;padding:11px 16px;transition:.15s}button:hover{filter:brightness(.97)}
+nav button{background:white;border:1px solid var(--line)}nav button.active,.primary{background:var(--purple);color:white}
+.panel{background:white;border:1px solid var(--line);border-radius:20px;padding:25px;box-shadow:0 12px 35px #59397012}
+.status{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;color:#796d81;font-size:14px;margin-bottom:16px}
+.progress{height:7px;background:#f0eaf5;border-radius:20px;overflow:hidden;margin-bottom:20px}.fill{height:100%;background:var(--purple);transition:.2s}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.column{display:grid;gap:9px;align-content:start}.match{min-height:76px;background:#f3e5fa;border:2px solid transparent;text-align:center;overflow-wrap:anywhere}
+.match.ru{background:#ddf2e9}.match.selected{border-color:#8955b4;box-shadow:0 0 0 2px #8955b42b}.match.done{opacity:.5;background:#e6f4e9;cursor:default}
+.center{text-align:center}.question{font-size:clamp(25px,4vw,35px);font-weight:650;margin:35px auto;max-width:720px}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:740px;margin:auto}.choice{background:#f2e6fa;min-height:78px;padding:15px}.choice.correct{background:#d7f0df}.choice.wrong{background:#f9d9dd}
+.card{width:min(100%,580px);min-height:290px;display:grid;place-items:center;margin:25px auto 12px;padding:25px;background:var(--pale);border:2px solid #d5b9e9;border-radius:22px;cursor:pointer;box-shadow:0 10px 22px #6b438a22;transition:transform .25s}
+.card.flipped{background:var(--mint);transform:rotateY(3deg)}.card .word{font-size:clamp(25px,4.5vw,37px);font-weight:600;overflow-wrap:anywhere;text-align:center}
+.card small{display:block;color:#665975;text-align:center;margin-top:16px}.actions{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:22px}.secondary{background:#f2e8f8;color:#694581}
+.feedback{min-height:28px;text-align:center;font-weight:600;margin:18px 0 0}.good{color:#23845b}.bad{color:#bd4d5b}
+@media(max-width:560px){.panel{padding:16px}.grid{gap:8px}.match{font-size:14px;padding:9px 5px}.choices{grid-template-columns:1fr}.card{min-height:250px}}
+</style></head><body><main>
+<h1>Vocabulary Games ✨</h1><p class="subtitle">Family, relationships & everyday English · 29 expressions</p>
+<nav><button data-mode="match" class="active">🔗 Соедини пары</button><button data-mode="choice">🎯 Выбери вариант</button><button data-mode="cards">🃏 Переверни карточку</button></nav>
+<section class="panel"><div class="status"><span id="label"></span><span id="counter"></span></div><div class="progress"><div class="fill" id="fill"></div></div><div id="content"></div><p class="feedback" id="feedback" aria-live="polite"></p><div class="actions" id="actions"></div></section>
+</main><script>
+const vocab = [
+ {en:"similar",ru:"одинаковый; похожий"},
+ {en:"easy-going",ru:"лёгкий в общении; покладистый"},
+ {en:"younger brother",ru:"младший брат"},
+ {en:"They are of the same age.",ru:"Они одного возраста."},
+ {en:"I have never wanted to ride an elephant.",ru:"Я никогда не хотел(а) кататься на слоне."},
+ {en:"fingers / toes",ru:"пальцы рук / пальцы ног"},
+ {en:"head, shoulders, knees, toes",ru:"голова, плечи, колени, пальцы ног"},
+ {en:"ride a bike / ride a bicycle / ride a horse / ride a camel",ru:"кататься на велосипеде / лошади / верблюде"},
+ {en:"They see each other from time to time.",ru:"Они видятся время от времени."},
+ {en:"He gave her a ring on one knee.",ru:"Он подарил ей кольцо, стоя на одном колене."},
+ {en:"among",ru:"среди"},
+ {en:"have arguments / argue",ru:"ссориться; выяснять отношения"},
+ {en:"What is the age difference?",ru:"Какая разница в возрасте?"},
+ {en:"grow up — grew up",ru:"вырастать — вырос(ла)"},
+ {en:"We don't see each other.",ru:"Мы не видимся."},
+ {en:"look alike",ru:"быть похожими внешне"},
+ {en:"Me and my sister look alike.",ru:"Мы с сестрой похожи."},
+ {en:"tell us that we look alike",ru:"говорить нам, что мы похожи"},
+ {en:"have much in common",ru:"иметь много общего"},
+ {en:"She's his mini-me.",ru:"Она — его маленькая копия."},
+ {en:"have a difficult personality",ru:"иметь сложный характер"},
+ {en:"get married",ru:"пожениться; выйти замуж / жениться"},
+ {en:"a marriage",ru:"брак"},
+ {en:"series",ru:"сериал; серия"},
+ {en:"successors",ru:"преемники"},
+ {en:"It is what it is.",ru:"Имеем что имеем."},
+ {en:"put on",ru:"надевать"},
+ {en:"get bored",ru:"становиться скучно; заскучать"},
+ {en:"poor / bad quality",ru:"плохое качество"}
+];
+
+const $=id=>document.getElementById(id);
+const shuffle=a=>[...a].sort(()=>Math.random()-.5);
+let mode="match",deck=[],idx=0,solved=0,errors=0,selection=null,flipped=false,locked=false;
+function el(tag,cls,txt,fn){let x=document.createElement(tag);x.className=cls||"";if(txt!==undefined)x.textContent=txt;if(fn)x.onclick=fn;return x}
+function action(label,fn,cls="secondary"){$("actions").append(el("button",cls,label,fn))}
+function reset(m){mode=m;idx=0;solved=0;errors=0;selection=null;flipped=false;locked=false;deck=shuffle(vocab);document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.mode===m));render()}
+function feedback(t,good){$("feedback").textContent=t;$("feedback").className="feedback "+(good?"good":"bad")}
+function render(){
+ $("content").innerHTML="";$("actions").innerHTML="";feedback("",true);
+ if(mode==="match")renderMatch();else if(mode==="choice")renderChoice();else renderCard();
+}
+function status(label,current,total){$("label").textContent=label;$("counter").textContent=`${current} / ${total}`;$("fill").style.width=`${100*current/total}%`}
+function renderMatch(){
+ let batch=deck.slice(idx*5,(idx+1)*5);if(!batch.length){end("Все пары собраны! 🎉");return}
+ let done=new Set(),left=shuffle(batch),right=shuffle(batch);
+ status("Найди английское выражение и его перевод",idx*5,deck.length);
+ let grid=el("div","grid"),lc=el("div","column"),rc=el("div","column");
+ function pick(item,side,btn){
+  if(done.has(item.en))return;
+  if(selection&&selection.side===side){selection.btn.classList.remove("selected");selection=null}
+  if(!selection){selection={item,side,btn};btn.classList.add("selected");return}
+  let first=selection;first.btn.classList.remove("selected");selection=null;
+  if(first.item.en===item.en){done.add(item.en);first.btn.classList.add("done");btn.classList.add("done");first.btn.disabled=true;btn.disabled=true;feedback("Отлично! Пара найдена ✓",true);
+   if(done.size===batch.length){solved+=batch.length;$("fill").style.width=`${100*solved/deck.length}%`;feedback("Все пары найдены! 🎉",true);action("Следующие пары →",()=>{idx++;render()},"primary")}
+  }else{errors++;feedback("Попробуй ещё раз",false)}
+ }
+ left.forEach(x=>lc.append(el("button","match",x.en,function(){pick(x,"en",this)})));
+ right.forEach(x=>rc.append(el("button","match ru",x.ru,function(){pick(x,"ru",this)})));
+ grid.append(lc,rc);$("content").append(grid);
+ action("Перемешать заново",()=>reset("match"));
+}
+function renderChoice(){
+ if(idx>=deck.length){end("Все варианты пройдены! 🎉");return}
+ let item=deck[idx];status("Выбери правильный русский перевод",idx,deck.length);
+ $("content").append(el("div","question center",item.en));
+ let choices=el("div","choices"),options=shuffle([item,...shuffle(vocab.filter(v=>v!==item)).slice(0,3)]);
+ options.forEach(opt=>{let b=el("button","choice",opt.ru,()=>{
+  if(locked)return;locked=true;let good=opt===item;if(good)solved++;else errors++;
+  choices.querySelectorAll("button").forEach(btn=>{btn.disabled=true;if(btn.textContent===item.ru)btn.classList.add("correct")});
+  if(!good)b.classList.add("wrong");feedback(good?"Правильно! ✓":`Правильный ответ: ${item.ru}`,good);
+  $("fill").style.width=`${100*(idx+1)/deck.length}%`;
+  action("Дальше →",()=>{idx++;locked=false;render()},"primary");
+ });choices.append(b)});
+ $("content").append(choices);
+}
+function renderCard(){
+ if(idx>=deck.length){end("Все карточки просмотрены! 🎉");return}
+ let item=deck[idx];status("Нажми на карточку, чтобы увидеть перевод",idx,deck.length);
+ let card=el("div","card",undefined,()=>{flipped=!flipped;draw()});
+ function draw(){card.classList.toggle("flipped",flipped);card.innerHTML="";card.append(el("div","word",flipped?item.ru:item.en));card.append(el("small","",flipped?"Нажми, чтобы вернуться":"Нажми, чтобы перевернуть"))}
+ draw();$("content").append(card);
+ action("← Назад",()=>{if(idx>0){idx--;flipped=false;render()}});
+ action("Следующая карточка →",()=>{idx++;flipped=false;render()},"primary");
+}
+function end(t){status("Завершено",deck.length,deck.length);$("content").append(el("div","question center",t));if(mode!=="cards")$("content").append(el("p","center",`Ошибок: ${errors}`));action("Играть ещё раз ↻",()=>reset(mode),"primary")}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>reset(b.dataset.mode));
+reset("match");
+</script></body></html>
