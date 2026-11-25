@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vocabulary Quiz — Aniway English</title>
+<style>
+:root{--pink:#efc3df;--berry:#a83c78;--blue:#b8d9f4;--ink:#292631;--muted:#716b78;--paper:#fff;--bg:#faf6fa;--green:#2e8b68;--red:#c34c5a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 Inter,Arial,sans-serif}
+header{background:linear-gradient(120deg,#f6d6e9,#e8d7f4);padding:25px 18px 22px;text-align:center;border-bottom:1px solid #e7c4da}
+header small{letter-spacing:.14em;text-transform:uppercase;color:#75415f;font-weight:700}
+h1{margin:7px 0 4px;font-size:clamp(25px,5vw,38px)}header p{margin:0;color:#655365}
+.wrap{max-width:920px;margin:22px auto;padding:0 15px}
+.panel{background:white;border:1px solid #eee2ec;border-radius:20px;padding:20px;box-shadow:0 8px 24px #4c28400d}
+.topline{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.pill{background:#f7e7f1;border-radius:99px;padding:7px 12px;font-size:13px;font-weight:700;color:#80456a}
+.progress{height:9px;background:#f1e8ef;border-radius:99px;overflow:hidden;margin:12px 0 20px}.bar{height:100%;width:0;background:var(--berry);transition:width .25s}
+.categories{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0 18px}
+button,select{font:inherit}button{border:0;border-radius:12px;padding:11px 16px;background:#f2e8ef;color:var(--ink);font-weight:700;cursor:pointer;transition:.15s}
+button:hover{transform:translateY(-1px);filter:brightness(.98)}button:focus-visible,select:focus-visible{outline:3px solid #bd78a3;outline-offset:2px}
+.cat.active,.primary{background:var(--berry);color:white}.secondary{background:#e6f1fb}.quiet{background:transparent;border:1px solid #eadde7}
+h2{font-size:21px;margin:0 0 5px}.hint{color:var(--muted);font-size:14px;margin:0 0 15px}
+.question{font-size:clamp(20px,4vw,27px);font-weight:750;margin:8px 0 16px}
+.visual{min-height:142px;border-radius:16px;background:linear-gradient(135deg,#f8e7f1,#e8f2fc);display:flex;align-items:center;justify-content:center;font-size:76px;margin:12px 0 18px;gap:12px}
+.visual span{filter:drop-shadow(0 4px 3px #00000012)}
+.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.answer{background:#fbf8fb;border:1.5px solid #eadfe8;text-align:left;min-height:58px}.answer.correct{background:#e5f5ed;border-color:#64ae8c;color:#216849}.answer.wrong{background:#fff0f0;border-color:#d8878e;color:#9b3441}.answer:disabled{cursor:default;transform:none}
+.feedback{min-height:30px;margin:14px 0 4px;font-weight:700}.feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}
+.actions{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px}
+.hidden{display:none!important}.selectrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+select{border:1px solid #e6d8e2;border-radius:10px;padding:10px;background:white}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+.stat{background:#faf4f8;border-radius:14px;padding:14px;text-align:center}.stat b{display:block;font-size:25px;color:var(--berry)}
+.wordbank{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.wordbank span{background:#eef5fb;border-radius:9px;padding:6px 10px;font-size:14px}
+footer{text-align:center;color:#938894;font-size:12px;padding:18px}
+@media(max-width:560px){.answers{grid-template-columns:1fr}.panel{padding:16px}.visual{min-height:115px;font-size:60px}.statgrid{grid-template-columns:1fr 1fr 1fr}}
+</style>
+</head>
+<body>
+<header><small>ANIWAY.ENGLISH · VOCABULARY PRACTICE</small><h1>Vocabulary Quiz</h1><p>Проверь слова — выбери категорию и начни тренировку</p></header>
+<main class="wrap">
+<section class="panel" id="start">
+ <div class="topline"><span class="pill">ENGLISH · RU</span><span class="pill">Картинки + задания</span></div>
+ <h2>Выбери рубрику</h2>
+ <p class="hint">В каждой рубрике слова проверяются разными способами: по картинке, переводу, синониму или в контексте.</p>
+ <div class="categories" id="categories"></div>
+ <div class="selectrow"><label for="count">Количество вопросов:</label><select id="count"><option value="10">10</option><option value="15">15</option><option value="20">20</option><option value="all">Все слова рубрики</option></select></div>
+ <div class="actions"><button class="primary" id="startBtn">Начать quiz →</button><button class="quiet" id="allBtn">Все рубрики</button></div>
+</section>
+<section class="panel hidden" id="game">
+ <div class="topline"><span class="pill" id="categoryLabel"></span><span class="pill" id="counter">1 / 10</span><span class="pill" id="score">Баллы: 0</span></div>
+ <div class="progress"><div class="bar" id="bar"></div></div>
+ <div id="kind" class="hint"></div><div class="question" id="prompt"></div>
+ <div class="visual" id="visual"><span>🧠</span></div>
+ <div class="answers" id="answers"></div>
+ <div class="feedback" id="feedback" aria-live="polite"></div>
+ <div class="actions"><button class="quiet" id="quitBtn">← К рубрикам</button><button class="primary" id="nextBtn" disabled>Дальше →</button></div>
+</section>
+<section class="panel hidden" id="result">
+ <div class="topline"><span class="pill">QUIZ COMPLETED</span><span class="pill">ANIWAY.ENGLISH</span></div>
+ <h2>Отличная работа!</h2><p class="hint" id="resultText"></p>
+ <div class="statgrid"><div class="stat"><b id="rightStat">0</b>верно</div><div class="stat"><b id="totalStat">0</b>вопросов</div><div class="stat"><b id="percentStat">0%</b>результат</div></div>
+ <div class="actions"><button class="primary" id="againBtn">Ещё раз</button><button class="quiet" id="homeBtn">К рубрикам</button></div>
+</section>
+</main><footer>© Aniway English · Learn a little, remember a lot.</footer>
+<script>
+const bank = [
+{w:"get sunburnt / get a sunburn",ru:"обгореть на солнце",cat:"Nature & body",pic:"☀️",q:"You forgot sunscreen and your skin turned red. What happened?",opts:["got sunburnt","got a suntan","fell asleep","got ripe"],a:0},
+{w:"get a suntan",ru:"загореть",cat:"Nature & body",pic:"🏖️",q:"After a week at the beach, your skin became darker.",opts:["get a sunburn","get a suntan","get overwhelmed","get restless"],a:1},
+{w:"sunrise",ru:"рассвет",cat:"Nature & body",pic:"🌅",q:"The sun is coming up. What time of day is it?",opts:["sunset","midnight","sunrise","noon"],a:2},
+{w:"sunset",ru:"закат",cat:"Nature & body",pic:"🌇",q:"The sun is going down below the horizon.",opts:["sunrise","sunset","sunburn","sunshine"],a:1},
+{w:"ripe",ru:"спелый",cat:"Food",pic:"🍑",q:"The peaches are soft, sweet and ready to eat.",opts:["chopped","dense","ripe","caloric"],a:2},
+{w:"food additives",ru:"пищевые добавки",cat:"Food",pic:"🧪🥫",q:"Substances added to food to improve its taste, colour or shelf life.",opts:["sesame seeds","food additives","chewing gum","soy sauce"],a:1},
+{w:"a buffet",ru:"шведский стол",cat:"Food",pic:"🍽️🥗",q:"Guests choose dishes themselves from a long table.",opts:["a date","a buffet","a menu","a snack"],a:1},
+{w:"sesame seeds",ru:"семена кунжута",cat:"Food",pic:"🥯",q:"Tiny seeds often sprinkled on bread or sushi.",opts:["sesame seeds","cilantro","lettuce","dumplings"],a:0},
+{w:"soy sauce",ru:"соевый соус",cat:"Food",pic:"🍶",q:"A dark salty sauce often served with sushi.",opts:["vinegar","soy sauce","olive oil","cream"],a:1},
+{w:"lettuce",ru:"салат-латук",cat:"Food",pic:"🥬",q:"A leafy green vegetable used in salads and burgers.",opts:["cilantro","lettuce","cabbage","mint"],a:1},
+{w:"cilantro",ru:"кинза",cat:"Food",pic:"🌿",q:"A fresh herb with distinctive leaves, popular in Mexican and Asian food.",opts:["parsley","lettuce","cilantro","dill"],a:2},
+{w:"chopped",ru:"мелко нарезанный / рубленный",cat:"Food",pic:"🔪🧅",q:"The onions are cut into small pieces.",opts:["ripe","chopped","dense","heavy"],a:1},
+{w:"caloric",ru:"калорийный",cat:"Food",pic:"🍰",q:"This dessert contains a lot of calories.",opts:["caloric","ripe","chopped","restless"],a:0},
+{w:"dumplings",ru:"пельмени; клёцки",cat:"Food",pic:"🥟",q:"Small pieces of dough with a filling, cooked in water or steamed.",opts:["pancakes","dumplings","biscuits","noodles"],a:1},
+{w:"chewing gum",ru:"жевательная резинка",cat:"Food",pic:"🫧",q:"You chew it but usually don't swallow it.",opts:["candy floss","chewing gum","sesame seeds","lettuce"],a:1},
+{w:"dense",ru:"густой, плотный",cat:"Description",pic:"🌳🌫️",q:"A ______ forest has many trees growing close together.",opts:["heavy","dense","ripe","sudden"],a:1},
+{w:"heavy",ru:"тяжёлый",cat:"Description",pic:"🏋️",q:"This suitcase weighs 25 kilos. It is very…",opts:["dense","lovely","heavy","ripe"],a:2},
+{w:"quite + adjective",ru:"довольно + прилагательное",cat:"Description",pic:"📈",q:"Choose the correct phrase: The film was ___ interesting.",opts:["quite","suddenly","heavily","ripe"],a:0},
+{w:"gorgeous / lovely / impressive",ru:"великолепный, чудесный, впечатляющий",cat:"Description",pic:"🏰✨",q:"Which group contains positive adjectives meaning beautiful or admirable?",opts:["restless / terrified","gorgeous / lovely / impressive","dense / heavy","ripe / chopped"],a:1},
+{w:"high standards / expectations",ru:"высокие стандарты / ожидания",cat:"Description",pic:"🏆",q:"She expects excellent work from everyone. She has…",opts:["high standards","have doubts","food additives","a buffet"],a:0},
+{w:"restless",ru:"неусидчивый, беспокойный",cat:"Feelings",pic:"🦵😣",q:"He can't sit still and keeps moving around.",opts:["ripe","restless","lovely","dense"],a:1},
+{w:"overwhelmed",ru:"переполненный эмоциями; перегруженный",cat:"Feelings",pic:"🤯",q:"You have too much to do and don't know where to start. You feel…",opts:["overwhelmed","ripe","gorgeous","caloric"],a:0},
+{w:"terrified",ru:"в ужасе; очень напуганный",cat:"Feelings",pic:"😱",q:"Which word means 'very scared'?",opts:["disappointed","terrified","restless","impressive"],a:1},
+{w:"disappointed",ru:"разочарованный",cat:"Feelings",pic:"😞",q:"You expected a great result, but it was poor. You feel…",opts:["in love","disappointed","terrified","restless"],a:1},
+{w:"have doubts",ru:"сомневаться",cat:"Feelings",pic:"🤔",q:"I'm not sure this is the right decision. I…",opts:["have doubts","nod","spy","fall asleep"],a:0},
+{w:"fall asleep",ru:"уснуть",cat:"Feelings",pic:"😴",q:"After reading for ten minutes, she began to…",opts:["wake up","fall asleep","come over","stop by"],a:1},
+{w:"suddenly",ru:"внезапно",cat:"Feelings",pic:"⚡",q:"Something happens unexpectedly and very quickly.",opts:["quite","suddenly","usually","carefully"],a:1},
+{w:"out of the blue",ru:"ни с того ни с сего; неожиданно",cat:"Feelings",pic:"💥",q:"He called me ______ after three years of silence.",opts:["on purpose","out of the blue","at first","in love"],a:1},
+{w:"spy",ru:"шпионить; шпион",cat:"Actions & people",pic:"🕵️",q:"Someone secretly watches or collects information about others.",opts:["nod","spy","hold","chop"],a:1},
+{w:"nod",ru:"кивать",cat:"Actions & people",pic:"🙂↕️",q:"You move your head up and down to say yes.",opts:["shake","nod","spy","hold"],a:1},
+{w:"hold",ru:"держать",cat:"Actions & people",pic:"🤲",q:"Please ______ my bag while I tie my shoe.",opts:["throw","hold","nod","spy"],a:1},
+{w:"gecko",ru:"геккон",cat:"Nature & body",pic:"🦎",q:"A small lizard that can climb walls and ceilings.",opts:["cockroach","gecko","bug","frog"],a:1},
+{w:"throw off the tail",ru:"отбросить хвост",cat:"Nature & body",pic:"🦎",q:"Some lizards can escape a predator by doing this.",opts:["hold the tail","throw off the tail","nod the tail","chop the tail"],a:1},
+{w:"bugs",ru:"насекомые; жуки",cat:"Nature & body",pic:"🐞🐜",q:"A general informal word for small insects.",opts:["bugs","dumplings","geckos","additives"],a:0},
+{w:"cockroach",ru:"таракан",cat:"Nature & body",pic:"🪳",q:"A flat-bodied insect often found in kitchens.",opts:["gecko","cockroach","butterfly","ladybird"],a:1},
+{w:"to be in love / have a crush",ru:"быть влюблённым; испытывать симпатию",cat:"Relationships",pic:"💗",q:"She thinks about him all the time and gets nervous when he is near.",opts:["have doubts","be in love / have a crush","be overwhelmed","be disappointed"],a:1},
+{w:"date",ru:"свидание; встречаться",cat:"Relationships",pic:"☕💐",q:"They went on a ______ on Saturday evening.",opts:["buffet","date","sunset","standard"],a:1},
+{w:"first date",ru:"первое свидание",cat:"Relationships",pic:"🥂🌷",q:"The very first romantic meeting of two people.",opts:["first date","high standards","sunrise","a buffet"],a:0},
+{w:"stop by",ru:"зайти ненадолго; заглянуть",cat:"Relationships",pic:"🚪👋",q:"I'll ______ your office for five minutes on my way home.",opts:["fall asleep","stop by","throw off","get sunburnt"],a:1},
+{w:"come over",ru:"зайти в гости",cat:"Relationships",pic:"🏡🔔",q:"Would you like to ______ to my place tonight?",opts:["come over","stop working","nod off","spy on"],a:0}
+];
+const cats=["All categories",...new Set(bank.map(x=>x.cat))];
+let selected="All categories",questions=[],idx=0,score=0,answered=false,lastCount=10;
+const $=id=>document.getElementById(id);
+function renderCats(){ $("categories").innerHTML="";cats.forEach(c=>{let b=document.createElement("button");b.textContent=c==="All categories"?"Все слова":c;b.className="cat"+(selected===c?" active":"");b.onclick=()=>{selected=c;renderCats()};$("categories").append(b)})}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function start(){let pool=selected==="All categories"?bank:bank.filter(x=>x.cat===selected);let n=$("count").value;lastCount=n;questions=shuffle(pool).slice(0,n==="all"?pool.length:Math.min(+n,pool.length));idx=0;score=0;$("start").classList.add("hidden");$("result").classList.add("hidden");$("game").classList.remove("hidden");showQ()}
+function showQ(){answered=false;let q=questions[idx];$("categoryLabel").textContent=q.cat;$("counter").textContent=`${idx+1} / ${questions.length}`;$("score").textContent=`Баллы: ${score}`;$("bar").style.width=`${idx/questions.length*100}%`;$("kind").textContent=idx%4===0?"🖼️ Вопрос по картинке":idx%4===1?"🇷🇺 Выбери перевод":idx%4===2?"🧩 Подбери слово по контексту":"🔎 Найди правильное значение";$("prompt").textContent=idx%4===1?`Как переводится “${q.w}”?`:idx%4===2?q.q:`${q.q}`;$("visual").innerHTML=`<span>${q.pic}</span>`;$("feedback").textContent="";$("feedback").className="feedback";$("nextBtn").disabled=true;
+let opts=shuffle(q.opts.map((t,i)=>({t,correct:i===q.a})));$("answers").innerHTML="";opts.forEach(o=>{let b=document.createElement("button");b.className="answer";b.textContent=idx%4===1?(o.correct?q.ru:bank.find(x=>x.w===o.t)?.ru||o.t):o.t;b.onclick=()=>choose(b,o,q);$("answers").append(b)})}
+function choose(btn,o,q){if(answered)return;answered=true;document.querySelectorAll(".answer").forEach(b=>b.disabled=true);if(o.correct){score++;btn.classList.add("correct");$("feedback").textContent="✓ Верно! "+q.w+" — "+q.ru;$("feedback").classList.add("good")}else{btn.classList.add("wrong");$("feedback").textContent="Правильный ответ: "+q.w+" — "+q.ru;$("feedback").classList.add("bad");[...document.querySelectorAll(".answer")].forEach(b=>{if((idx%4===1?b.textContent===q.ru:b.textContent===q.opts[q.a]))b.classList.add("correct")})}$("score").textContent=`Баллы: ${score}`;$("nextBtn").disabled=false;$("nextBtn").textContent=idx===questions.length-1?"Результат":"Дальше →"}
+function next(){if(!answered)return;if(idx<questions.length-1){idx++;showQ()}else finish()}
+function finish(){$("game").classList.add("hidden");$("result").classList.remove("hidden");let p=Math.round(score/questions.length*100);$("rightStat").textContent=score;$("totalStat").textContent=questions.length;$("percentStat").textContent=p+"%";$("resultText").textContent=p>=85?"Прекрасно! Слова уже хорошо знакомы.":p>=60?"Хороший результат! Повтори слова, в которых были ошибки.":"Повтори эту рубрику и попробуй ещё раз.";$("bar").style.width="100%"}
+function home(){$("game").classList.add("hidden");$("result").classList.add("hidden");$("start").classList.remove("hidden")}
+$("startBtn").onclick=start;$("allBtn").onclick=()=>{selected="All categories";renderCats();start()};$("nextBtn").onclick=next;$("quitBtn").onclick=home;$("homeBtn").onclick=home;$("againBtn").onclick=start;renderCats();
+</script>
+</body></html>
